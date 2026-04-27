@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+:root {
+  --bg: #eef9ff;
+  --bg-soft: #dff4ff;
+  --primary: #19b7c9;
+  --primary-dark: #0ea5b7;
+  --text: #16324a;
+  --text-soft: #4b6b80;
+  --border: #cfeaf6;
+}
+body {
+  margin: 0;
+  padding: 0;
+}
+button,
+a,
+[role="button"],
+.cursor-pointer-target {
+  cursor: pointer;
+}
