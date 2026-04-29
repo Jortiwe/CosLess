@@ -81,41 +81,39 @@ export default function FavoritesPage() {
       <Header />
 
       <section className="mx-auto w-full max-w-[1380px] px-4 pb-10 pt-4 sm:px-6 lg:px-8 lg:pt-6">
-        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex justify-center sm:justify-start">
-            <div className="inline-flex items-center rounded-full bg-[#dff4ff] px-5 py-3 text-base font-semibold text-[#19b7c9]">
-              <FiHeart className="mr-2 text-[1.05rem]" />
-              Favoritos
-            </div>
+        <div className="mb-4">
+          <span className="inline-flex items-center rounded-full bg-[#dff4ff] px-4 py-2 text-sm font-semibold text-[#19b7c9]">
+            <FiHeart className="mr-2 text-[1.05rem]" />
+            Favoritos
+          </span>
+        </div>
+
+        <div className="mb-6 grid grid-cols-3 gap-2 sm:flex sm:justify-end sm:gap-3">
+          <div className="min-w-[110px] rounded-[22px] bg-[#dff1fb] px-4 py-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#68839a]">
+              Guardados
+            </p>
+            <p className="mt-1 text-2xl font-extrabold text-[#16324a]">
+              {totalFavorites}
+            </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-2 self-center sm:flex sm:gap-3 sm:self-auto">
-            <div className="min-w-[110px] rounded-[22px] bg-[#dff1fb] px-4 py-3">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#68839a]">
-                Guardados
-              </p>
-              <p className="mt-1 text-2xl font-extrabold text-[#16324a]">
-                {totalFavorites}
-              </p>
-            </div>
+          <div className="min-w-[110px] rounded-[22px] bg-[#dff1fb] px-4 py-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#68839a]">
+              Stock
+            </p>
+            <p className="mt-1 text-2xl font-extrabold text-[#16324a]">
+              {stockCount}
+            </p>
+          </div>
 
-            <div className="min-w-[110px] rounded-[22px] bg-[#dff1fb] px-4 py-3">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#68839a]">
-                Stock
-              </p>
-              <p className="mt-1 text-2xl font-extrabold text-[#16324a]">
-                {stockCount}
-              </p>
-            </div>
-
-            <div className="min-w-[110px] rounded-[22px] bg-[#dff1fb] px-4 py-3">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#68839a]">
-                Preventa
-              </p>
-              <p className="mt-1 text-2xl font-extrabold text-[#16324a]">
-                {preventaCount}
-              </p>
-            </div>
+          <div className="min-w-[110px] rounded-[22px] bg-[#dff1fb] px-4 py-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#68839a]">
+              Preventa
+            </p>
+            <p className="mt-1 text-2xl font-extrabold text-[#16324a]">
+              {preventaCount}
+            </p>
           </div>
         </div>
 

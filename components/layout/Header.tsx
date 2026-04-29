@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   FiHeart,
@@ -13,7 +13,13 @@ import {
 } from "react-icons/fi";
 import { FaFacebookMessenger, FaWhatsapp } from "react-icons/fa";
 import SearchTrigger from "../search/SearchTrigger";
-import { getCartItems, getFavoriteItems } from "../../lib/storage";
+import {
+  clearLocalShopState,
+  getCartItems,
+  getFavoriteItems,
+  loadAccountStoreToLocal,
+  setGuestShopMode,
+} from "../../lib/storage";
 
 type SessionUser = {
   userId?: string;
@@ -55,6 +61,8 @@ const menuCategories = [
 
 export default function Header() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const hideSocialLinksBar = pathname === "/account";
 
   const [showSocialBar, setShowSocialBar] = useState(true);
@@ -63,6 +71,7 @@ export default function Header() {
   const [sessionReady, setSessionReady] = useState(false);
   const [sessionUser, setSessionUser] = useState<SessionUser | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [sessionToast, setSessionToast] = useState("");
 
   const [cartCount, setCartCount] = useState(0);
   const [favoritesCount, setFavoritesCount] = useState(0);
@@ -79,9 +88,14 @@ export default function Header() {
   const countsInitialized = useRef(false);
 
   const isSearchPage = pathname.startsWith("/buscar");
-  const isAccountPage = pathname.startsWith("/account");
+  const isAccountPage =
+    pathname.startsWith("/account") || pathname.startsWith("/perfil");
   const isFavoritesPage = pathname.startsWith("/favoritos");
   const isCartPage = pathname.startsWith("/carrito");
+
+  const profileHref = isLoggedIn ? "/perfil" : "/account";
+  const displayName =
+    sessionUser?.nickname || sessionUser?.fullName || "Mi cuenta";
 
   const refreshHeaderCounts = useCallback((skipPulse = false) => {
     const cartItems = getCartItems() as CartItem[];
@@ -138,6 +152,13 @@ export default function Header() {
           setIsLoggedIn(Boolean(data.isLoggedIn));
           setSessionUser(data.user || null);
           setSessionReady(true);
+
+          if (data.isLoggedIn) {
+            await loadAccountStoreToLocal();
+            refreshHeaderCounts(true);
+          } else {
+            setGuestShopMode();
+          }
         }
       } catch {
         if (!cancelled) {
@@ -145,6 +166,7 @@ export default function Header() {
           setIsLoggedIn(false);
           setSessionUser(null);
           setSessionReady(true);
+          setGuestShopMode();
         }
       }
     }
@@ -156,6 +178,38 @@ export default function Header() {
       cancelled = true;
     };
   }, [pathname, refreshHeaderCounts]);
+
+  useEffect(() => {
+    const sessionStatus = searchParams.get("session");
+    const logoutStatus = searchParams.get("logout");
+
+    if (logoutStatus === "1") {
+      clearLocalShopState();
+
+      const timer = window.setTimeout(() => {
+        window.history.replaceState({}, "", "/");
+      }, 300);
+
+      return () => window.clearTimeout(timer);
+    }
+
+    if (sessionStatus === "login") {
+      setSessionToast("Sesión iniciada correctamente.");
+    }
+
+    if (sessionStatus === "register") {
+      setSessionToast("Cuenta creada correctamente. Sesión abierta.");
+    }
+
+    if (sessionStatus === "login" || sessionStatus === "register") {
+      const timer = window.setTimeout(() => {
+        setSessionToast("");
+        window.history.replaceState({}, "", "/");
+      }, 3500);
+
+      return () => window.clearTimeout(timer);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const handleCartUpdate = () => refreshHeaderCounts(false);
@@ -261,6 +315,17 @@ export default function Header() {
 
   return (
     <>
+      {sessionToast && (
+        <div className="fixed left-1/2 top-[92px] z-[120] w-[calc(100%-32px)] max-w-[420px] -translate-x-1/2 rounded-[22px] border border-[#bfefff] bg-white px-5 py-4 text-center shadow-[0_14px_40px_rgba(22,50,74,0.16)]">
+          <p className="text-sm font-extrabold text-[#19b7c9]">
+            {sessionToast}
+          </p>
+          <p className="mt-1 text-xs font-medium text-[#4b6b80]">
+            Bienvenido a CosLess.
+          </p>
+        </div>
+      )}
+
       <header className="sticky top-0 z-50 select-none border-b border-[#cfeaf6] bg-[#f7fdff]/95 backdrop-blur">
         <div className="mx-auto w-full max-w-[1700px] px-3 sm:px-5 md:px-10 lg:px-14 xl:px-20 2xl:px-24">
           <div className="grid min-h-[72px] grid-cols-[54px_1fr_auto] items-center gap-1 sm:min-h-[84px] sm:grid-cols-[72px_1fr_auto] sm:gap-2 md:grid-cols-[120px_1fr_120px] md:min-h-[92px] lg:grid-cols-[220px_1fr_220px] lg:min-h-[100px]">
@@ -311,8 +376,8 @@ export default function Header() {
                     <span className="absolute -top-2 left-1/2 h-[3px] w-6 -translate-x-1/2 rounded-full bg-red-500" />
                   )}
                   <Link
-                    href="/account"
-                    aria-label="Mi cuenta"
+                    href={profileHref}
+                    aria-label={isLoggedIn ? "Mi perfil" : "Mi cuenta"}
                     className="group flex h-8 w-8 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
                   >
                     <FiUser className="text-[1.12rem] transition duration-200 group-hover:text-[#19b7c9] sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem]" />
@@ -392,7 +457,9 @@ export default function Header() {
                     className="group flex items-center gap-1.5 rounded-lg px-2 py-[2px] transition duration-200 hover:scale-110"
                   >
                     <FaWhatsapp className="text-[0.78rem] transition duration-200 group-hover:text-[#0ea5b7] sm:text-[0.82rem]" />
-                    <span className="underline underline-offset-4">WhatsApp</span>
+                    <span className="underline underline-offset-4">
+                      WhatsApp
+                    </span>
                   </a>
 
                   <span className="px-1 text-[#7fb8c8]">|</span>
@@ -405,7 +472,9 @@ export default function Header() {
                     className="group flex items-center gap-1.5 rounded-lg px-2 py-[2px] transition duration-200 hover:scale-110"
                   >
                     <FaFacebookMessenger className="text-[0.76rem] transition duration-200 group-hover:text-[#0ea5b7] sm:text-[0.8rem]" />
-                    <span className="underline underline-offset-4">Messenger</span>
+                    <span className="underline underline-offset-4">
+                      Messenger
+                    </span>
                   </a>
                 </div>
               </div>
@@ -413,16 +482,6 @@ export default function Header() {
           )}
         </div>
       </header>
-
-      {isLoggedIn && (
-        <a
-          href="/api/auth/logout"
-          className="fixed right-0 top-[42%] z-[70] hidden -translate-y-1/2 rounded-l-2xl bg-[#e63946] px-4 py-3 text-sm font-extrabold text-white shadow-[0_10px_24px_rgba(230,57,70,0.28)] transition hover:bg-[#d62839] lg:flex lg:items-center lg:gap-2"
-        >
-          <FiLogOut />
-          Cerrar sesión
-        </a>
-      )}
 
       <div
         className={`fixed inset-0 z-[80] transition duration-300 ${
@@ -482,50 +541,22 @@ export default function Header() {
           <div className="shrink-0 border-t border-[#e2f1f7] bg-[#f2fbff] px-5 py-3 sm:px-6">
             {isLoggedIn ? (
               <div className="space-y-3">
-                <div className="rounded-[22px] bg-white p-3.5 shadow-[0_6px_18px_rgba(22,50,74,0.05)] sm:rounded-[24px] sm:p-4">
-                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#8aa5b4]">
-                    Tu cuenta
-                  </p>
-                  <p className="mt-2 text-base font-extrabold text-[#16324a] sm:text-lg">
-                    {sessionUser?.nickname || sessionUser?.fullName || "Mi cuenta"}
-                  </p>
-                  <p className="mt-1 break-all text-sm text-[#4b6b80]">
-                    {sessionUser?.email || "Cuenta activa"}
-                  </p>
-                </div>
+                <Link
+                  href="/perfil"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="inline-flex max-w-full items-center gap-3 rounded-2xl px-2 py-1 text-[1rem] font-bold text-[#16324a] transition hover:text-[#19b7c9]"
+                >
+                  <FiUser className="shrink-0 text-[1.2rem]" />
+                  <span className="truncate">{displayName}</span>
+                </Link>
 
-                <div className="grid gap-2">
-                  <Link
-                    href="/account"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="rounded-2xl bg-white px-4 py-2.5 text-sm font-bold text-[#16324a] transition hover:bg-[#eaf8ff] hover:text-[#19b7c9]"
-                  >
-                    Mi perfil
-                  </Link>
-
-                  <Link
-                    href="/account/orders"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="rounded-2xl bg-white px-4 py-2.5 text-sm font-bold text-[#16324a] transition hover:bg-[#eaf8ff] hover:text-[#19b7c9]"
-                  >
-                    Historial de pedidos
-                  </Link>
-
-                  <Link
-                    href="/account/password"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="rounded-2xl bg-white px-4 py-2.5 text-sm font-bold text-[#16324a] transition hover:bg-[#eaf8ff] hover:text-[#19b7c9]"
-                  >
-                    Cambiar contraseña
-                  </Link>
-
-                  <a
-                    href="/api/auth/logout"
-                    className="rounded-2xl bg-[#ffe9eb] px-4 py-2.5 text-sm font-bold text-[#d62839] transition hover:bg-[#ffd9dd]"
-                  >
-                    Cerrar sesión
-                  </a>
-                </div>
+                <a
+                  href="/api/auth/logout"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#ffe9eb] px-4 py-3 text-sm font-bold text-[#d62839] transition hover:bg-[#ffd9dd]"
+                >
+                  <FiLogOut />
+                  Cerrar sesión
+                </a>
 
                 <div className="flex items-center gap-3 pt-1 text-[#16324a]">
                   <a

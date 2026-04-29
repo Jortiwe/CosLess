@@ -4,7 +4,18 @@ import jwt from "jsonwebtoken";
 import { connectDB } from "../../../../lib/mongodb";
 import User from "../../../../models/User";
 
-const JWT_SECRET = process.env.JWT_SECRET || "cosless_dev_secret";
+const JWT_SECRET =
+  process.env.JWT_SECRET ||
+  process.env.ADMIN_JWT_SECRET ||
+  "cosless_dev_secret";
+
+type TokenPayload = {
+  userId?: string;
+  email?: string;
+  role?: string;
+  nickname?: string;
+  fullName?: string;
+};
 
 export async function GET() {
   try {
@@ -19,11 +30,7 @@ export async function GET() {
       });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as {
-      userId?: string;
-      email?: string;
-      role?: string;
-    };
+    const decoded = jwt.verify(token, JWT_SECRET) as TokenPayload;
 
     if (!decoded?.email) {
       return NextResponse.json({
@@ -45,12 +52,14 @@ export async function GET() {
       });
     }
 
+    const isAdmin =
+      user.role === "admin" ||
+      user.role === "superadmin" ||
+      user.role === "superadministrador";
+
     return NextResponse.json({
       isLoggedIn: true,
-      isAdmin:
-        user.role === "admin" ||
-        user.role === "superadmin" ||
-        user.role === "superadministrador",
+      isAdmin,
       user: {
         userId: String(user._id),
         email: user.email,
@@ -59,7 +68,9 @@ export async function GET() {
         fullName: user.fullName || "",
       },
     });
-  } catch {
+  } catch (error) {
+    console.error("Error leyendo sesión:", error);
+
     return NextResponse.json({
       isLoggedIn: false,
       isAdmin: false,

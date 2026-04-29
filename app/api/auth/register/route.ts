@@ -4,7 +4,10 @@ import jwt from "jsonwebtoken";
 import { connectDB } from "../../../../lib/mongodb";
 import User from "../../../../models/User";
 
-const JWT_SECRET = process.env.JWT_SECRET || "cosless_dev_secret";
+const JWT_SECRET =
+  process.env.JWT_SECRET ||
+  process.env.ADMIN_JWT_SECRET ||
+  "cosless_dev_secret";
 
 export async function POST(request: Request) {
   try {
@@ -46,6 +49,7 @@ export async function POST(request: Request) {
     await connectDB();
 
     const emailExists = await User.findOne({ email }).lean();
+
     if (emailExists) {
       return NextResponse.json(
         { error: "Ese correo ya está registrado." },
@@ -54,6 +58,7 @@ export async function POST(request: Request) {
     }
 
     const nicknameExists = await User.findOne({ nickname }).lean();
+
     if (nicknameExists) {
       return NextResponse.json(
         { error: "Ese nickname ya está en uso." },
@@ -70,7 +75,7 @@ export async function POST(request: Request) {
       passwordHash,
       provider: "credentials",
       providerId: null,
-      role: "user",
+      role: "customer",
       isActive: true,
     });
 
@@ -79,28 +84,33 @@ export async function POST(request: Request) {
         userId: String(newUser._id),
         email: newUser.email,
         role: newUser.role,
+        nickname: newUser.nickname,
+        fullName: newUser.fullName,
       },
       JWT_SECRET,
       { expiresIn: "7d" }
     );
 
-    const response = NextResponse.json({
-      success: true,
-      message: "Cuenta creada correctamente.",
-      redirectTo: "/account",
-      user: {
-        userId: String(newUser._id),
-        nickname: newUser.nickname,
-        fullName: newUser.fullName,
-        email: newUser.email,
-        role: newUser.role,
+    const response = NextResponse.json(
+      {
+        success: true,
+        message: "Cuenta creada correctamente.",
+        redirectTo: "/?session=register",
+        user: {
+          userId: String(newUser._id),
+          nickname: newUser.nickname,
+          fullName: newUser.fullName,
+          email: newUser.email,
+          role: newUser.role,
+        },
       },
-    });
+      { status: 201 }
+    );
 
     response.cookies.set("cosless_token", token, {
       httpOnly: true,
       sameSite: "lax",
-      secure: false,
+      secure: process.env.NODE_ENV === "production",
       path: "/",
       maxAge: 60 * 60 * 24 * 7,
     });
@@ -108,6 +118,7 @@ export async function POST(request: Request) {
     return response;
   } catch (error) {
     console.error("Error registrando usuario:", error);
+
     return NextResponse.json(
       { error: "No se pudo crear la cuenta." },
       { status: 500 }
