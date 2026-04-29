@@ -76,8 +76,14 @@ export default function Header() {
 
   const prevCartCount = useRef(0);
   const prevFavoritesCount = useRef(0);
+  const countsInitialized = useRef(false);
 
-  const refreshHeaderCounts = useCallback(() => {
+  const isSearchPage = pathname.startsWith("/buscar");
+  const isAccountPage = pathname.startsWith("/account");
+  const isFavoritesPage = pathname.startsWith("/favoritos");
+  const isCartPage = pathname.startsWith("/carrito");
+
+  const refreshHeaderCounts = useCallback((skipPulse = false) => {
     const cartItems = getCartItems() as CartItem[];
     const favoriteItems = getFavoriteItems();
 
@@ -85,8 +91,34 @@ export default function Header() {
       return acc + (item.quantity || 0);
     }, 0);
 
+    const totalFavorites = favoriteItems.length;
+
+    if (!countsInitialized.current) {
+      prevCartCount.current = totalCart;
+      prevFavoritesCount.current = totalFavorites;
+      countsInitialized.current = true;
+    } else if (!skipPulse) {
+      if (totalCart !== prevCartCount.current) {
+        setCartPulse(false);
+        requestAnimationFrame(() => setCartPulse(true));
+        window.setTimeout(() => setCartPulse(false), 350);
+      }
+
+      if (totalFavorites !== prevFavoritesCount.current) {
+        setFavoritesPulse(false);
+        requestAnimationFrame(() => setFavoritesPulse(true));
+        window.setTimeout(() => setFavoritesPulse(false), 350);
+      }
+
+      prevCartCount.current = totalCart;
+      prevFavoritesCount.current = totalFavorites;
+    } else {
+      prevCartCount.current = totalCart;
+      prevFavoritesCount.current = totalFavorites;
+    }
+
     setCartCount(totalCart);
-    setFavoritesCount(favoriteItems.length);
+    setFavoritesCount(totalFavorites);
   }, []);
 
   useEffect(() => {
@@ -118,7 +150,7 @@ export default function Header() {
     }
 
     loadSession();
-    refreshHeaderCounts();
+    refreshHeaderCounts(true);
 
     return () => {
       cancelled = true;
@@ -126,9 +158,9 @@ export default function Header() {
   }, [pathname, refreshHeaderCounts]);
 
   useEffect(() => {
-    const handleCartUpdate = () => refreshHeaderCounts();
-    const handleFavoritesUpdate = () => refreshHeaderCounts();
-    const handleStorage = () => refreshHeaderCounts();
+    const handleCartUpdate = () => refreshHeaderCounts(false);
+    const handleFavoritesUpdate = () => refreshHeaderCounts(false);
+    const handleStorage = () => refreshHeaderCounts(false);
 
     window.addEventListener("cosless-cart-updated", handleCartUpdate);
     window.addEventListener("cosless-favorites-updated", handleFavoritesUpdate);
@@ -143,28 +175,6 @@ export default function Header() {
       window.removeEventListener("storage", handleStorage);
     };
   }, [refreshHeaderCounts]);
-
-  useEffect(() => {
-    if (cartCount !== prevCartCount.current) {
-      if (prevCartCount.current !== 0 || cartCount !== 0) {
-        setCartPulse(false);
-        requestAnimationFrame(() => setCartPulse(true));
-        setTimeout(() => setCartPulse(false), 350);
-      }
-      prevCartCount.current = cartCount;
-    }
-  }, [cartCount]);
-
-  useEffect(() => {
-    if (favoritesCount !== prevFavoritesCount.current) {
-      if (prevFavoritesCount.current !== 0 || favoritesCount !== 0) {
-        setFavoritesPulse(false);
-        requestAnimationFrame(() => setFavoritesPulse(true));
-        setTimeout(() => setFavoritesPulse(false), 350);
-      }
-      prevFavoritesCount.current = favoritesCount;
-    }
-  }, [favoritesCount]);
 
   useEffect(() => {
     if (hideSocialLinksBar) return;
@@ -289,57 +299,77 @@ export default function Header() {
               )}
 
               <div className="flex items-center justify-end gap-0 sm:gap-0.5 md:gap-1.5">
-                <SearchTrigger className="group flex h-8 w-8 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11" />
-
-                <Link
-                  href="/account"
-                  aria-label="Mi cuenta"
-                  className="group flex h-8 w-8 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
-                >
-                  <FiUser className="text-[1.12rem] transition duration-200 group-hover:text-[#19b7c9] sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem]" />
-                </Link>
-
-                <Link
-                  href="/favoritos"
-                  aria-label="Favoritos"
-                  className="group relative flex h-8 w-8 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
-                >
-                  <FiHeart
-                    className={`text-[1.12rem] transition duration-200 group-hover:text-[#19b7c9] sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem] ${
-                      favoritesPulse ? "scale-125 text-[#19b7c9]" : ""
-                    }`}
-                  />
-                  {favoritesCount > 0 && (
-                    <span
-                      className={`absolute right-[-1px] top-[-2px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-[#19b7c9] px-1 text-[9px] font-bold text-white sm:h-[17px] sm:min-w-[17px] md:h-[18px] md:min-w-[18px] md:text-[10px] lg:h-5 lg:min-w-5 ${
-                        favoritesPulse ? "scale-125" : ""
-                      }`}
-                    >
-                      {favoritesBadge}
-                    </span>
+                <div className="relative">
+                  {isSearchPage && (
+                    <span className="absolute -top-2 left-1/2 h-[3px] w-6 -translate-x-1/2 rounded-full bg-red-500" />
                   )}
-                </Link>
+                  <SearchTrigger className="group flex h-8 w-8 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11" />
+                </div>
 
-                <Link
-                  href="/carrito"
-                  aria-label="Carrito"
-                  className="group relative flex h-8 w-8 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
-                >
-                  <FiShoppingBag
-                    className={`text-[1.12rem] transition duration-200 group-hover:text-[#19b7c9] sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem] ${
-                      cartPulse ? "scale-125 text-[#19b7c9]" : ""
-                    }`}
-                  />
-                  {cartCount > 0 && (
-                    <span
-                      className={`absolute right-[-1px] top-[-2px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-[#19b7c9] px-1 text-[9px] font-bold text-white sm:h-[17px] sm:min-w-[17px] md:h-[18px] md:min-w-[18px] md:text-[10px] lg:h-5 lg:min-w-5 ${
-                        cartPulse ? "scale-125" : ""
-                      }`}
-                    >
-                      {cartBadge}
-                    </span>
+                <div className="relative">
+                  {isAccountPage && (
+                    <span className="absolute -top-2 left-1/2 h-[3px] w-6 -translate-x-1/2 rounded-full bg-red-500" />
                   )}
-                </Link>
+                  <Link
+                    href="/account"
+                    aria-label="Mi cuenta"
+                    className="group flex h-8 w-8 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
+                  >
+                    <FiUser className="text-[1.12rem] transition duration-200 group-hover:text-[#19b7c9] sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem]" />
+                  </Link>
+                </div>
+
+                <div className="relative">
+                  {isFavoritesPage && (
+                    <span className="absolute -top-2 left-1/2 z-10 h-[3px] w-6 -translate-x-1/2 rounded-full bg-red-500" />
+                  )}
+                  <Link
+                    href="/favoritos"
+                    aria-label="Favoritos"
+                    className="group relative flex h-8 w-8 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
+                  >
+                    <FiHeart
+                      className={`text-[1.12rem] transition duration-200 group-hover:text-[#19b7c9] sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem] ${
+                        favoritesPulse ? "scale-125 text-[#19b7c9]" : ""
+                      }`}
+                    />
+                    {favoritesCount > 0 && (
+                      <span
+                        className={`absolute right-[-1px] top-[-2px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-[#19b7c9] px-1 text-[9px] font-bold text-white sm:h-[17px] sm:min-w-[17px] md:h-[18px] md:min-w-[18px] md:text-[10px] lg:h-5 lg:min-w-5 ${
+                          favoritesPulse ? "scale-125" : ""
+                        }`}
+                      >
+                        {favoritesBadge}
+                      </span>
+                    )}
+                  </Link>
+                </div>
+
+                <div className="relative">
+                  {isCartPage && (
+                    <span className="absolute -top-2 left-1/2 z-10 h-[3px] w-6 -translate-x-1/2 rounded-full bg-red-500" />
+                  )}
+                  <Link
+                    href="/carrito"
+                    aria-label="Carrito"
+                    className="group relative flex h-8 w-8 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
+                  >
+                    <FiShoppingBag
+                      className={`text-[1.12rem] transition duration-200 group-hover:text-[#19b7c9] sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem] ${
+                        cartPulse ? "scale-125 text-[#19b7c9]" : ""
+                      }`}
+                    />
+                    {cartCount > 0 && (
+                      <span
+                        className={`absolute right-[-1px] top-[-2px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-[#19b7c9] px-1 text-[9px] font-bold text-white sm:h-[17px] sm:min-w-[17px] md:h-[18px] md:min-w-[18px] md:text-[10px] lg:h-5 lg:min-w-5 ${
+                          cartPulse ? "scale-125" : ""
+                        }`}
+                      >
+                        {cartBadge}
+                      </span>
+                    )}
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
