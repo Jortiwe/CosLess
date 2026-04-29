@@ -5,6 +5,7 @@ import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 import AuthHero from "./AuthHero";
 import AuthCard from "./AuthCard";
+import AuthMobileHero from "./AuthMobileHero";
 
 type Mode = "login" | "register";
 
@@ -15,16 +16,29 @@ export default function AuthPage() {
     <main className="min-h-screen bg-[#eef9ff] text-[#16324a]">
       <Header />
 
-      <section className="mx-auto w-full max-w-[1600px] px-4 py-5 sm:px-6 md:px-8 lg:px-10 xl:px-14">
-        <div className="grid gap-5 lg:min-h-[calc(100vh-220px)] lg:grid-cols-[0.95fr_1.05fr] xl:gap-6">
-          <div className="hidden lg:block">
+      {/* MÓVIL */}
+      <div className="lg:hidden">
+        <section className="relative min-h-[calc(100vh-86px)] overflow-hidden bg-[#9ddcf8]">
+          <AuthMobileHero />
+
+          <div className="relative z-10 mx-auto w-full max-w-[430px] px-4 pt-[180px] pb-10">
+            <AuthCard mode={mode} onModeChange={setMode} />
+          </div>
+
+          {/* Fade final extra */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 bg-gradient-to-b from-transparent to-[#eef9ff]" />
+        </section>
+      </div>
+
+      {/* PC */}
+      <section className="mx-auto hidden w-full max-w-[1500px] px-5 py-6 lg:block xl:px-8">
+        <div className="grid items-start gap-8 xl:grid-cols-[760px_minmax(0,1fr)]">
+          <div className="min-w-0">
             <AuthHero mode={mode} />
           </div>
 
-          <div className="flex items-start">
-            <div className="w-full">
-              <AuthCard mode={mode} onModeChange={setMode} />
-            </div>
+          <div className="min-w-0">
+            <AuthCard mode={mode} onModeChange={setMode} />
           </div>
         </div>
       </section>
