@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   FiHeart,
   FiLogOut,
@@ -77,7 +77,7 @@ export default function Header() {
   const prevCartCount = useRef(0);
   const prevFavoritesCount = useRef(0);
 
-  const refreshHeaderCounts = () => {
+  const refreshHeaderCounts = useCallback(() => {
     const cartItems = getCartItems() as CartItem[];
     const favoriteItems = getFavoriteItems();
 
@@ -87,7 +87,7 @@ export default function Header() {
 
     setCartCount(totalCart);
     setFavoritesCount(favoriteItems.length);
-  };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -123,7 +123,7 @@ export default function Header() {
     return () => {
       cancelled = true;
     };
-  }, [pathname]);
+  }, [pathname, refreshHeaderCounts]);
 
   useEffect(() => {
     const handleCartUpdate = () => refreshHeaderCounts();
@@ -142,7 +142,7 @@ export default function Header() {
       );
       window.removeEventListener("storage", handleStorage);
     };
-  }, []);
+  }, [refreshHeaderCounts]);
 
   useEffect(() => {
     if (cartCount !== prevCartCount.current) {
@@ -252,28 +252,28 @@ export default function Header() {
   return (
     <>
       <header className="sticky top-0 z-50 select-none border-b border-[#cfeaf6] bg-[#f7fdff]/95 backdrop-blur">
-        <div className="mx-auto w-full max-w-[1700px] px-5 sm:px-7 md:px-10 lg:px-14 xl:px-20 2xl:px-24">
-          <div className="grid min-h-[84px] grid-cols-[120px_1fr_120px] items-center sm:min-h-[92px] md:grid-cols-[170px_1fr_170px] md:min-h-[100px] lg:grid-cols-[220px_1fr_220px]">
+        <div className="mx-auto w-full max-w-[1700px] px-3 sm:px-5 md:px-10 lg:px-14 xl:px-20 2xl:px-24">
+          <div className="grid min-h-[72px] grid-cols-[54px_1fr_auto] items-center gap-1 sm:min-h-[84px] sm:grid-cols-[72px_1fr_auto] sm:gap-2 md:grid-cols-[120px_1fr_120px] md:min-h-[92px] lg:grid-cols-[220px_1fr_220px] lg:min-h-[100px]">
             <div className="flex items-center justify-start">
               <button
                 type="button"
                 aria-label="Abrir menú"
                 onClick={() => setIsMenuOpen(true)}
-                className="group flex h-12 w-12 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110"
+                className="group flex h-10 w-10 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-11 sm:w-11 md:h-12 md:w-12"
               >
-                <FiMenu className="text-[2rem] transition duration-200 group-hover:text-[#19b7c9]" />
+                <FiMenu className="text-[1.7rem] transition duration-200 group-hover:text-[#19b7c9] sm:text-[1.85rem] md:text-[2rem]" />
               </button>
             </div>
 
             <Link
               href="/"
-              className="flex flex-col items-center justify-center text-center transition duration-200 hover:scale-[1.02]"
+              className="flex min-w-0 flex-col items-center justify-center text-center transition duration-200 hover:scale-[1.02]"
               aria-label="Ir a la página principal"
             >
-              <div className="text-[2rem] font-extrabold leading-none tracking-wide text-[#19b7c9] sm:text-[2.35rem] md:text-[2.7rem]">
+              <div className="truncate text-[1.55rem] font-extrabold leading-none tracking-wide text-[#19b7c9] sm:text-[1.9rem] md:text-[2.25rem] lg:text-[2.7rem]">
                 CosLess
               </div>
-              <p className="mt-2 text-[10px] font-medium uppercase tracking-[0.32em] text-[#4b6b80] sm:text-[11px] md:text-[12px]">
+              <p className="mt-1 text-[8px] font-medium uppercase tracking-[0.26em] text-[#4b6b80] sm:mt-1.5 sm:text-[9px] md:mt-2 md:text-[11px] lg:text-[12px]">
                 Cosplay Store
               </p>
             </Link>
@@ -288,30 +288,30 @@ export default function Header() {
                 </Link>
               )}
 
-              <div className="flex items-center justify-end gap-[2px] sm:gap-1 md:gap-2">
-                <SearchTrigger className="group flex h-10 w-10 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-11 sm:w-11" />
+              <div className="flex items-center justify-end gap-0 sm:gap-0.5 md:gap-1.5">
+                <SearchTrigger className="group flex h-8 w-8 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11" />
 
                 <Link
                   href="/account"
                   aria-label="Mi cuenta"
-                  className="group flex h-10 w-10 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-11 sm:w-11"
+                  className="group flex h-8 w-8 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
                 >
-                  <FiUser className="text-[1.28rem] transition duration-200 group-hover:text-[#19b7c9] sm:text-[1.38rem]" />
+                  <FiUser className="text-[1.12rem] transition duration-200 group-hover:text-[#19b7c9] sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem]" />
                 </Link>
 
                 <Link
                   href="/favoritos"
                   aria-label="Favoritos"
-                  className="group relative flex h-10 w-10 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-11 sm:w-11"
+                  className="group relative flex h-8 w-8 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
                 >
                   <FiHeart
-                    className={`text-[1.28rem] transition duration-200 group-hover:text-[#19b7c9] sm:text-[1.38rem] ${
+                    className={`text-[1.12rem] transition duration-200 group-hover:text-[#19b7c9] sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem] ${
                       favoritesPulse ? "scale-125 text-[#19b7c9]" : ""
                     }`}
                   />
                   {favoritesCount > 0 && (
                     <span
-                      className={`absolute right-[0px] top-[0px] flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#19b7c9] px-1 text-[10px] font-bold text-white sm:h-5 sm:min-w-5 ${
+                      className={`absolute right-[-1px] top-[-2px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-[#19b7c9] px-1 text-[9px] font-bold text-white sm:h-[17px] sm:min-w-[17px] md:h-[18px] md:min-w-[18px] md:text-[10px] lg:h-5 lg:min-w-5 ${
                         favoritesPulse ? "scale-125" : ""
                       }`}
                     >
@@ -323,16 +323,16 @@ export default function Header() {
                 <Link
                   href="/carrito"
                   aria-label="Carrito"
-                  className="group relative flex h-10 w-10 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-11 sm:w-11"
+                  className="group relative flex h-8 w-8 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
                 >
                   <FiShoppingBag
-                    className={`text-[1.28rem] transition duration-200 group-hover:text-[#19b7c9] sm:text-[1.38rem] ${
+                    className={`text-[1.12rem] transition duration-200 group-hover:text-[#19b7c9] sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem] ${
                       cartPulse ? "scale-125 text-[#19b7c9]" : ""
                     }`}
                   />
                   {cartCount > 0 && (
                     <span
-                      className={`absolute right-[-1px] top-[-1px] flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-[#19b7c9] px-1 text-[10px] font-bold text-white sm:h-5 sm:min-w-5 ${
+                      className={`absolute right-[-1px] top-[-2px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-[#19b7c9] px-1 text-[9px] font-bold text-white sm:h-[17px] sm:min-w-[17px] md:h-[18px] md:min-w-[18px] md:text-[10px] lg:h-5 lg:min-w-5 ${
                         cartPulse ? "scale-125" : ""
                       }`}
                     >
@@ -352,16 +352,16 @@ export default function Header() {
                   : "max-h-0 border-transparent opacity-0"
               }`}
             >
-              <div className="flex items-center justify-center py-[7px]">
-                <div className="flex flex-wrap items-center justify-center gap-2 text-center text-[0.82rem] font-semibold text-[#19b7c9] sm:text-[0.86rem]">
+              <div className="flex items-center justify-center py-[6px] sm:py-[7px]">
+                <div className="flex flex-wrap items-center justify-center gap-2 text-center text-[0.74rem] font-semibold text-[#19b7c9] sm:text-[0.82rem] md:text-[0.86rem]">
                   <a
                     href={WHATSAPP_URL}
                     target="_blank"
                     rel="noreferrer"
                     aria-label="WhatsApp"
-                    className="group flex items-center gap-2 rounded-lg px-2 py-[2px] transition duration-200 hover:scale-110"
+                    className="group flex items-center gap-1.5 rounded-lg px-2 py-[2px] transition duration-200 hover:scale-110"
                   >
-                    <FaWhatsapp className="text-[0.82rem] transition duration-200 group-hover:text-[#0ea5b7]" />
+                    <FaWhatsapp className="text-[0.78rem] transition duration-200 group-hover:text-[#0ea5b7] sm:text-[0.82rem]" />
                     <span className="underline underline-offset-4">WhatsApp</span>
                   </a>
 
@@ -372,9 +372,9 @@ export default function Header() {
                     target="_blank"
                     rel="noreferrer"
                     aria-label="Messenger"
-                    className="group flex items-center gap-2 rounded-lg px-2 py-[2px] transition duration-200 hover:scale-110"
+                    className="group flex items-center gap-1.5 rounded-lg px-2 py-[2px] transition duration-200 hover:scale-110"
                   >
-                    <FaFacebookMessenger className="text-[0.8rem] transition duration-200 group-hover:text-[#0ea5b7]" />
+                    <FaFacebookMessenger className="text-[0.76rem] transition duration-200 group-hover:text-[#0ea5b7] sm:text-[0.8rem]" />
                     <span className="underline underline-offset-4">Messenger</span>
                   </a>
                 </div>
@@ -404,17 +404,17 @@ export default function Header() {
       />
 
       <aside
-        className={`fixed left-3 top-3 z-[90] h-[calc(100vh-24px)] w-[88%] max-w-[410px] overflow-hidden rounded-[34px] border border-[#d7eef7] bg-[#f8fcff] shadow-[0_24px_70px_rgba(20,50,80,0.18)] transition duration-300 select-none ${
+        className={`fixed left-2 top-2 z-[90] h-[calc(100dvh-16px)] w-[92%] max-w-[420px] overflow-hidden rounded-[32px] border border-[#d7eef7] bg-[#f8fcff] shadow-[0_24px_70px_rgba(20,50,80,0.18)] transition duration-300 select-none sm:left-3 sm:top-3 sm:h-[calc(100dvh-24px)] sm:w-[88%] sm:rounded-[34px] ${
           isMenuOpen ? "translate-x-0" : "-translate-x-[110%]"
         }`}
       >
         <div className="flex h-full flex-col">
-          <div className="flex items-center justify-between border-b border-[#e2f1f7] px-6 py-4">
+          <div className="flex shrink-0 items-center justify-between border-b border-[#e2f1f7] px-5 py-4 sm:px-6 sm:py-4">
             <div>
               <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#8aa5b4]">
                 Menú
               </p>
-              <h2 className="mt-1 text-[2rem] font-extrabold leading-none text-[#16324a]">
+              <h2 className="mt-1 text-[1.9rem] font-extrabold leading-none text-[#16324a] sm:text-[2rem]">
                 CosLess
               </h2>
             </div>
@@ -429,34 +429,34 @@ export default function Header() {
             </button>
           </div>
 
-          <nav className="flex-1 overflow-hidden px-5 py-2">
+          <nav className="min-h-0 flex-1 overflow-y-auto px-4 py-2 sm:px-5">
             <div className="grid gap-1">
               {menuCategories.map((item) => (
                 <Link
                   key={item.label}
                   href={item.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className="group flex min-h-[42px] items-center justify-between rounded-[16px] px-4 py-1.5 text-[1.08rem] font-extrabold text-[#16324a] transition duration-200 hover:bg-[#dff6ff] hover:text-[#149db0] active:scale-[0.99]"
+                  className="group flex min-h-[38px] items-center justify-between rounded-[16px] px-4 py-1 text-[1rem] font-extrabold text-[#16324a] transition duration-200 hover:bg-[#dff6ff] hover:text-[#149db0] active:scale-[0.99] sm:min-h-[40px] sm:py-1.5 sm:text-[1.05rem]"
                   style={{ WebkitUserSelect: "none", userSelect: "none" }}
                 >
                   <span className="leading-none">{item.label}</span>
 
                   <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#eefaff] text-[#19b7c9] transition duration-200 group-hover:bg-white group-hover:translate-x-1 group-hover:shadow-[0_6px_16px_rgba(25,183,201,0.18)]">
-                    <span className="text-[0.95rem] font-extrabold">→</span>
+                    <span className="text-[0.92rem] font-extrabold">→</span>
                   </span>
                 </Link>
               ))}
             </div>
           </nav>
 
-          <div className="border-t border-[#e2f1f7] bg-[#f2fbff] px-6 py-3">
+          <div className="shrink-0 border-t border-[#e2f1f7] bg-[#f2fbff] px-5 py-3 sm:px-6">
             {isLoggedIn ? (
-              <div className="space-y-4">
-                <div className="rounded-[24px] bg-white p-4 shadow-[0_6px_18px_rgba(22,50,74,0.05)]">
+              <div className="space-y-3">
+                <div className="rounded-[22px] bg-white p-3.5 shadow-[0_6px_18px_rgba(22,50,74,0.05)] sm:rounded-[24px] sm:p-4">
                   <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#8aa5b4]">
                     Tu cuenta
                   </p>
-                  <p className="mt-2 text-lg font-extrabold text-[#16324a]">
+                  <p className="mt-2 text-base font-extrabold text-[#16324a] sm:text-lg">
                     {sessionUser?.nickname || sessionUser?.fullName || "Mi cuenta"}
                   </p>
                   <p className="mt-1 break-all text-sm text-[#4b6b80]">
@@ -468,7 +468,7 @@ export default function Header() {
                   <Link
                     href="/account"
                     onClick={() => setIsMenuOpen(false)}
-                    className="rounded-2xl bg-white px-4 py-3 text-sm font-bold text-[#16324a] transition hover:bg-[#eaf8ff] hover:text-[#19b7c9]"
+                    className="rounded-2xl bg-white px-4 py-2.5 text-sm font-bold text-[#16324a] transition hover:bg-[#eaf8ff] hover:text-[#19b7c9]"
                   >
                     Mi perfil
                   </Link>
@@ -476,7 +476,7 @@ export default function Header() {
                   <Link
                     href="/account/orders"
                     onClick={() => setIsMenuOpen(false)}
-                    className="rounded-2xl bg-white px-4 py-3 text-sm font-bold text-[#16324a] transition hover:bg-[#eaf8ff] hover:text-[#19b7c9]"
+                    className="rounded-2xl bg-white px-4 py-2.5 text-sm font-bold text-[#16324a] transition hover:bg-[#eaf8ff] hover:text-[#19b7c9]"
                   >
                     Historial de pedidos
                   </Link>
@@ -484,25 +484,25 @@ export default function Header() {
                   <Link
                     href="/account/password"
                     onClick={() => setIsMenuOpen(false)}
-                    className="rounded-2xl bg-white px-4 py-3 text-sm font-bold text-[#16324a] transition hover:bg-[#eaf8ff] hover:text-[#19b7c9]"
+                    className="rounded-2xl bg-white px-4 py-2.5 text-sm font-bold text-[#16324a] transition hover:bg-[#eaf8ff] hover:text-[#19b7c9]"
                   >
                     Cambiar contraseña
                   </Link>
 
                   <a
                     href="/api/auth/logout"
-                    className="rounded-2xl bg-[#ffe9eb] px-4 py-3 text-sm font-bold text-[#d62839] transition hover:bg-[#ffd9dd]"
+                    className="rounded-2xl bg-[#ffe9eb] px-4 py-2.5 text-sm font-bold text-[#d62839] transition hover:bg-[#ffd9dd]"
                   >
                     Cerrar sesión
                   </a>
                 </div>
 
-                <div className="flex items-center gap-4 text-[#16324a]">
+                <div className="flex items-center gap-3 pt-1 text-[#16324a]">
                   <a
                     href={WHATSAPP_URL}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[1.25rem] shadow-[0_6px_18px_rgba(22,50,74,0.08)] transition hover:scale-110 hover:text-[#19b7c9]"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[1.2rem] shadow-[0_6px_18px_rgba(22,50,74,0.08)] transition hover:scale-110 hover:text-[#19b7c9]"
                     aria-label="WhatsApp"
                   >
                     <FaWhatsapp />
@@ -512,7 +512,7 @@ export default function Header() {
                     href={FACEBOOK_URL}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[1.25rem] shadow-[0_6px_18px_rgba(22,50,74,0.08)] transition hover:scale-110 hover:text-[#19b7c9]"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[1.2rem] shadow-[0_6px_18px_rgba(22,50,74,0.08)] transition hover:scale-110 hover:text-[#19b7c9]"
                     aria-label="Messenger"
                   >
                     <FaFacebookMessenger />
@@ -530,12 +530,12 @@ export default function Header() {
                   Acceso
                 </Link>
 
-                <div className="mt-3 flex items-center gap-4 text-[#16324a]">
+                <div className="mt-3 flex items-center gap-3 text-[#16324a]">
                   <a
                     href={WHATSAPP_URL}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[1.25rem] shadow-[0_6px_18px_rgba(22,50,74,0.08)] transition hover:scale-110 hover:text-[#19b7c9]"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[1.2rem] shadow-[0_6px_18px_rgba(22,50,74,0.08)] transition hover:scale-110 hover:text-[#19b7c9]"
                     aria-label="WhatsApp"
                   >
                     <FaWhatsapp />
@@ -545,7 +545,7 @@ export default function Header() {
                     href={FACEBOOK_URL}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[1.25rem] shadow-[0_6px_18px_rgba(22,50,74,0.08)] transition hover:scale-110 hover:text-[#19b7c9]"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[1.2rem] shadow-[0_6px_18px_rgba(22,50,74,0.08)] transition hover:scale-110 hover:text-[#19b7c9]"
                     aria-label="Messenger"
                   >
                     <FaFacebookMessenger />

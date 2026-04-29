@@ -14,6 +14,19 @@ type PageProps = {
   }>;
 };
 
+type ProductDetail = {
+  _id: string;
+  slug?: string;
+  title?: string;
+  category?: string;
+  status?: string;
+  description?: string;
+  price?: number;
+  stock?: number;
+  mainImage?: string;
+  images?: string[];
+};
+
 function formatBs(value?: number) {
   if (typeof value !== "number") return "Bs0";
   return `Bs${value}`;
@@ -30,7 +43,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  const product = JSON.parse(JSON.stringify(rawProduct));
+  const product: ProductDetail = JSON.parse(JSON.stringify(rawProduct));
 
   const rawRelatedProducts = await Product.find({
     _id: { $ne: product._id },
@@ -41,11 +54,14 @@ export default async function ProductDetailPage({ params }: PageProps) {
     .limit(8)
     .lean();
 
-  const relatedProducts = JSON.parse(JSON.stringify(rawRelatedProducts));
-
-  const galleryImages = [product.mainImage, ...(product.images || [])].filter(
-    Boolean
+  const relatedProducts: ProductDetail[] = JSON.parse(
+    JSON.stringify(rawRelatedProducts)
   );
+
+  const galleryImages: string[] = [
+    product.mainImage || "",
+    ...((product.images || []).filter((image: string) => Boolean(image))),
+  ].filter((image: string) => image.length > 0);
 
   return (
     <main className="min-h-screen bg-[#eef9ff] text-[#16324a]">
@@ -65,8 +81,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
           <div className="rounded-[30px] border border-[#cfeaf6] bg-[#f7fdff] p-5 shadow-[0_10px_30px_rgba(22,50,74,0.05)] sm:p-6">
             <div className="overflow-hidden rounded-[26px] border border-[#d9eef7] bg-white">
               <Image
-                src={product.mainImage}
-                alt={product.title}
+                src={product.mainImage || "/placeholder-product.png"}
+                alt={product.title || "Producto"}
                 width={1200}
                 height={1400}
                 className="h-auto w-full object-cover"
@@ -83,7 +99,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                   >
                     <Image
                       src={image}
-                      alt={`${product.title} ${index + 1}`}
+                      alt={`${product.title || "Producto"} ${index + 1}`}
                       width={300}
                       height={300}
                       className="h-[100px] w-full object-cover"
@@ -97,7 +113,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
           <div className="rounded-[30px] border border-[#cfeaf6] bg-[#f7fdff] p-6 shadow-[0_10px_30px_rgba(22,50,74,0.05)] sm:p-7">
             <div className="flex flex-wrap items-center gap-3">
               <span className="rounded-full bg-[#eaf8ff] px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-[#19b7c9]">
-                {product.category}
+                {product.category || "Sin categoría"}
               </span>
 
               <span
@@ -112,7 +128,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
             </div>
 
             <h1 className="mt-5 text-3xl font-extrabold leading-tight sm:text-4xl">
-              {product.title}
+              {product.title || "Sin título"}
             </h1>
 
             <div className="mt-5 flex flex-wrap items-end gap-4">
@@ -139,22 +155,25 @@ export default async function ProductDetailPage({ params }: PageProps) {
               <AddToCartButton
                 product={{
                   productId: String(product._id),
-                  title: product.title,
-                  price: product.price,
-                  mainImage: product.mainImage,
-                  slug: product.slug,
+                  title: product.title || "Producto",
+                  price: typeof product.price === "number" ? product.price : 0,
+                  mainImage:
+                    product.mainImage || "/placeholder-product.png",
+                  slug: product.slug || "",
                 }}
               />
 
               <AddToFavoritesButton
                 product={{
                   productId: String(product._id),
-                  title: product.title,
-                  price: product.price,
-                  mainImage: product.mainImage,
-                  slug: product.slug,
-                  category: product.category,
-                  status: product.status,
+                  title: product.title || "Producto",
+                  price: typeof product.price === "number" ? product.price : 0,
+                  mainImage:
+                    product.mainImage || "/placeholder-product.png",
+                  slug: product.slug || "",
+                  category: product.category || "Sin categoría",
+                  status:
+                    product.status === "preventa" ? "preventa" : "stock",
                 }}
               />
             </div>
@@ -184,16 +203,16 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 No hay productos relacionados todavía.
               </div>
             ) : (
-              relatedProducts.map((item: any) => (
+              relatedProducts.map((item: ProductDetail) => (
                 <Link
                   key={String(item._id)}
-                  href={`/producto/${item.slug}`}
+                  href={`/producto/${item.slug || ""}`}
                   className="rounded-[24px] bg-white p-4 transition duration-200 hover:-translate-y-1 hover:shadow-[0_14px_34px_rgba(22,50,74,0.10)]"
                 >
                   <div className="overflow-hidden rounded-[18px] bg-[#eef9ff]">
                     <Image
-                      src={item.mainImage}
-                      alt={item.title}
+                      src={item.mainImage || "/placeholder-product.png"}
+                      alt={item.title || "Producto"}
                       width={500}
                       height={600}
                       className="h-[260px] w-full object-cover"
@@ -202,11 +221,11 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
                   <div className="mt-4">
                     <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#6f8798]">
-                      {item.category}
+                      {item.category || "Sin categoría"}
                     </p>
 
                     <h3 className="mt-2 line-clamp-2 text-lg font-extrabold leading-7">
-                      {item.title}
+                      {item.title || "Sin título"}
                     </h3>
 
                     <div className="mt-3 flex items-center justify-between gap-3">

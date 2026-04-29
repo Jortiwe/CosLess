@@ -1,58 +1,45 @@
+"use client";
+
+import Image from "next/image";
+
 type AuthHeroProps = {
   mode: "login" | "register";
 };
 
 export default function AuthHero({ mode }: AuthHeroProps) {
   return (
-    <div className="relative h-full min-h-[520px] overflow-hidden rounded-[32px] border border-[#cfeaf6] bg-gradient-to-br from-[#9bdcff] via-[#74c9f3] to-[#29b8cd]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.28),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.18),transparent_28%)]" />
+    <div className="relative overflow-hidden rounded-[32px] border border-[#bfe3f3] bg-[#7dcff2] lg:h-[760px] min-h-[320px]">
+      {/* Imagen */}
+      <div className="absolute inset-0 overflow-hidden rounded-[32px]">
+        <Image
+          src="/images/auth/cosless-login-hero.png"
+          alt="CosLess cosplay hero"
+          fill
+          priority
+          className="
+            object-cover
+            object-center
+            scale-[1.045]
+            sm:scale-[1.035]
+            lg:scale-[1.02]
+          "
+        />
+      </div>
 
-      <div className="relative flex h-full flex-col justify-between p-8 lg:p-10 xl:p-12">
-        <div>
-          <div className="inline-flex rounded-full bg-white/20 px-4 py-2 text-sm font-semibold text-white backdrop-blur">
-            CosLess
-          </div>
+      {/* Capa suave encima para mejorar lectura */}
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(125,207,242,0.10)_0%,rgba(125,207,242,0.04)_35%,rgba(125,207,242,0.08)_100%)]" />
 
-          <div className="mt-8">
-            <div className="flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/20 text-2xl font-extrabold text-white backdrop-blur">
-                C
-              </div>
+      {/* Texto encima de la imagen */}
+      <div className="absolute left-5 top-5 z-10 max-w-[82%] sm:left-7 sm:top-7 lg:left-8 lg:top-8">
+        <h2 className="text-[40px] font-extrabold leading-[0.95] text-[#16324a] drop-shadow-[0_2px_10px_rgba(255,255,255,0.35)] sm:text-[52px] lg:text-[64px] xl:text-[72px]">
+  {mode === "login" ? "Inicia sesión" : "Crea tu cuenta"}
+</h2>
 
-              <div>
-                <p className="text-3xl font-extrabold tracking-wide text-white xl:text-4xl">
-                  CosLess
-                </p>
-                <p className="mt-1 text-sm uppercase tracking-[0.28em] text-white/80">
-                  Cosplay Store
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-10 max-w-[430px]">
-              <h2 className="text-5xl font-extrabold leading-[1.05] text-white xl:text-6xl">
-                {mode === "login" ? "Inicia sesión" : "Crea tu cuenta"}
-              </h2>
-
-              <p className="mt-5 text-lg leading-8 text-white/90">
-                {mode === "login"
-                  ? "Accede rápidamente a tu cuenta, tus favoritos y tu carrito."
-                  : "Regístrate para guardar tus productos, favoritos y pedidos."}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-10 flex items-end justify-start">
-          <div className="rounded-[26px] border border-white/25 bg-white/12 px-6 py-4 backdrop-blur-md">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-white/80">
-              Tienda cosplay
-            </p>
-            <p className="mt-2 text-sm text-white/90">
-              Acceso rápido y experiencia visual simple.
-            </p>
-          </div>
-        </div>
+<p className="mt-3 max-w-[420px] text-[16px] leading-8 text-[#2f5874] drop-shadow-[0_1px_8px_rgba(255,255,255,0.28)] sm:text-[18px] lg:mt-4 lg:text-[20px]">
+  {mode === "login"
+    ? "Accede rápidamente a tu cuenta, tus favoritos y tu carrito."
+    : "Regístrate para guardar tus productos, favoritos y pedidos."}
+</p>
       </div>
     </div>
   );

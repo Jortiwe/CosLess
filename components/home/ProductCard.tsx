@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 type ProductCardProps = {
   name: string;
   price: number;
@@ -17,9 +19,11 @@ export default function ProductCard({
     <article className="group overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md">
       <div className="relative">
         <div className="aspect-[4/5] w-full overflow-hidden bg-neutral-100">
-          <img
-            src={image}
+          <Image
+            src={image || "/placeholder-product.png"}
             alt={name}
+            width={600}
+            height={750}
             className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
           />
         </div>

@@ -2,6 +2,25 @@ import { NextResponse } from "next/server";
 import { connectDB } from "../../../lib/mongodb";
 import Product from "../../../models/Product";
 
+type SearchProduct = {
+  _id: string;
+  title?: string;
+  category?: string;
+  description?: string;
+  isActive?: boolean;
+  createdAt?: string | Date;
+};
+
+function normalizeText(value: unknown): string {
+  return String(value || "").toLowerCase();
+}
+
+function splitWords(value: unknown): string[] {
+  return normalizeText(value)
+    .split(/\s+/)
+    .filter((word: string) => word.length > 0);
+}
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -18,13 +37,16 @@ export async function GET(request: Request) {
 
     const normalized = q.toLowerCase();
 
-    const rawProducts = await Product.find({ isActive: true }).sort({ createdAt: -1 }).lean();
-    const products = JSON.parse(JSON.stringify(rawProducts));
+    const rawProducts = await Product.find({ isActive: true })
+      .sort({ createdAt: -1 })
+      .lean();
 
-    const exactMatches = products.filter((product: any) => {
-      const title = String(product.title || "").toLowerCase();
-      const category = String(product.category || "").toLowerCase();
-      const description = String(product.description || "").toLowerCase();
+    const products: SearchProduct[] = JSON.parse(JSON.stringify(rawProducts));
+
+    const exactMatches = products.filter((product: SearchProduct) => {
+      const title = normalizeText(product.title);
+      const category = normalizeText(product.category);
+      const description = normalizeText(product.description);
 
       return (
         title.includes(normalized) ||
@@ -33,30 +55,26 @@ export async function GET(request: Request) {
       );
     });
 
-    const relatedMatches = products.filter((product: any) => {
-      const titleWords = String(product.title || "")
-        .toLowerCase()
-        .split(/\s+/)
-        .filter(Boolean);
+    const relatedMatches = products.filter((product: SearchProduct) => {
+      const titleWords = splitWords(product.title);
+      const category = normalizeText(product.category);
+      const descriptionWords = splitWords(product.description);
+      const queryWords = splitWords(normalized);
 
-      const category = String(product.category || "").toLowerCase();
-      const descriptionWords = String(product.description || "")
-        .toLowerCase()
-        .split(/\s+/)
-        .filter(Boolean);
-
-      const queryWords = normalized.split(/\s+/).filter(Boolean);
-
-      const hasWordMatch = queryWords.some((word) => {
+      const hasWordMatch = queryWords.some((word: string) => {
         return (
-          titleWords.some((item: string) => item.includes(word) || word.includes(item)) ||
-          descriptionWords.some((item: string) => item.includes(word) || word.includes(item)) ||
+          titleWords.some(
+            (item: string) => item.includes(word) || word.includes(item)
+          ) ||
+          descriptionWords.some(
+            (item: string) => item.includes(word) || word.includes(item)
+          ) ||
           category.includes(word)
         );
       });
 
       const alreadyInExact = exactMatches.some(
-        (exact: any) => String(exact._id) === String(product._id)
+        (exact: SearchProduct) => String(exact._id) === String(product._id)
       );
 
       return hasWordMatch && !alreadyInExact;

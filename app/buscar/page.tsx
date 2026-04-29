@@ -11,9 +11,29 @@ type SearchPageProps = {
   }>;
 };
 
+type SearchProduct = {
+  _id: string;
+  slug?: string;
+  title?: string;
+  category?: string;
+  description?: string;
+  mainImage?: string;
+  price?: number;
+};
+
 function formatBs(value?: number) {
   if (typeof value !== "number") return "Bs0";
   return `Bs${value}`;
+}
+
+function normalizeText(value: unknown): string {
+  return String(value || "").toLowerCase();
+}
+
+function splitWords(value: unknown): string[] {
+  return normalizeText(value)
+    .split(/\s+/)
+    .filter((word: string) => word.length > 0);
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
@@ -26,13 +46,13 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     .sort({ createdAt: -1 })
     .lean();
 
-  const products = JSON.parse(JSON.stringify(rawProducts));
+  const products: SearchProduct[] = JSON.parse(JSON.stringify(rawProducts));
 
-  const exactMatches = query
-    ? products.filter((product: any) => {
-        const title = String(product.title || "").toLowerCase();
-        const category = String(product.category || "").toLowerCase();
-        const description = String(product.description || "").toLowerCase();
+  const exactMatches: SearchProduct[] = query
+    ? products.filter((product: SearchProduct) => {
+        const title = normalizeText(product.title);
+        const category = normalizeText(product.category);
+        const description = normalizeText(product.description);
 
         return (
           title.includes(query) ||
@@ -42,21 +62,12 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       })
     : [];
 
-  const relatedMatches = query
-    ? products.filter((product: any) => {
-        const titleWords = String(product.title || "")
-          .toLowerCase()
-          .split(/\s+/)
-          .filter(Boolean);
-
-        const category = String(product.category || "").toLowerCase();
-
-        const descriptionWords = String(product.description || "")
-          .toLowerCase()
-          .split(/\s+/)
-          .filter(Boolean);
-
-        const queryWords = query.split(/\s+/).filter(Boolean);
+  const relatedMatches: SearchProduct[] = query
+    ? products.filter((product: SearchProduct) => {
+        const titleWords = splitWords(product.title);
+        const category = normalizeText(product.category);
+        const descriptionWords = splitWords(product.description);
+        const queryWords = splitWords(query);
 
         const hasWordMatch = queryWords.some((word: string) => {
           return (
@@ -71,7 +82,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         });
 
         const alreadyInExact = exactMatches.some(
-          (exact: any) => String(exact._id) === String(product._id)
+          (exact: SearchProduct) => String(exact._id) === String(product._id)
         );
 
         return hasWordMatch && !alreadyInExact;
@@ -109,25 +120,25 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                   No hay coincidencias directas.
                 </div>
               ) : (
-                exactMatches.map((product: any) => (
+                exactMatches.map((product: SearchProduct) => (
                   <Link
                     key={product._id}
-                    href={`/producto/${product.slug}`}
+                    href={`/producto/${product.slug || ""}`}
                     className="rounded-[24px] bg-white p-5 transition hover:-translate-y-1"
                   >
                     <Image
-                      src={product.mainImage}
-                      alt={product.title}
+                      src={product.mainImage || "/placeholder-product.png"}
+                      alt={product.title || "Producto"}
                       width={400}
                       height={400}
                       className="h-[220px] w-full rounded-2xl object-cover"
                     />
 
                     <h3 className="mt-4 text-xl font-extrabold">
-                      {product.title}
+                      {product.title || "Sin título"}
                     </h3>
                     <p className="mt-2 text-sm text-[#4b6b80]">
-                      {product.category}
+                      {product.category || "Sin categoría"}
                     </p>
                     <p className="mt-3 text-lg font-extrabold text-[#19b7c9]">
                       {formatBs(product.price)}
@@ -147,25 +158,25 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                   No hay productos relacionados.
                 </div>
               ) : (
-                relatedMatches.map((product: any) => (
+                relatedMatches.map((product: SearchProduct) => (
                   <Link
                     key={product._id}
-                    href={`/producto/${product.slug}`}
+                    href={`/producto/${product.slug || ""}`}
                     className="rounded-[24px] bg-white p-5 transition hover:-translate-y-1"
                   >
                     <Image
-                      src={product.mainImage}
-                      alt={product.title}
+                      src={product.mainImage || "/placeholder-product.png"}
+                      alt={product.title || "Producto"}
                       width={400}
                       height={400}
                       className="h-[220px] w-full rounded-2xl object-cover"
                     />
 
                     <h3 className="mt-4 text-xl font-extrabold">
-                      {product.title}
+                      {product.title || "Sin título"}
                     </h3>
                     <p className="mt-2 text-sm text-[#4b6b80]">
-                      {product.category}
+                      {product.category || "Sin categoría"}
                     </p>
                     <p className="mt-3 text-lg font-extrabold text-[#19b7c9]">
                       {formatBs(product.price)}
