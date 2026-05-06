@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 
@@ -16,6 +16,7 @@ type CartItem = {
 };
 
 const CART_KEY = "cosless_cart";
+const DIRECT_CHECKOUT_KEY = "cosless_direct_checkout";
 
 const shippingRates: Record<string, number> = {
   "La Paz": 18,
@@ -43,6 +44,8 @@ const departments = [
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isDirectCheckout = searchParams.get("direct") === "1";
 
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [customerName, setCustomerName] = useState("");
@@ -59,18 +62,25 @@ export default function CheckoutPage() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
 
     try {
-      const savedCart = localStorage.getItem(CART_KEY);
+      const storageKey = isDirectCheckout ? DIRECT_CHECKOUT_KEY : CART_KEY;
+      const savedCart = isDirectCheckout
+        ? sessionStorage.getItem(storageKey)
+        : localStorage.getItem(storageKey);
+
       if (savedCart) {
-        setCartItems(JSON.parse(savedCart));
+        const parsed = JSON.parse(savedCart);
+
+        if (Array.isArray(parsed)) {
+          setCartItems(parsed);
+        }
       }
     } catch (error) {
-      console.error("Error leyendo carrito:", error);
+      console.error("Error leyendo productos del checkout:", error);
     }
-  }, []);
+  }, [isDirectCheckout]);
 
   const shippingCost = useMemo(() => {
     if (shippingType === "pickup") return 0;
@@ -105,7 +115,7 @@ export default function CheckoutPage() {
     }
 
     if (cartItems.length === 0) {
-      setErrorText("No hay productos en el carrito.");
+      setErrorText("No hay productos para finalizar el pedido.");
       return;
     }
 
@@ -141,7 +151,14 @@ export default function CheckoutPage() {
       }
 
       setSuccessText(`Pedido creado: ${data.order.orderCode}`);
-      localStorage.removeItem(CART_KEY);
+
+      if (isDirectCheckout) {
+        sessionStorage.removeItem(DIRECT_CHECKOUT_KEY);
+      } else {
+        localStorage.removeItem(CART_KEY);
+        window.dispatchEvent(new Event("cosless-cart-updated"));
+      }
+
       setCartItems([]);
 
       const phone = "59160769356";
@@ -170,13 +187,15 @@ export default function CheckoutPage() {
             ← Volver
           </button>
 
-          <button
-            type="button"
-            onClick={() => router.push("/carrito")}
-            className="inline-flex items-center justify-center rounded-2xl border border-[#cfeaf6] bg-[#f7fdff] px-5 py-3 text-sm font-bold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9]"
-          >
-            Ir al carrito
-          </button>
+          {!isDirectCheckout && (
+            <button
+              type="button"
+              onClick={() => router.push("/carrito")}
+              className="inline-flex items-center justify-center rounded-2xl border border-[#cfeaf6] bg-[#f7fdff] px-5 py-3 text-sm font-bold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9]"
+            >
+              Ir al carrito
+            </button>
+          )}
         </div>
 
         <div className="grid gap-8 xl:grid-cols-[1.1fr_0.9fr]">
@@ -185,13 +204,14 @@ export default function CheckoutPage() {
               <span className="inline-flex rounded-full bg-[#dff4ff] px-4 py-2 text-sm font-semibold text-[#19b7c9]">
                 Finalizar pedido
               </span>
+
               <h1 className="mt-4 text-3xl font-extrabold leading-tight sm:text-4xl">
                 Completa tus datos para enviar tu pedido por WhatsApp
               </h1>
+
               <p className="mt-3 max-w-2xl text-[15px] leading-7 text-[#4b6b80] sm:text-base">
-                Aquí vas a confirmar tus datos, departamento y entrega. Luego se
-                generará tu pedido automáticamente y se abrirá WhatsApp con el
-                mensaje listo.
+                Confirma tus datos de contacto y entrega. Luego se abrirá
+                WhatsApp con el mensaje listo.
               </p>
             </div>
 
@@ -333,6 +353,7 @@ export default function CheckoutPage() {
             <h2 className="text-2xl font-extrabold text-[#16324a]">
               Resumen del pedido
             </h2>
+
             <p className="mt-2 text-sm leading-6 text-[#4b6b80]">
               Revisa tus productos antes de enviarlos por WhatsApp.
             </p>
@@ -356,9 +377,11 @@ export default function CheckoutPage() {
                       <h3 className="text-base font-bold leading-6 text-[#16324a]">
                         {item.title}
                       </h3>
+
                       <p className="mt-2 text-sm text-[#4b6b80]">
                         Cantidad: {item.quantity}
                       </p>
+
                       <p className="mt-2 text-base font-extrabold text-[#19b7c9]">
                         Bs{item.price * item.quantity}
                       </p>
@@ -367,7 +390,7 @@ export default function CheckoutPage() {
                 ))
               ) : (
                 <div className="rounded-2xl border border-[#d9eef7] bg-white px-4 py-5 text-sm text-[#4b6b80]">
-                  No hay productos en el carrito.
+                  No hay productos para finalizar el pedido.
                 </div>
               )}
             </div>
@@ -389,11 +412,6 @@ export default function CheckoutPage() {
                 <span>Total</span>
                 <span>Bs{total}</span>
               </div>
-            </div>
-
-            <div className="mt-5 rounded-2xl bg-[#eaf8ff] px-4 py-3 text-sm leading-6 text-[#4b6b80]">
-              El stock no se descuenta al añadir al carrito. Se descuenta cuando
-              el pedido sea confirmado o pagado.
             </div>
           </aside>
         </div>

@@ -12,11 +12,7 @@ export default async function ProductsPage() {
   await connectDB();
 
   const rawProducts = await Product.find({
-    $or: [
-      { isActive: true },
-      { active: true },
-      { isActive: { $exists: false } },
-    ],
+    isActive: true,
   })
     .sort({ createdAt: -1 })
     .lean();
@@ -30,7 +26,7 @@ export default async function ProductsPage() {
       <section className="mx-auto w-full max-w-[1380px] px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-6">
           <span className="inline-flex rounded-full bg-[#dff4ff] px-4 py-2 text-sm font-bold text-[#19b7c9]">
-            Catálogo
+            Ver todo
           </span>
 
           <h1 className="mt-4 text-[2.3rem] font-extrabold leading-tight sm:text-[3rem]">

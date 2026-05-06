@@ -12,11 +12,13 @@ const ProductSchema = new Schema(
       required: true,
       unique: true,
       trim: true,
+      lowercase: true,
     },
     category: {
       type: String,
       required: true,
-      enum: ["cosplays", "pelucas", "lentes", "mallas", "accesorios", "preventa"],
+      trim: true,
+      lowercase: true,
     },
     status: {
       type: String,
@@ -27,6 +29,11 @@ const ProductSchema = new Schema(
     price: {
       type: Number,
       required: true,
+      min: 0,
+    },
+    oldPrice: {
+      type: Number,
+      default: 0,
       min: 0,
     },
     stock: {
@@ -53,6 +60,14 @@ const ProductSchema = new Schema(
       default: "",
     },
     isFeatured: {
+      type: Boolean,
+      default: false,
+    },
+    isOffer: {
+      type: Boolean,
+      default: false,
+    },
+    isWeeklyNew: {
       type: Boolean,
       default: false,
     },

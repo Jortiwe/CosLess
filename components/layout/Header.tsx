@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   FiHeart,
   FiLogOut,
@@ -48,18 +55,18 @@ const FACEBOOK_URL =
   encodeURIComponent("Hola, quiero consultar sobre la tienda CosLess.");
 
 const menuCategories = [
-  { label: "Ver todo", href: "/buscar?q=" },
-  { label: "Cosplays", href: "/buscar?q=cosplays" },
-  { label: "Pelucas", href: "/buscar?q=pelucas" },
-  { label: "Lentes", href: "/buscar?q=lentes" },
-  { label: "Mallas", href: "/buscar?q=mallas" },
-  { label: "Accesorios", href: "/buscar?q=accesorios" },
-  { label: "Preventa", href: "/buscar?q=preventa" },
-  { label: "Novedades", href: "/buscar?q=novedades" },
-  { label: "Ofertas", href: "/buscar?q=ofertas" },
+  { label: "Ver todo", href: "/productos" },
+  { label: "Cosplays", href: "/categoria/cosplays" },
+  { label: "Pelucas", href: "/categoria/pelucas" },
+  { label: "Lentes", href: "/categoria/lentes" },
+  { label: "Mallas", href: "/categoria/mallas" },
+  { label: "Accesorios", href: "/categoria/accesorios" },
+  { label: "Preventa", href: "/categoria/preventa" },
+  { label: "Novedades", href: "/novedades" },
+  { label: "Ofertas", href: "/promociones" },
 ];
 
-export default function Header() {
+function HeaderContent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -618,5 +625,13 @@ export default function Header() {
         </div>
       </aside>
     </>
+  );
+}
+
+export default function Header() {
+  return (
+    <Suspense fallback={null}>
+      <HeaderContent />
+    </Suspense>
   );
 }

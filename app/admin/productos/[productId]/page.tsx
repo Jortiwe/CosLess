@@ -4,6 +4,8 @@ import Product from "../../../../models/Product";
 import AdminBackButton from "../../../../components/admin/AdminBackButton";
 import ProductForm from "../../../../components/admin/ProductForm";
 
+export const dynamic = "force-dynamic";
+
 type PageProps = {
   params: Promise<{
     productId: string;

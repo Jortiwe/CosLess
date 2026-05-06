@@ -10,11 +10,14 @@ type ProductType = {
   category?: string;
   status?: string;
   price?: number;
+  oldPrice?: number;
   stock?: number;
   mainImage?: string;
   images?: string[];
   description?: string;
   isFeatured?: boolean;
+  isOffer?: boolean;
+  isWeeklyNew?: boolean;
   isActive?: boolean;
 };
 
@@ -42,11 +45,14 @@ export default function ProductForm({ mode, product }: Props) {
   const [category, setCategory] = useState(product?.category || "cosplays");
   const [status, setStatus] = useState(product?.status || "stock");
   const [price, setPrice] = useState(String(product?.price ?? 0));
+  const [oldPrice, setOldPrice] = useState(String(product?.oldPrice ?? 0));
   const [stock, setStock] = useState(String(product?.stock ?? 0));
   const [mainImage, setMainImage] = useState(product?.mainImage || "");
   const [images, setImages] = useState((product?.images || []).join("\n"));
   const [description, setDescription] = useState(product?.description || "");
   const [isFeatured, setIsFeatured] = useState(Boolean(product?.isFeatured));
+  const [isOffer, setIsOffer] = useState(Boolean(product?.isOffer));
+  const [isWeeklyNew, setIsWeeklyNew] = useState(Boolean(product?.isWeeklyNew));
   const [isActive, setIsActive] = useState(
     product?.isActive === undefined ? true : Boolean(product.isActive)
   );
@@ -64,6 +70,7 @@ export default function ProductForm({ mode, product }: Props) {
         category,
         status,
         price: Number(price),
+        oldPrice: Number(oldPrice),
         stock: Number(stock),
         mainImage,
         images: images
@@ -72,13 +79,13 @@ export default function ProductForm({ mode, product }: Props) {
           .filter(Boolean),
         description,
         isFeatured,
+        isOffer,
+        isWeeklyNew,
         isActive,
       };
 
       const url =
-        mode === "create"
-          ? "/api/products"
-          : `/api/products/${product?._id}`;
+        mode === "create" ? "/api/products" : `/api/products/${product?._id}`;
 
       const method = mode === "create" ? "POST" : "PATCH";
 
@@ -172,12 +179,25 @@ export default function ProductForm({ mode, product }: Props) {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-bold">Precio</label>
+          <label className="mb-2 block text-sm font-bold">Precio actual</label>
           <input
             type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none"
+          />
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-bold">
+            Precio anterior
+          </label>
+          <input
+            type="number"
+            value={oldPrice}
+            onChange={(e) => setOldPrice(e.target.value)}
+            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none"
+            placeholder="Opcional para ofertas"
           />
         </div>
 
@@ -192,7 +212,9 @@ export default function ProductForm({ mode, product }: Props) {
         </div>
 
         <div className="md:col-span-2">
-          <label className="mb-2 block text-sm font-bold">Imagen principal</label>
+          <label className="mb-2 block text-sm font-bold">
+            Imagen principal
+          </label>
           <input
             value={mainImage}
             onChange={(e) => setMainImage(e.target.value)}
@@ -223,23 +245,49 @@ export default function ProductForm({ mode, product }: Props) {
           />
         </div>
 
-        <label className="flex items-center gap-3 rounded-2xl bg-white px-4 py-4">
-          <input
-            type="checkbox"
-            checked={isFeatured}
-            onChange={(e) => setIsFeatured(e.target.checked)}
-          />
-          <span className="font-semibold">Producto destacado</span>
-        </label>
+        <div className="md:col-span-2">
+          <p className="mb-3 text-sm font-bold text-[#16324a]">
+            Secciones de la tienda
+          </p>
 
-        <label className="flex items-center gap-3 rounded-2xl bg-white px-4 py-4">
-          <input
-            type="checkbox"
-            checked={isActive}
-            onChange={(e) => setIsActive(e.target.checked)}
-          />
-          <span className="font-semibold">Producto activo</span>
-        </label>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <label className="flex items-center gap-3 rounded-2xl bg-white px-4 py-4">
+              <input
+                type="checkbox"
+                checked={isOffer}
+                onChange={(e) => setIsOffer(e.target.checked)}
+              />
+              <span className="font-semibold">Oferta</span>
+            </label>
+
+            <label className="flex items-center gap-3 rounded-2xl bg-white px-4 py-4">
+              <input
+                type="checkbox"
+                checked={isWeeklyNew}
+                onChange={(e) => setIsWeeklyNew(e.target.checked)}
+              />
+              <span className="font-semibold">Nuevo semanal</span>
+            </label>
+
+            <label className="flex items-center gap-3 rounded-2xl bg-white px-4 py-4">
+              <input
+                type="checkbox"
+                checked={isFeatured}
+                onChange={(e) => setIsFeatured(e.target.checked)}
+              />
+              <span className="font-semibold">Producto destacado</span>
+            </label>
+
+            <label className="flex items-center gap-3 rounded-2xl bg-white px-4 py-4">
+              <input
+                type="checkbox"
+                checked={isActive}
+                onChange={(e) => setIsActive(e.target.checked)}
+              />
+              <span className="font-semibold">Producto activo</span>
+            </label>
+          </div>
+        </div>
       </div>
 
       {message && (

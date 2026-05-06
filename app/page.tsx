@@ -4,74 +4,75 @@ import Categories from "../components/home/Categories";
 import HomeIntro from "../components/home/HomeIntro";
 import HomeProductRail from "../components/home/HomeProductRail";
 import Footer from "../components/layout/Footer";
+import { connectDB } from "../lib/mongodb";
+import Product from "../models/Product";
 
-const offerProducts = [
-  {
-    title: "Oferta especial de cosplay fantasy",
-    oldPrice: "Bs483,59",
-    price: "Bs310,88",
-    image: "/images/home/offer-1.png",
-    href: "/productos",
-    badge: "Oferta",
-  },
-  {
-    title: "Cosplay en descuento limitado",
-    oldPrice: "Bs566,49",
-    price: "Bs407,60",
-    image: "/images/home/offer-2.png",
-    href: "/productos",
-    badge: "Oferta",
-  },
-  {
-    title: "Accesorios seleccionados en promoción",
-    oldPrice: "Bs180,00",
-    price: "Bs125,00",
-    image: "/images/home/offer-3.png",
-    href: "/productos",
-    badge: "Promo",
-  },
-  {
-    title: "Peluca edición especial",
-    oldPrice: "Bs250,00",
-    price: "Bs189,00",
-    image: "/images/home/offer-4.png",
-    href: "/productos",
-    badge: "Oferta",
-  },
-];
+export const dynamic = "force-dynamic";
 
-const weeklyProducts = [
-  {
-    title: "Lanzamiento semanal de cosplay",
-    price: "Desde Bs117,44",
-    image: "/images/home/weekly-1.png",
-    href: "/productos",
-    badge: "Nuevo",
-  },
-  {
-    title: "Nuevo outfit cosplay disponible",
-    price: "Bs587,22",
-    image: "/images/home/weekly-2.png",
-    href: "/productos",
-    badge: "Nuevo",
-  },
-  {
-    title: "Nuevo ingreso de accesorios",
-    price: "Desde Bs85,00",
-    image: "/images/home/weekly-3.png",
-    href: "/productos",
-    badge: "Nuevo",
-  },
-  {
-    title: "Cosplay bajo pedido semanal",
-    price: "Consultar",
-    image: "/images/home/weekly-4.png",
-    href: "/productos",
-    badge: "Preventa",
-  },
-];
+type RawProduct = {
+  title?: string;
+  slug?: string;
+  price?: number;
+  oldPrice?: number;
+  mainImage?: string;
+  images?: string[];
+  status?: string;
+};
 
-export default function HomePage() {
+function formatBs(value?: number) {
+  if (typeof value !== "number") return "Consultar";
+  return `Bs${value.toFixed(2)}`;
+}
+
+function formatProduct(product: RawProduct, fallbackBadge: string) {
+  return {
+    title: product.title || "Producto",
+    price: formatBs(product.price),
+    oldPrice:
+      typeof product.oldPrice === "number" && product.oldPrice > 0
+        ? formatBs(product.oldPrice)
+        : undefined,
+    image:
+      product.mainImage ||
+      product.images?.[0] ||
+      "/placeholder-product.png",
+    href: product.slug ? `/producto/${product.slug}` : "/productos",
+    badge:
+      product.status === "preventa"
+        ? "Preventa"
+        : fallbackBadge,
+  };
+}
+
+export default async function HomePage() {
+  await connectDB();
+
+  const [offerRawProducts, weeklyRawProducts] = await Promise.all([
+    Product.find({
+      isActive: true,
+      isOffer: true,
+    })
+      .sort({ updatedAt: -1, createdAt: -1 })
+      .limit(10)
+      .lean(),
+
+    Product.find({
+      isActive: true,
+      isWeeklyNew: true,
+    })
+      .sort({ updatedAt: -1, createdAt: -1 })
+      .limit(10)
+      .lean(),
+  ]);
+
+  const offerProducts = JSON.parse(JSON.stringify(offerRawProducts)).map(
+    (product: RawProduct) => formatProduct(product, "Oferta")
+  );
+
+  const weeklyProducts = JSON.parse(JSON.stringify(weeklyRawProducts)).map(
+    (product: RawProduct) => formatProduct(product, "Nuevo")
+  );
+
   return (
     <main className="min-h-screen bg-[#eef9ff] text-[#16324a]">
       <Header />
@@ -81,19 +82,23 @@ export default function HomePage() {
 
         <Categories />
 
-        <HomeProductRail
-          title="Ofertas"
-          subtitle="Productos seleccionados con precios especiales."
-          products={offerProducts}
-          viewAllHref="/productos"
-        />
+        {offerProducts.length > 0 && (
+          <HomeProductRail
+            title="Ofertas"
+            subtitle="Productos seleccionados con precios especiales."
+            products={offerProducts}
+            viewAllHref="/productos?section=ofertas"
+          />
+        )}
 
-        <HomeProductRail
-          title="Nuevos semanales"
-          subtitle="Ingresos recientes y productos destacados de la semana."
-          products={weeklyProducts}
-          viewAllHref="/productos"
-        />
+        {weeklyProducts.length > 0 && (
+          <HomeProductRail
+            title="Nuevos semanales"
+            subtitle="Ingresos recientes y productos destacados de la semana."
+            products={weeklyProducts}
+            viewAllHref="/productos?section=nuevos"
+          />
+        )}
 
         <HomeIntro />
       </div>

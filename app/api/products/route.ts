@@ -5,6 +5,7 @@ import Product from "../../../models/Product";
 export async function GET() {
   try {
     await connectDB();
+
     const products = await Product.find().sort({ createdAt: -1 }).lean();
 
     return NextResponse.json({
@@ -31,12 +32,15 @@ export async function POST(request: Request) {
       slug: body.slug,
       category: body.category,
       status: body.status,
-      price: body.price,
-      stock: body.stock,
+      price: Number(body.price || 0),
+      oldPrice: Number(body.oldPrice || 0),
+      stock: Number(body.stock || 0),
       mainImage: body.mainImage,
       images: body.images || [],
       description: body.description || "",
       isFeatured: Boolean(body.isFeatured),
+      isOffer: Boolean(body.isOffer),
+      isWeeklyNew: Boolean(body.isWeeklyNew),
       isActive: body.isActive !== false,
     });
 

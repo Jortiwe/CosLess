@@ -25,12 +25,15 @@ export async function PATCH(
     product.slug = body.slug;
     product.category = body.category;
     product.status = body.status;
-    product.price = body.price;
-    product.stock = body.stock;
+    product.price = Number(body.price || 0);
+    product.oldPrice = Number(body.oldPrice || 0);
+    product.stock = Number(body.stock || 0);
     product.mainImage = body.mainImage;
     product.images = body.images || [];
     product.description = body.description || "";
     product.isFeatured = Boolean(body.isFeatured);
+    product.isOffer = Boolean(body.isOffer);
+    product.isWeeklyNew = Boolean(body.isWeeklyNew);
     product.isActive = body.isActive !== false;
 
     await product.save();

@@ -1,6 +1,8 @@
 import AdminBackButton from "../../../../components/admin/AdminBackButton";
 import ProductForm from "../../../../components/admin/ProductForm";
 
+export const dynamic = "force-dynamic";
+
 export default function NewProductPage() {
   return (
     <main className="min-h-screen bg-[#eef9ff] px-5 py-8 text-[#16324a] sm:px-8 lg:px-12">
