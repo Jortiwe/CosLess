@@ -86,15 +86,23 @@ export default async function ProductPage({ params }: PageProps) {
     .map((image) => getSafeImage(image))
     .filter(Boolean);
 
-  const checkoutProduct = {
-    productId: product._id,
-    title: product.title,
-    price: product.price,
-    mainImage,
-    slug: product.slug,
-    stock: typeof product.stock === "number" ? product.stock : 0,
-    status: product.status === "preventa" ? "preventa" : "stock",
-  };
+const checkoutProduct: {
+  productId: string;
+  title: string;
+  price: number;
+  mainImage: string;
+  slug?: string;
+  stock?: number;
+  status?: "stock" | "preventa";
+} = {
+  productId: product._id,
+  title: product.title,
+  price: product.price,
+  mainImage,
+  slug: product.slug,
+  stock: typeof product.stock === "number" ? product.stock : 0,
+  status: product.status === "preventa" ? "preventa" : "stock",
+};
 
   const isPreventa = product.status === "preventa";
   const stock = typeof product.stock === "number" ? product.stock : 0;
