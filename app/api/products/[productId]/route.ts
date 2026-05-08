@@ -2,6 +2,16 @@ import { NextResponse } from "next/server";
 import { connectDB } from "../../../../lib/mongodb";
 import Product from "../../../../models/Product";
 
+function cleanImage(value: unknown) {
+  const image = String(value || "").trim();
+
+  if (!image) {
+    return "/placeholder-product.png";
+  }
+
+  return image;
+}
+
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ productId: string }> }
@@ -21,16 +31,21 @@ export async function PATCH(
       );
     }
 
-    product.title = body.title;
-    product.slug = body.slug;
-    product.category = body.category;
-    product.status = body.status;
+    product.title = String(body.title || "").trim();
+    product.slug = String(body.slug || "").trim().toLowerCase();
+    product.category = String(body.category || "").trim().toLowerCase();
+    product.status = body.status === "preventa" ? "preventa" : "stock";
     product.price = Number(body.price || 0);
     product.oldPrice = Number(body.oldPrice || 0);
     product.stock = Number(body.stock || 0);
-    product.mainImage = body.mainImage;
-    product.images = body.images || [];
-    product.description = body.description || "";
+    product.mainImage = cleanImage(body.mainImage);
+    product.images = Array.isArray(body.images)
+      ? body.images
+          .map((image: unknown) => cleanImage(image))
+          .filter((image: string) => image !== "/placeholder-product.png")
+          .slice(0, 5)
+      : [];
+    product.description = String(body.description || "");
     product.isFeatured = Boolean(body.isFeatured);
     product.isOffer = Boolean(body.isOffer);
     product.isWeeklyNew = Boolean(body.isWeeklyNew);
@@ -46,7 +61,10 @@ export async function PATCH(
     console.error("Error actualizando producto:", error);
 
     return NextResponse.json(
-      { error: "No se pudo actualizar el producto." },
+      {
+        error: "No se pudo actualizar el producto.",
+        detail: error instanceof Error ? error.message : "Error desconocido",
+      },
       { status: 500 }
     );
   }

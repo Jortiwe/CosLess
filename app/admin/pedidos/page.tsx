@@ -2,6 +2,9 @@ import Link from "next/link";
 import { connectDB } from "../../../lib/mongodb";
 import Order from "../../../models/Order";
 import AdminBackButton from "../../../components/admin/AdminBackButton";
+import DeleteOrderButton from "../../../components/admin/DeleteOrderButton";
+
+export const dynamic = "force-dynamic";
 
 type OrderItem = {
   _id: string;
@@ -10,6 +13,7 @@ type OrderItem = {
   customerPhone?: string;
   total?: number;
   status?: string;
+  inventoryDeducted?: boolean;
   createdAt?: string | Date;
 };
 
@@ -22,6 +26,7 @@ function formatDate(dateValue?: string | Date) {
   if (!dateValue) return "Sin fecha";
 
   const date = new Date(dateValue);
+
   return date.toLocaleString("es-BO", {
     year: "numeric",
     month: "2-digit",
@@ -103,6 +108,7 @@ export default async function AdminOrdersPage() {
                   <th className="px-3 py-2">Teléfono</th>
                   <th className="px-3 py-2">Total</th>
                   <th className="px-3 py-2">Estado</th>
+                  <th className="px-3 py-2">Stock</th>
                   <th className="px-3 py-2">Fecha</th>
                   <th className="px-3 py-2">Acción</th>
                 </tr>
@@ -112,7 +118,7 @@ export default async function AdminOrdersPage() {
                 {orders.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={7}
+                      colSpan={8}
                       className="rounded-2xl bg-white px-4 py-6 text-sm text-[#4b6b80]"
                     >
                       No hay pedidos todavía.
@@ -124,15 +130,19 @@ export default async function AdminOrdersPage() {
                       <td className="rounded-l-2xl px-3 py-4 font-bold">
                         {order.orderCode || "Sin código"}
                       </td>
+
                       <td className="px-3 py-4">
                         {order.customerName || "Sin cliente"}
                       </td>
+
                       <td className="px-3 py-4">
                         {order.customerPhone || "Sin teléfono"}
                       </td>
+
                       <td className="px-3 py-4 font-semibold">
                         {formatBs(order.total)}
                       </td>
+
                       <td className="px-3 py-4">
                         <span
                           className={`inline-flex rounded-full border px-3 py-1 text-xs font-bold ${statusClass(
@@ -142,16 +152,37 @@ export default async function AdminOrdersPage() {
                           {statusLabel(order.status)}
                         </span>
                       </td>
+
+                      <td className="px-3 py-4">
+                        {order.inventoryDeducted ? (
+                          <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
+                            Descontado
+                          </span>
+                        ) : (
+                          <span className="inline-flex rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-bold text-gray-600">
+                            Sin descontar
+                          </span>
+                        )}
+                      </td>
+
                       <td className="px-3 py-4 text-sm text-[#4b6b80]">
                         {formatDate(order.createdAt)}
                       </td>
+
                       <td className="rounded-r-2xl px-3 py-4">
-                        <Link
-                          href={`/admin/pedidos/${order._id}`}
-                          className="inline-flex rounded-xl bg-[#19b7c9] px-4 py-2 text-sm font-bold text-white"
-                        >
-                          Ver / editar
-                        </Link>
+                        <div className="flex flex-wrap gap-2">
+                          <Link
+                            href={`/admin/pedidos/${order._id}`}
+                            className="inline-flex rounded-xl bg-[#19b7c9] px-4 py-2 text-sm font-bold text-white"
+                          >
+                            Ver / editar
+                          </Link>
+
+                          <DeleteOrderButton
+                            orderId={order._id}
+                            orderCode={order.orderCode}
+                          />
+                        </div>
                       </td>
                     </tr>
                   ))

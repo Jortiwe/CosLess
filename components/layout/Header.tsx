@@ -62,8 +62,8 @@ const menuCategories = [
   { label: "Mallas", href: "/categoria/mallas" },
   { label: "Accesorios", href: "/categoria/accesorios" },
   { label: "Preventa", href: "/categoria/preventa" },
-  { label: "Novedades", href: "/novedades" },
-  { label: "Ofertas", href: "/promociones" },
+  { label: "Novedades", href: "/productos?section=nuevos" },
+  { label: "Ofertas", href: "/productos?section=ofertas" },
 ];
 
 function HeaderContent() {

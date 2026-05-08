@@ -43,7 +43,8 @@ const ProductSchema = new Schema(
     },
     mainImage: {
       type: String,
-      required: true,
+      default: "/placeholder-product.png",
+      trim: true,
     },
     images: {
       type: [String],

@@ -35,7 +35,7 @@ export async function POST(request: Request) {
       price: Number(body.price || 0),
       oldPrice: Number(body.oldPrice || 0),
       stock: Number(body.stock || 0),
-      mainImage: body.mainImage,
+      mainImage: String(body.mainImage || "").trim() || "/placeholder-product.png",
       images: body.images || [],
       description: body.description || "",
       isFeatured: Boolean(body.isFeatured),

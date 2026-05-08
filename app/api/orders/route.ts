@@ -40,7 +40,9 @@ Teléfono: ${order.customerPhone}
 Correo: ${order.customerEmail || "No especificado"}
 
 Departamento: ${order.shippingDepartment}
-Ciudad/Zona: ${order.shippingCity || "-"} ${order.shippingZone ? `/ ${order.shippingZone}` : ""}
+Ciudad/Zona: ${order.shippingCity || "-"} ${
+    order.shippingZone ? `/ ${order.shippingZone}` : ""
+  }
 Tipo de entrega: ${order.shippingType}
 
 Productos:
@@ -49,6 +51,29 @@ ${itemsText}
 Subtotal: Bs${order.subtotal}
 Envío: Bs${order.shippingCost}
 Total: Bs${order.total}`;
+}
+
+export async function GET() {
+  try {
+    await connectDB();
+
+    const orders = await Order.find().sort({ createdAt: -1 }).lean();
+
+    return NextResponse.json({
+      success: true,
+      orders: JSON.parse(JSON.stringify(orders)),
+    });
+  } catch (error) {
+    console.error("Error obteniendo pedidos:", error);
+
+    return NextResponse.json(
+      {
+        error: "No se pudieron obtener los pedidos.",
+        detail: error instanceof Error ? error.message : "Error desconocido",
+      },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(request: Request) {
@@ -85,35 +110,49 @@ export async function POST(request: Request) {
       );
     }
 
-    const productIds = items.map((item: { productId: string }) => item.productId);
+    const normalizedItems = items.map(
+      (item: { productId: string; quantity: number }) => ({
+        productId: String(item.productId),
+        quantity: Math.max(1, Number(item.quantity || 1)),
+      })
+    );
+
+    const productIds = normalizedItems.map((item) => item.productId);
     const products = await Product.find({ _id: { $in: productIds } });
 
-    const orderItems = items.map(
-      (item: { productId: string; quantity: number }) => {
-        const product = products.find(
-          (p) => String(p._id) === String(item.productId)
-        );
+    const orderItems = normalizedItems.map((item) => {
+      const product = products.find(
+        (p) => String(p._id) === String(item.productId)
+      );
 
-        if (!product) {
-          throw new Error(`Producto no encontrado: ${item.productId}`);
-        }
-
-        return {
-          productId: product._id,
-          title: product.title,
-          price: product.price,
-          quantity: item.quantity,
-          mainImage: product.mainImage,
-        };
+      if (!product) {
+        throw new Error(`Producto no encontrado: ${item.productId}`);
       }
-    );
+
+      const isPreventa = product.status === "preventa";
+      const currentStock = Number(product.stock || 0);
+
+      if (!isPreventa && currentStock < item.quantity) {
+        throw new Error(
+          `Stock insuficiente para ${product.title}. Stock actual: ${currentStock}`
+        );
+      }
+
+      return {
+        productId: product._id,
+        title: product.title,
+        price: Number(product.price || 0),
+        quantity: item.quantity,
+        mainImage: product.mainImage || "/placeholder-product.png",
+      };
+    });
 
     const subtotal = orderItems.reduce(
       (acc, item) => acc + item.price * item.quantity,
       0
     );
 
-    const total = subtotal + Number(shippingCost);
+    const total = subtotal + Number(shippingCost || 0);
 
     const orderCode = generateOrderCode();
 
@@ -126,7 +165,7 @@ export async function POST(request: Request) {
       shippingCity,
       shippingZone,
       shippingType,
-      shippingCost,
+      shippingCost: Number(shippingCost || 0),
       items: orderItems,
       subtotal,
       total,
@@ -142,12 +181,13 @@ export async function POST(request: Request) {
       shippingCity,
       shippingZone,
       shippingType,
-      shippingCost,
+      shippingCost: Number(shippingCost || 0),
       paymentMethod: "whatsapp",
       items: orderItems,
       subtotal,
       total,
       status: "pending",
+      inventoryDeducted: false,
       whatsappMessage,
       notes,
     });
@@ -155,7 +195,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: true,
-        order,
+        order: JSON.parse(JSON.stringify(order)),
         whatsappMessage,
       },
       { status: 201 }
@@ -165,7 +205,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json(
       {
-        error: "No se pudo crear el pedido.",
+        error:
+          error instanceof Error
+            ? error.message
+            : "No se pudo crear el pedido.",
         detail: error instanceof Error ? error.message : "Error desconocido",
       },
       { status: 500 }

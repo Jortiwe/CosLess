@@ -141,6 +141,11 @@ const OrderSchema = new Schema(
       default: "pending",
     },
 
+    inventoryDeducted: {
+      type: Boolean,
+      default: false,
+    },
+
     whatsappMessage: {
       type: String,
       default: "",

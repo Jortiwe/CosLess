@@ -30,9 +30,9 @@ const infoItems = [
 
 export default function HomeIntro() {
   return (
-    <section className="mt-8 rounded-[28px] border border-[#cfeaf6] bg-white px-5 py-7 shadow-[0_12px_30px_rgba(22,50,74,0.05)] sm:px-8 sm:py-9 lg:px-10">
+    <section className="mt-12 rounded-[28px] border border-[#cfeaf6] bg-white px-5 py-7 shadow-[0_12px_30px_rgba(22,50,74,0.05)] sm:px-8 sm:py-9 lg:px-10">
       <div className="max-w-5xl">
-        <h2 className="font-serif text-[2rem] font-bold leading-tight tracking-[-0.02em] text-[#16324a] sm:text-[2.6rem] lg:text-[3.15rem]">
+        <h2 className="text-[2rem] font-extrabold leading-tight tracking-tight text-[#16324a] sm:text-[2.45rem] lg:text-[2.8rem]">
           Tienda online de cosplay en Cochabamba
         </h2>
       </div>

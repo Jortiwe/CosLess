@@ -52,6 +52,16 @@ function categoryLabel(value?: string) {
   return labels[value] || value;
 }
 
+function getSafeImage(src?: string) {
+  if (!src) return "/placeholder-product.png";
+
+  const value = src.trim();
+
+  if (!value) return "/placeholder-product.png";
+
+  return value;
+}
+
 export default async function ProductPage({ params }: PageProps) {
   const { slug } = await params;
 
@@ -67,18 +77,27 @@ export default async function ProductPage({ params }: PageProps) {
 
   const product = JSON.parse(JSON.stringify(rawProduct)) as ProductItem;
 
+  const mainImage = getSafeImage(product.mainImage);
+
   const gallery = [
-    product.mainImage,
+    mainImage,
     ...(Array.isArray(product.images) ? product.images : []),
-  ].filter(Boolean);
+  ]
+    .map((image) => getSafeImage(image))
+    .filter(Boolean);
 
   const checkoutProduct = {
     productId: product._id,
     title: product.title,
     price: product.price,
-    mainImage: product.mainImage,
+    mainImage,
     slug: product.slug,
+    stock: typeof product.stock === "number" ? product.stock : 0,
+    status: product.status === "preventa" ? "preventa" : "stock",
   };
+
+  const isPreventa = product.status === "preventa";
+  const stock = typeof product.stock === "number" ? product.stock : 0;
 
   return (
     <main className="min-h-screen bg-[#eef9ff] text-[#16324a]">
@@ -89,7 +108,7 @@ export default async function ProductPage({ params }: PageProps) {
           <div className="rounded-[32px] border border-[#cfeaf6] bg-white p-4 shadow-[0_12px_30px_rgba(22,50,74,0.05)]">
             <div className="overflow-hidden rounded-[26px] bg-[#eaf8ff]">
               <img
-                src={product.mainImage || "/placeholder-product.png"}
+                src={mainImage}
                 alt={product.title}
                 className="h-[430px] w-full object-cover sm:h-[560px]"
               />
@@ -119,7 +138,7 @@ export default async function ProductPage({ params }: PageProps) {
                 {categoryLabel(product.category)}
               </span>
 
-              {product.status === "preventa" && (
+              {isPreventa && (
                 <span className="rounded-full bg-[#fff3dc] px-4 py-2 text-sm font-bold text-[#b87d00]">
                   Preventa
                 </span>
@@ -166,15 +185,23 @@ export default async function ProductPage({ params }: PageProps) {
               </p>
 
               <p className="mt-1 text-sm text-[#4b6b80]">
-                {product.status === "preventa"
+                {isPreventa
                   ? "Producto disponible bajo pedido o preventa."
-                  : "Producto en stock."}
+                  : stock > 0
+                  ? "Producto en stock."
+                  : "Producto sin stock disponible."}
               </p>
 
               <p className="mt-2 text-sm text-[#4b6b80]">
                 Stock:{" "}
-                <span className="font-bold text-[#16324a]">
-                  {typeof product.stock === "number" ? product.stock : 0}
+                <span
+                  className={`font-bold ${
+                    !isPreventa && stock <= 0
+                      ? "text-red-500"
+                      : "text-[#16324a]"
+                  }`}
+                >
+                  {stock}
                 </span>
               </p>
             </div>
@@ -202,11 +229,10 @@ export default async function ProductPage({ params }: PageProps) {
                   productId: product._id,
                   title: product.title,
                   price: product.price,
-                  mainImage: product.mainImage,
+                  mainImage,
                   slug: product.slug,
                   category: product.category,
-                  status:
-                    product.status === "preventa" ? "preventa" : "stock",
+                  status: isPreventa ? "preventa" : "stock",
                 }}
               />
             </div>

@@ -4,6 +4,7 @@ import Order from "../../models/Order";
 import Product from "../../models/Product";
 import User from "../../models/User";
 import Favorite from "../../models/Favorite";
+import News from "../../models/News";
 import AdminToolbar from "../../components/admin/AdminToolbar";
 import AdminSectionCard from "../../components/admin/AdminSectionCard";
 import AdminQuickStat from "../../components/admin/AdminQuickStat";
@@ -102,6 +103,7 @@ export default async function AdminPage() {
     productsCount,
     usersCount,
     favoritesCount,
+    newsCount,
     rawRecentOrders,
     rawRecentProducts,
     rawRecentUsers,
@@ -110,6 +112,7 @@ export default async function AdminPage() {
     Product.countDocuments(),
     User.countDocuments(),
     Favorite.countDocuments(),
+    News.countDocuments(),
     Order.find().sort({ createdAt: -1 }).limit(5).lean(),
     Product.find().sort({ createdAt: -1 }).limit(5).lean(),
     User.find().sort({ createdAt: -1 }).limit(5).lean(),
@@ -140,37 +143,47 @@ export default async function AdminPage() {
 
             <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[#4b6b80]">
               Desde aquí podrás gestionar productos, pedidos, usuarios,
-              favoritos y estadísticas.
+              favoritos, novedades y estadísticas.
             </p>
           </div>
 
           <AdminToolbar />
         </div>
 
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-5">
           <AdminQuickStat
             title="Pedidos"
             value={ordersCount}
             subtitle="Pedidos registrados"
             href="/admin/pedidos"
           />
+
           <AdminQuickStat
             title="Productos"
             value={productsCount}
             subtitle="Productos cargados"
             href="/admin/productos"
           />
+
           <AdminQuickStat
             title="Usuarios"
             value={usersCount}
             subtitle="Cuentas registradas"
             href="/admin/usuarios"
           />
+
           <AdminQuickStat
             title="Favoritos"
             value={favoritesCount}
             subtitle="Favoritos guardados"
             href="/admin/favoritos"
+          />
+
+          <AdminQuickStat
+            title="Novedades"
+            value={newsCount}
+            subtitle="Noticias publicadas"
+            href="/admin/novedades"
           />
         </div>
 
@@ -181,30 +194,42 @@ export default async function AdminPage() {
             href="/admin/pedidos"
             buttonLabel="Gestionar pedidos"
           />
+
           <AdminSectionCard
             title="Productos"
             description="Crear productos, editar stock, precio, imágenes y categorías."
             href="/admin/productos"
             buttonLabel="Gestionar productos"
           />
+
+          <AdminSectionCard
+            title="Novedades"
+            description="Crear noticias, anuncios, nuevos ingresos y actualizaciones para clientes."
+            href="/admin/novedades"
+            buttonLabel="Gestionar novedades"
+          />
+
           <AdminSectionCard
             title="Usuarios"
             description="Ver clientes registrados y administradores del sistema."
             href="/admin/usuarios"
             buttonLabel="Gestionar usuarios"
           />
+
           <AdminSectionCard
             title="Favoritos"
             description="Revisar qué productos guarda más la gente en favoritos."
             href="/admin/favoritos"
             buttonLabel="Gestionar favoritos"
           />
+
           <AdminSectionCard
             title="Estadísticas"
             description="Ver productos más vistos, pedidos más frecuentes y resumen general."
             href="/admin/estadisticas"
             buttonLabel="Ver estadísticas"
           />
+
           <AdminSectionCard
             title="Configuración"
             description="Definir costos de envío, estados y opciones del sistema."
@@ -258,18 +283,21 @@ export default async function AdminPage() {
                       <tr key={order._id} className="bg-white">
                         <td className="rounded-l-2xl px-3 py-4 font-bold">
                           <Link
-                            href={`/admin/pedidos`}
+                            href="/admin/pedidos"
                             className="hover:text-[#19b7c9]"
                           >
                             {order.orderCode || "Sin código"}
                           </Link>
                         </td>
+
                         <td className="px-3 py-4">
                           {order.customerName || "Sin cliente"}
                         </td>
+
                         <td className="px-3 py-4 font-semibold">
                           {formatBs(order.total)}
                         </td>
+
                         <td className="px-3 py-4">
                           <span
                             className={`inline-flex rounded-full border px-3 py-1 text-xs font-bold ${statusClass(
@@ -279,6 +307,7 @@ export default async function AdminPage() {
                             {statusLabel(order.status)}
                           </span>
                         </td>
+
                         <td className="rounded-r-2xl px-3 py-4 text-sm text-[#4b6b80]">
                           {formatDate(order.createdAt)}
                         </td>
@@ -319,6 +348,7 @@ export default async function AdminPage() {
                           <h3 className="font-bold">
                             {product.title || "Sin título"}
                           </h3>
+
                           <p className="mt-1 text-sm text-[#4b6b80]">
                             {product.category || "Sin categoría"} ·{" "}
                             {product.status || "Sin estado"}
@@ -329,8 +359,12 @@ export default async function AdminPage() {
                           <p className="font-extrabold text-[#19b7c9]">
                             {formatBs(product.price)}
                           </p>
+
                           <p className="mt-1 text-xs text-[#6f8798]">
-                            Stock: {typeof product.stock === "number" ? product.stock : 0}
+                            Stock:{" "}
+                            {typeof product.stock === "number"
+                              ? product.stock
+                              : 0}
                           </p>
                         </div>
                       </div>
@@ -366,9 +400,11 @@ export default async function AdminPage() {
                       <h3 className="font-bold">
                         {user.fullName || "Sin nombre"}
                       </h3>
+
                       <p className="mt-1 text-sm text-[#4b6b80]">
                         {user.email || "Sin correo"}
                       </p>
+
                       <p className="mt-2 inline-flex rounded-full bg-[#eaf8ff] px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#19b7c9]">
                         {user.role || "Sin rol"}
                       </p>

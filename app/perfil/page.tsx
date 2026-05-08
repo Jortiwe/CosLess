@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
+import ChangePasswordForm from "../../components/account/ChangePasswordForm";
 import { connectDB } from "../../lib/mongodb";
 import User from "../../models/User";
 import {
@@ -12,7 +13,6 @@ import {
   FiShoppingBag,
   FiUser,
 } from "react-icons/fi";
-
 
 const JWT_SECRET =
   process.env.JWT_SECRET ||
@@ -132,9 +132,11 @@ export default async function PerfilPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
                 <FiUser className="text-[1.35rem]" />
               </div>
+
               <p className="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-[#68839a]">
                 Nickname
               </p>
+
               <p className="mt-2 break-words text-lg font-extrabold text-[#16324a]">
                 {user.nickname || "Sin nickname"}
               </p>
@@ -144,9 +146,11 @@ export default async function PerfilPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
                 <FiMail className="text-[1.35rem]" />
               </div>
+
               <p className="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-[#68839a]">
                 Correo
               </p>
+
               <p className="mt-2 break-words text-lg font-extrabold text-[#16324a]">
                 {user.email || "Sin correo"}
               </p>
@@ -159,9 +163,11 @@ export default async function PerfilPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
                 <FiShoppingBag className="text-[1.35rem]" />
               </div>
+
               <p className="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-[#68839a]">
                 Pedidos
               </p>
+
               <p className="mt-2 text-lg font-extrabold">Ver historial</p>
             </Link>
 
@@ -172,9 +178,11 @@ export default async function PerfilPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
                 <FiHeart className="text-[1.35rem]" />
               </div>
+
               <p className="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-[#68839a]">
                 Favoritos
               </p>
+
               <p className="mt-2 text-lg font-extrabold">Ver favoritos</p>
             </Link>
           </div>
@@ -193,6 +201,7 @@ export default async function PerfilPage() {
                   <h2 className="text-xl font-extrabold text-[#16324a]">
                     Panel admin
                   </h2>
+
                   <p className="mt-1 text-sm text-[#4b6b80]">
                     Ir al panel de gestión principal.
                   </p>
@@ -200,6 +209,8 @@ export default async function PerfilPage() {
               </Link>
             </div>
           )}
+
+          <ChangePasswordForm />
         </div>
       </section>
 

@@ -3,6 +3,14 @@
 import { useEffect, useState } from "react";
 import { FaChevronUp, FaCommentDots } from "react-icons/fa";
 
+const PHONE_NUMBER = "59160769356";
+
+const WHATSAPP_URL =
+  `https://wa.me/${PHONE_NUMBER}?text=` +
+  encodeURIComponent(
+    "Hola, quiero consultar sobre productos, pedidos o preventas de CosLess."
+  );
+
 export default function FloatingActions() {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
@@ -37,13 +45,15 @@ export default function FloatingActions() {
         <FaChevronUp className="text-[0.8rem]" />
       </button>
 
-      <button
-        type="button"
-        aria-label="Abrir chat"
+      <a
+        href={WHATSAPP_URL}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Abrir WhatsApp"
         className="pointer-events-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#19b7c9] text-white shadow-xl transition duration-200 hover:scale-110 hover:bg-[#0ea5b7] sm:h-[68px] sm:w-[68px]"
       >
         <FaCommentDots className="text-[1.3rem]" />
-      </button>
+      </a>
     </div>
   );
 }

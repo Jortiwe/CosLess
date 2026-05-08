@@ -30,9 +30,7 @@ const EMAIL_URL =
   `mailto:${EMAIL}?subject=` +
   encodeURIComponent("Consulta desde CosLess") +
   "&body=" +
-  encodeURIComponent(
-    "Hola, quiero hacer una consulta sobre la tienda CosLess."
-  );
+  encodeURIComponent("Hola, quiero hacer una consulta sobre la tienda CosLess.");
 
 const FACEBOOK_URL =
   "https://m.me/jorge.alvarez.742658?ref=" +
@@ -41,6 +39,38 @@ const FACEBOOK_URL =
 const INSTAGRAM_URL = "#";
 const TIKTOK_URL = "#";
 const YOUTUBE_URL = "#";
+
+const categoryLinks = [
+  { label: "Cosplays", href: "/categoria/cosplays" },
+  { label: "Pelucas", href: "/categoria/pelucas" },
+  { label: "Lentes", href: "/categoria/lentes" },
+  { label: "Mallas", href: "/categoria/mallas" },
+  { label: "Accesorios", href: "/categoria/accesorios" },
+  { label: "Preventa", href: "/categoria/preventa" },
+];
+
+const updateLinks = [
+  {
+    label: "Novedades",
+    href: "/novedades",
+  },
+  {
+    label: "Próximos ingresos",
+    href: "/categoria/preventa",
+  },
+  {
+    label: "Nuevos cosplays",
+    href: "/productos?section=nuevos-cosplays",
+  },
+  {
+    label: "Productos destacados",
+    href: "/productos?section=destacados",
+  },
+  {
+    label: "Promociones",
+    href: "/productos?section=ofertas",
+  },
+];
 
 export default function Footer() {
   const footerRef = useRef<HTMLElement | null>(null);
@@ -62,10 +92,10 @@ export default function Footer() {
   }, []);
 
   const linkClass =
-    "inline-block text-[14px] sm:text-[15px] text-[#4b6b80] transition duration-200 hover:scale-105 hover:text-[#19b7c9] hover:underline hover:underline-offset-4";
+    "inline-block text-[14px] text-[#4b6b80] transition duration-200 hover:text-[#19b7c9] hover:underline hover:underline-offset-4 sm:text-[15px]";
 
   const socialClass =
-    "flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-[#cfeaf6] bg-white text-[#16324a] transition duration-200 hover:-translate-y-1 hover:scale-110 hover:border-[#19b7c9] hover:text-[#19b7c9]";
+    "flex h-10 w-10 items-center justify-center rounded-full border border-[#cfeaf6] bg-white text-[#16324a] transition duration-200 hover:-translate-y-1 hover:scale-110 hover:border-[#19b7c9] hover:text-[#19b7c9] sm:h-11 sm:w-11";
 
   return (
     <footer
@@ -81,19 +111,21 @@ export default function Footer() {
           <h3 className="text-[2rem] font-extrabold tracking-wide text-[#19b7c9] sm:text-[2.2rem]">
             CosLess
           </h3>
+
           <p className="mx-auto mt-3 max-w-[95%] text-[15px] leading-7 text-[#4b6b80] sm:mt-4 sm:max-w-[90%] sm:text-[16px] sm:leading-8">
-            Tienda de cosplays, pelucas, lentes, mallas y accesorios.
+            Tienda online de cosplay, preventa y accesorios en Bolivia.
           </p>
         </div>
 
-        {/* escritorio grande */}
         <div className="hidden gap-12 xl:grid xl:grid-cols-4">
           <div>
             <h3 className="text-[2rem] font-extrabold tracking-wide text-[#19b7c9]">
               CosLess
             </h3>
+
             <p className="mt-4 max-w-sm text-[17px] leading-8 text-[#4b6b80]">
-              Tienda de cosplays, pelucas, lentes, mallas y accesorios.
+              Cosplays, pelucas, lentes, mallas, accesorios, renta y preventas.
+              Cotiza rápido por WhatsApp.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -141,36 +173,13 @@ export default function Footer() {
             </h4>
 
             <ul className="mt-6 space-y-4">
-              <li>
-                <Link href="/buscar?q=cosplays" className={linkClass}>
-                  Cosplays
-                </Link>
-              </li>
-              <li>
-                <Link href="/buscar?q=pelucas" className={linkClass}>
-                  Pelucas
-                </Link>
-              </li>
-              <li>
-                <Link href="/buscar?q=lentes" className={linkClass}>
-                  Lentes
-                </Link>
-              </li>
-              <li>
-                <Link href="/buscar?q=mallas" className={linkClass}>
-                  Mallas
-                </Link>
-              </li>
-              <li>
-                <Link href="/buscar?q=accesorios" className={linkClass}>
-                  Accesorios
-                </Link>
-              </li>
-              <li>
-                <Link href="/buscar?q=preventa" className={linkClass}>
-                  Preventa
-                </Link>
-              </li>
+              {categoryLinks.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className={linkClass}>
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -180,31 +189,13 @@ export default function Footer() {
             </h4>
 
             <ul className="mt-6 space-y-4">
-              <li>
-                <Link href="/novedades" className={linkClass}>
-                  Novedades
-                </Link>
-              </li>
-              <li>
-                <Link href="/proximos-ingresos" className={linkClass}>
-                  Próximos ingresos
-                </Link>
-              </li>
-              <li>
-                <Link href="/nuevos-cosplays" className={linkClass}>
-                  Nuevos cosplays
-                </Link>
-              </li>
-              <li>
-                <Link href="/productos-destacados" className={linkClass}>
-                  Productos destacados
-                </Link>
-              </li>
-              <li>
-                <Link href="/promociones" className={linkClass}>
-                  Promociones
-                </Link>
-              </li>
+              {updateLinks.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className={linkClass}>
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -260,60 +251,52 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* tablet y móvil */}
-        <div className="grid grid-cols-2 gap-x-7 gap-y-4 sm:gap-x-10 sm:gap-y-6 xl:hidden">
+        <div className="grid grid-cols-2 gap-x-7 gap-y-7 sm:gap-x-10 xl:hidden">
           <div className="min-w-0 pl-1 sm:pl-2">
             <h4 className="text-[0.98rem] font-semibold uppercase tracking-[0.12em] text-[#16324a]">
               Categorías
             </h4>
 
             <ul className="mt-4 space-y-2.5 sm:mt-5 sm:space-y-3">
-              <li>
-                <Link href="/buscar?q=cosplays" className={linkClass}>
-                  Cosplays
-                </Link>
-              </li>
-              <li>
-                <Link href="/buscar?q=pelucas" className={linkClass}>
-                  Pelucas
-                </Link>
-              </li>
-              <li>
-                <Link href="/buscar?q=lentes" className={linkClass}>
-                  Lentes
-                </Link>
-              </li>
-              <li>
-                <Link href="/buscar?q=mallas" className={linkClass}>
-                  Mallas
-                </Link>
-              </li>
-              <li>
-                <Link href="/buscar?q=accesorios" className={linkClass}>
-                  Accesorios
-                </Link>
-              </li>
-              <li>
-                <Link href="/buscar?q=preventa" className={linkClass}>
-                  Preventa
-                </Link>
-              </li>
+              {categoryLinks.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className={linkClass}>
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div className="min-w-0">
             <h4 className="text-[0.98rem] font-semibold uppercase tracking-[0.12em] text-[#16324a]">
+              Actualizaciones
+            </h4>
+
+            <ul className="mt-4 space-y-2.5 sm:mt-5 sm:space-y-3">
+              {updateLinks.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className={linkClass}>
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="col-span-2 min-w-0 rounded-[26px] border border-[#d9eef7] bg-white/70 p-5">
+            <h4 className="text-[0.98rem] font-semibold uppercase tracking-[0.12em] text-[#16324a]">
               Contacto
             </h4>
 
-            <div className="mt-4 space-y-3 sm:mt-5 sm:space-y-4">
+            <div className="mt-4 grid gap-3 sm:grid-cols-3">
               <a
                 href={WHATSAPP_ORDER_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="flex w-full items-start gap-2 text-left text-[13px] text-[#4b6b80] transition duration-200 hover:scale-[1.03] hover:text-[#19b7c9] sm:text-[15px]"
+                className="flex items-start gap-2 text-left text-[13px] text-[#4b6b80] transition duration-200 hover:text-[#19b7c9] sm:text-[15px]"
               >
-                <FaWhatsapp className="mt-1 shrink-0 text-[0.9rem] sm:text-[0.95rem]" />
+                <FaWhatsapp className="mt-1 shrink-0 text-[0.9rem]" />
                 <span className="break-words leading-6 hover:underline hover:underline-offset-4">
                   Pedidos por WhatsApp
                 </span>
@@ -321,9 +304,9 @@ export default function Footer() {
 
               <a
                 href={EMAIL_URL}
-                className="flex w-full items-start gap-2 text-left text-[13px] text-[#4b6b80] transition duration-200 hover:scale-[1.03] hover:text-[#19b7c9] sm:text-[15px]"
+                className="flex items-start gap-2 text-left text-[13px] text-[#4b6b80] transition duration-200 hover:text-[#19b7c9] sm:text-[15px]"
               >
-                <FiMail className="mt-1 shrink-0 text-[0.9rem] sm:text-[0.95rem]" />
+                <FiMail className="mt-1 shrink-0 text-[0.9rem]" />
                 <span className="break-words leading-6 hover:underline hover:underline-offset-4">
                   Correo electrónico
                 </span>
@@ -333,9 +316,9 @@ export default function Footer() {
                 href={WHATSAPP_HELP_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="flex w-full items-start gap-2 text-left text-[13px] text-[#4b6b80] transition duration-200 hover:scale-[1.03] hover:text-[#19b7c9] sm:text-[15px]"
+                className="flex items-start gap-2 text-left text-[13px] text-[#4b6b80] transition duration-200 hover:text-[#19b7c9] sm:text-[15px]"
               >
-                <FiHelpCircle className="mt-1 shrink-0 text-[0.9rem] sm:text-[0.95rem]" />
+                <FiHelpCircle className="mt-1 shrink-0 text-[0.9rem]" />
                 <span className="break-words leading-6 hover:underline hover:underline-offset-4">
                   Centro de ayuda
                 </span>

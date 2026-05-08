@@ -169,3 +169,69 @@ export async function PUT(request: Request) {
     );
   }
 }
+
+export async function PATCH(request: Request) {
+  try {
+    const sessionUser = await getSessionUser();
+
+    if (!sessionUser) {
+      return NextResponse.json(
+        { error: "No hay sesión activa." },
+        { status: 401 }
+      );
+    }
+
+    const body = await request.json();
+
+    await connectDB();
+
+    const currentStore = await AccountStore.findOne({
+      userId: sessionUser.userId,
+    }).lean();
+
+    const hasCart =
+      Object.prototype.hasOwnProperty.call(body, "cart") ||
+      Object.prototype.hasOwnProperty.call(body, "cartItems");
+
+    const hasFavorites =
+      Object.prototype.hasOwnProperty.call(body, "favorites") ||
+      Object.prototype.hasOwnProperty.call(body, "favoriteItems");
+
+    const nextCart = hasCart
+      ? cleanCartItems(body.cart || body.cartItems || [])
+      : cleanCartItems(currentStore?.cart || []);
+
+    const nextFavorites = hasFavorites
+      ? cleanFavoriteItems(body.favorites || body.favoriteItems || [])
+      : cleanFavoriteItems(currentStore?.favorites || []);
+
+    const store = await AccountStore.findOneAndUpdate(
+      { userId: sessionUser.userId },
+      {
+        $set: {
+          userId: sessionUser.userId,
+          email: sessionUser.email,
+          cart: nextCart,
+          favorites: nextFavorites,
+        },
+      },
+      {
+        new: true,
+        upsert: true,
+      }
+    ).lean();
+
+    return NextResponse.json({
+      success: true,
+      cart: store?.cart || nextCart,
+      favorites: store?.favorites || nextFavorites,
+    });
+  } catch (error) {
+    console.error("Error actualizando store de cuenta:", error);
+
+    return NextResponse.json(
+      { error: "No se pudo actualizar la información de la cuenta." },
+      { status: 500 }
+    );
+  }
+}

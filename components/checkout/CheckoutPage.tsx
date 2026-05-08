@@ -94,6 +94,48 @@ export default function CheckoutPage() {
 
   const total = subtotal + shippingCost;
 
+  async function clearCartAfterOrder() {
+  if (isDirectCheckout) {
+    sessionStorage.removeItem(DIRECT_CHECKOUT_KEY);
+    setCartItems([]);
+    return;
+  }
+
+  // 1. Borrar carrito local inmediatamente
+  localStorage.removeItem(CART_KEY);
+  localStorage.setItem(CART_KEY, JSON.stringify([]));
+
+  // 2. Borrar estado visual del checkout
+  setCartItems([]);
+
+  // 3. Avisar al header y a otros componentes
+  window.dispatchEvent(new Event("cosless-cart-updated"));
+  window.dispatchEvent(new Event("storage"));
+
+  // 4. Intentar borrar también el carrito guardado en la cuenta
+  try {
+    await fetch("/api/account/store", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        cartItems: [],
+        cart: [],
+      }),
+    });
+  } catch (error) {
+    console.error("No se pudo limpiar el carrito de la cuenta:", error);
+  }
+
+  // 5. Reforzar limpieza por si la sincronización vuelve a escribirlo
+  window.setTimeout(() => {
+    localStorage.removeItem(CART_KEY);
+    localStorage.setItem(CART_KEY, JSON.stringify([]));
+    window.dispatchEvent(new Event("cosless-cart-updated"));
+  }, 300);
+}
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErrorText("");
@@ -152,14 +194,7 @@ export default function CheckoutPage() {
 
       setSuccessText(`Pedido creado: ${data.order.orderCode}`);
 
-      if (isDirectCheckout) {
-        sessionStorage.removeItem(DIRECT_CHECKOUT_KEY);
-      } else {
-        localStorage.removeItem(CART_KEY);
-        window.dispatchEvent(new Event("cosless-cart-updated"));
-      }
-
-      setCartItems([]);
+      await clearCartAfterOrder();
 
       const phone = "59160769356";
       const message = encodeURIComponent(data.whatsappMessage);
