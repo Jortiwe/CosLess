@@ -1,7 +1,85 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
 import { connectDB } from "../../../lib/mongodb";
 import Order from "../../../models/Order";
 import Product from "../../../models/Product";
+import User from "../../../models/User";
+
+const JWT_SECRET =
+  process.env.JWT_SECRET ||
+  process.env.ADMIN_JWT_SECRET ||
+  "cosless_dev_secret";
+
+type TokenPayload = {
+  userId?: string;
+  id?: string;
+  _id?: string;
+  sub?: string;
+  email?: string;
+  user?: {
+    id?: string;
+    _id?: string;
+    userId?: string;
+    email?: string;
+  };
+};
+
+async function getSessionUser() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("cosless_token")?.value;
+
+  if (!token) return null;
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as TokenPayload;
+
+    const tokenEmail = String(decoded.email || decoded.user?.email || "")
+      .toLowerCase()
+      .trim();
+
+    const possibleUserId =
+      decoded.userId ||
+      decoded.id ||
+      decoded._id ||
+      decoded.user?.userId ||
+      decoded.user?.id ||
+      decoded.user?._id ||
+      "";
+
+    await connectDB();
+
+    if (possibleUserId) {
+      const user = await User.findById(possibleUserId)
+        .select("_id email")
+        .lean();
+
+      if (user) {
+        return {
+          userId: String(user._id),
+          email: String(user.email || tokenEmail).toLowerCase().trim(),
+        };
+      }
+    }
+
+    if (tokenEmail) {
+      const user = await User.findOne({ email: tokenEmail })
+        .select("_id email")
+        .lean();
+
+      if (user) {
+        return {
+          userId: String(user._id),
+          email: String(user.email || tokenEmail).toLowerCase().trim(),
+        };
+      }
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+}
 
 function generateOrderCode() {
   const random = Math.floor(100000 + Math.random() * 900000);
@@ -80,10 +158,11 @@ export async function POST(request: Request) {
   try {
     await connectDB();
 
+    const sessionUser = await getSessionUser();
+
     const body = await request.json();
 
     const {
-      userId = null,
       customerName,
       customerEmail = "",
       customerPhone,
@@ -118,7 +197,10 @@ export async function POST(request: Request) {
     );
 
     const productIds = normalizedItems.map((item) => item.productId);
-    const products = await Product.find({ _id: { $in: productIds } });
+
+    const products = await Product.find({
+      _id: { $in: productIds },
+    });
 
     const orderItems = normalizedItems.map((item) => {
       const product = products.find(
@@ -153,14 +235,21 @@ export async function POST(request: Request) {
     );
 
     const total = subtotal + Number(shippingCost || 0);
-
     const orderCode = generateOrderCode();
+
+    const cleanCustomerEmail = String(customerEmail || "")
+      .toLowerCase()
+      .trim();
+
+    const accountEmail = String(sessionUser?.email || "")
+      .toLowerCase()
+      .trim();
 
     const whatsappMessage = buildWhatsAppMessage({
       orderCode,
       customerName,
       customerPhone,
-      customerEmail,
+      customerEmail: cleanCustomerEmail,
       shippingDepartment,
       shippingCity,
       shippingZone,
@@ -173,9 +262,12 @@ export async function POST(request: Request) {
 
     const order = await Order.create({
       orderCode,
-      userId,
+
+      userId: sessionUser?.userId || null,
+      accountEmail,
+
       customerName,
-      customerEmail,
+      customerEmail: cleanCustomerEmail,
       customerPhone,
       shippingDepartment,
       shippingCity,

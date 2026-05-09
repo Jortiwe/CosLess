@@ -16,6 +16,11 @@ type PageProps = {
   }>;
 };
 
+function formatProductCount(count: number) {
+  if (count > 99) return "99+";
+  return `${count}+`;
+}
+
 export default async function CategoryPage({ params }: PageProps) {
   const { slug } = await params;
   const category = getCategoryBySlug(slug);
@@ -43,33 +48,34 @@ export default async function CategoryPage({ params }: PageProps) {
     <main className="min-h-screen bg-[#eef9ff] text-[#16324a]">
       <Header />
 
-      <section className="mx-auto w-full max-w-[1380px] px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-7 overflow-hidden rounded-[34px] border border-[#cfeaf6] bg-white shadow-[0_12px_32px_rgba(22,50,74,0.06)]">
-          <div className="grid lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
-              <span className="inline-flex w-fit rounded-full bg-[#dff4ff] px-4 py-2 text-sm font-bold text-[#19b7c9]">
+      <section className="mx-auto w-full max-w-[1380px] px-4 pb-8 pt-6 sm:px-6 sm:py-8 lg:px-8">
+        <div className="mb-6 overflow-hidden rounded-[30px] border border-[#cfeaf6] bg-white shadow-[0_12px_32px_rgba(22,50,74,0.06)] sm:mb-7 sm:rounded-[34px]">
+          <div className="grid min-h-[165px] grid-cols-[1fr_40%] lg:min-h-[320px] lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="flex flex-col justify-center p-5 pr-3 sm:p-8 lg:p-10">
+              <span className="inline-flex w-fit rounded-full bg-[#dff4ff] px-4 py-2 text-xs font-extrabold text-[#19b7c9] sm:text-sm">
                 Categoría
               </span>
 
-              <h1 className="mt-4 text-[2.4rem] font-extrabold leading-tight text-[#16324a] sm:text-[3.2rem]">
+              <h1 className="mt-3 text-[2rem] font-extrabold leading-tight text-[#16324a] sm:mt-4 sm:text-[3.2rem]">
                 {category.title}
               </h1>
 
-              <p className="mt-3 max-w-2xl text-base leading-7 text-[#4b6b80]">
+              <p className="mt-3 hidden max-w-2xl text-base leading-7 text-[#4b6b80] sm:block">
                 {category.description}
               </p>
 
-              <p className="mt-4 text-sm font-bold text-[#19b7c9]">
-                {products.length} productos encontrados
+              <p className="mt-3 text-sm font-extrabold text-[#19b7c9] sm:mt-4">
+                {formatProductCount(products.length)} productos
               </p>
             </div>
 
-            <div className="relative min-h-[230px] overflow-hidden lg:min-h-[320px]">
+            <div className="relative min-h-[165px] overflow-hidden bg-[#eaf8ff] lg:min-h-[320px]">
               <div
                 className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: `url(${category.image})` }}
               />
-              <div className="absolute inset-0 bg-gradient-to-l from-transparent to-white/20" />
+
+              <div className="absolute inset-0 bg-gradient-to-l from-transparent to-white/10" />
             </div>
           </div>
         </div>

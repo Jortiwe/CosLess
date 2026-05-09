@@ -155,28 +155,29 @@ export default function ChangePasswordForm() {
   }
 
   return (
-    <section className="mt-7 overflow-hidden rounded-[32px] border border-[#cfeaf6] bg-white shadow-[0_12px_35px_rgba(22,50,74,0.06)]">
+    <section className="overflow-hidden rounded-[30px] border border-[#cfeaf6] bg-white shadow-[0_10px_26px_rgba(22,50,74,0.05)]">
       <button
         type="button"
         onClick={() => setIsOpen((value) => !value)}
-        className="flex w-full items-center justify-between gap-4 bg-[#f7fdff] px-5 py-5 text-left transition hover:bg-[#eef9ff] sm:px-7"
+        className="flex min-h-[126px] w-full items-center justify-between gap-4 px-5 py-5 text-left transition hover:bg-[#f7fdff] sm:px-6"
       >
-        <div className="flex items-start gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
+        <div className="flex items-center gap-4">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
             <FiShield className="text-[1.35rem]" />
           </div>
 
           <div>
-            <h2 className="text-2xl font-extrabold text-[#16324a]">
+            <h2 className="text-xl font-extrabold text-[#16324a]">
               Cambiar contraseña
             </h2>
-            <p className="mt-1 text-sm leading-6 text-[#4b6b80]">
+
+            <p className="mt-1 text-sm text-[#4b6b80]">
               Actualiza tu contraseña de acceso.
             </p>
           </div>
         </div>
 
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-[#16324a] shadow-sm transition">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#f7fdff] text-[#16324a] shadow-sm transition">
           {isOpen ? <FiChevronUp /> : <FiChevronDown />}
         </div>
       </button>
@@ -191,7 +192,7 @@ export default function ChangePasswordForm() {
         <div className="overflow-hidden">
           <form
             onSubmit={handleSubmit}
-            className="grid gap-5 border-t border-[#e5f3fa] px-5 py-6 sm:px-7"
+            className="grid gap-5 border-t border-[#e5f3fa] px-5 py-6 sm:px-6"
           >
             <div className="grid gap-5 lg:grid-cols-3">
               <div>

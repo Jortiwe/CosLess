@@ -44,6 +44,13 @@ const OrderSchema = new Schema(
       default: null,
     },
 
+    accountEmail: {
+  type: String,
+  default: "",
+  trim: true,
+  lowercase: true,
+},
+
     customerName: {
       type: String,
       required: true,

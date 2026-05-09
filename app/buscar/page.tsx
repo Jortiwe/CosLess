@@ -19,6 +19,7 @@ type SearchProduct = {
   description?: string;
   mainImage?: string;
   price?: number;
+  status?: string;
 };
 
 function formatBs(value?: number) {
@@ -34,6 +35,74 @@ function splitWords(value: unknown): string[] {
   return normalizeText(value)
     .split(/\s+/)
     .filter((word: string) => word.length > 0);
+}
+
+function formatCount(count: number) {
+  if (count > 99) return "99+";
+  return `${count}+`;
+}
+
+function ProductCard({ product }: { product: SearchProduct }) {
+  const href = product.slug ? `/producto/${product.slug}` : "#";
+  const image = product.mainImage || "/placeholder-product.png";
+  const status = product.status || "stock";
+
+  return (
+    <Link
+      href={href}
+      className="group overflow-hidden rounded-[26px] border border-[#cfeaf6] bg-white shadow-[0_8px_24px_rgba(22,50,74,0.04)] transition hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(22,50,74,0.10)]"
+    >
+      <div className="relative aspect-square overflow-hidden bg-[#eaf8ff]">
+        <Image
+          src={image}
+          alt={product.title || "Producto"}
+          width={500}
+          height={500}
+          className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+        />
+
+        <div className="absolute left-2 top-2 flex max-w-[calc(100%-16px)] flex-wrap gap-1.5 sm:left-3 sm:top-3 sm:gap-2">
+          <span className="rounded-full bg-white/90 px-2.5 py-1 text-[8px] font-extrabold uppercase tracking-[0.12em] text-[#16324a] shadow-sm sm:px-3 sm:text-[10px] sm:tracking-[0.14em]">
+            {product.category || "Producto"}
+          </span>
+
+          <span
+            className={`rounded-full px-2.5 py-1 text-[8px] font-extrabold uppercase tracking-[0.12em] shadow-sm sm:px-3 sm:text-[10px] sm:tracking-[0.14em] ${
+              status === "preventa"
+                ? "bg-[#fff3dc] text-[#b87d00]"
+                : "bg-[#e6f6ed] text-[#16824c]"
+            }`}
+          >
+            {status === "preventa" ? "Preventa" : "Stock"}
+          </span>
+        </div>
+      </div>
+
+      <div className="p-3 sm:p-4">
+        <h3 className="line-clamp-2 min-h-[42px] text-[0.9rem] font-extrabold leading-5 text-[#16324a] sm:min-h-[48px] sm:text-[1.08rem] sm:leading-6">
+          {product.title || "Producto sin título"}
+        </h3>
+
+        <div className="mt-3 flex items-center justify-between gap-2 sm:gap-3">
+          <p className="text-[0.98rem] font-extrabold text-[#19b7c9] sm:text-[1.08rem]">
+            {formatBs(product.price)}
+          </p>
+
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#eaf8ff] text-sm font-extrabold text-[#19b7c9] transition group-hover:bg-[#19b7c9] group-hover:text-white sm:h-9 sm:w-9">
+            →
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+function EmptyState({ text }: { text: string }) {
+  return (
+    <div className="rounded-[24px] border border-[#cfeaf6] bg-white px-5 py-6 text-sm font-semibold text-[#4b6b80] shadow-[0_8px_24px_rgba(22,50,74,0.04)]">
+      {text}
+    </div>
+  );
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
@@ -93,98 +162,74 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     <main className="min-h-screen bg-[#eef9ff] text-[#16324a]">
       <Header />
 
-      <section className="mx-auto max-w-[1500px] px-5 py-8 sm:px-8 lg:px-12">
-        <div className="mb-6 flex flex-wrap items-center gap-3">
+      <section className="mx-auto w-full max-w-[1380px] px-4 pb-8 pt-3 sm:px-6 sm:pt-5 lg:px-8">
+        <div className="mb-4 flex justify-start">
           <Link
             href="/"
-            className="inline-flex items-center justify-center rounded-2xl border border-[#cfeaf6] bg-white px-5 py-3 text-sm font-bold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9]"
+            className="group relative inline-flex items-center text-sm font-extrabold text-[#16324a] transition hover:text-[#19b7c9]"
           >
-            ← Volver al inicio
+            <span className="mr-1">←</span>
+            Inicio
+            <span className="absolute -bottom-1 left-0 h-[2px] w-0 rounded-full bg-[#19b7c9] transition-all duration-300 group-hover:w-full" />
           </Link>
         </div>
 
-        <div className="mb-8">
-          <h1 className="text-4xl font-extrabold">Resultados de búsqueda</h1>
-          <p className="mt-3 text-[#4b6b80]">
-            Consulta por: <span className="font-bold">“{q}”</span>
-          </p>
+        <div className="mb-6 rounded-[26px] border border-[#cfeaf6] bg-white px-4 py-4 shadow-[0_10px_25px_rgba(22,50,74,0.04)] sm:mb-7 sm:rounded-[28px] sm:px-5 sm:py-5">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="inline-flex rounded-full bg-[#dff4ff] px-4 py-2 text-xs font-extrabold text-[#19b7c9] sm:text-sm">
+              Búsqueda
+            </span>
+
+            <p className="text-sm font-semibold text-[#4b6b80] sm:text-base">
+              Consulta por:{" "}
+              <span className="font-extrabold text-[#16324a]">“{q}”</span>
+            </p>
+          </div>
         </div>
 
-        <div className="grid gap-8">
-          <section className="rounded-[32px] border border-[#cfeaf6] bg-[#f7fdff] p-6">
-            <h2 className="text-2xl font-extrabold">Coincidencias directas</h2>
+        <div className="grid gap-7">
+          <section>
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <h2 className="text-[1.35rem] font-extrabold text-[#16324a] sm:text-2xl">
+                Coincidencias directas
+              </h2>
 
-            <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {exactMatches.length === 0 ? (
-                <div className="rounded-2xl bg-white p-5 text-[#4b6b80]">
-                  No hay coincidencias directas.
-                </div>
-              ) : (
-                exactMatches.map((product: SearchProduct) => (
-                  <Link
-                    key={product._id}
-                    href={`/producto/${product.slug || ""}`}
-                    className="rounded-[24px] bg-white p-5 transition hover:-translate-y-1"
-                  >
-                    <Image
-                      src={product.mainImage || "/placeholder-product.png"}
-                      alt={product.title || "Producto"}
-                      width={400}
-                      height={400}
-                      className="h-[220px] w-full rounded-2xl object-cover"
-                    />
-
-                    <h3 className="mt-4 text-xl font-extrabold">
-                      {product.title || "Sin título"}
-                    </h3>
-                    <p className="mt-2 text-sm text-[#4b6b80]">
-                      {product.category || "Sin categoría"}
-                    </p>
-                    <p className="mt-3 text-lg font-extrabold text-[#19b7c9]">
-                      {formatBs(product.price)}
-                    </p>
-                  </Link>
-                ))
-              )}
+              <span className="rounded-full bg-white px-3 py-1 text-xs font-extrabold text-[#19b7c9] shadow-sm">
+                {formatCount(exactMatches.length)}
+              </span>
             </div>
+
+            {exactMatches.length === 0 ? (
+              <EmptyState text="No hay coincidencias directas." />
+            ) : (
+              <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4">
+                {exactMatches.map((product: SearchProduct) => (
+                  <ProductCard key={product._id} product={product} />
+                ))}
+              </div>
+            )}
           </section>
 
-          <section className="rounded-[32px] border border-[#cfeaf6] bg-[#f7fdff] p-6">
-            <h2 className="text-2xl font-extrabold">Relacionados</h2>
+          <section>
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <h2 className="text-[1.35rem] font-extrabold text-[#16324a] sm:text-2xl">
+                Relacionados
+              </h2>
 
-            <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {relatedMatches.length === 0 ? (
-                <div className="rounded-2xl bg-white p-5 text-[#4b6b80]">
-                  No hay productos relacionados.
-                </div>
-              ) : (
-                relatedMatches.map((product: SearchProduct) => (
-                  <Link
-                    key={product._id}
-                    href={`/producto/${product.slug || ""}`}
-                    className="rounded-[24px] bg-white p-5 transition hover:-translate-y-1"
-                  >
-                    <Image
-                      src={product.mainImage || "/placeholder-product.png"}
-                      alt={product.title || "Producto"}
-                      width={400}
-                      height={400}
-                      className="h-[220px] w-full rounded-2xl object-cover"
-                    />
-
-                    <h3 className="mt-4 text-xl font-extrabold">
-                      {product.title || "Sin título"}
-                    </h3>
-                    <p className="mt-2 text-sm text-[#4b6b80]">
-                      {product.category || "Sin categoría"}
-                    </p>
-                    <p className="mt-3 text-lg font-extrabold text-[#19b7c9]">
-                      {formatBs(product.price)}
-                    </p>
-                  </Link>
-                ))
-              )}
+              <span className="rounded-full bg-white px-3 py-1 text-xs font-extrabold text-[#19b7c9] shadow-sm">
+                {formatCount(relatedMatches.length)}
+              </span>
             </div>
+
+            {relatedMatches.length === 0 ? (
+              <EmptyState text="No hay productos relacionados." />
+            ) : (
+              <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4">
+                {relatedMatches.map((product: SearchProduct) => (
+                  <ProductCard key={product._id} product={product} />
+                ))}
+              </div>
+            )}
           </section>
         </div>
       </section>

@@ -46,6 +46,17 @@ export default function SearchOverlay({
   useEffect(() => {
     if (!isOpen) return;
 
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         onClose();
@@ -175,7 +186,7 @@ export default function SearchOverlay({
             </button>
           </div>
 
-          <div className="mt-5 overflow-hidden rounded-[6px] bg-white">
+          <div className="mt-5 max-h-[calc(100vh-150px)] overflow-y-auto overscroll-contain rounded-[6px] bg-white [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:max-h-[calc(100vh-170px)] md:max-h-[calc(100vh-190px)]">
             {!normalizedQuery ? (
               <div className="px-6 py-8 text-[1rem] text-[#5e7381]">
                 Busca por nombre, categoría o descripción.

@@ -62,7 +62,7 @@ const menuCategories = [
   { label: "Mallas", href: "/categoria/mallas" },
   { label: "Accesorios", href: "/categoria/accesorios" },
   { label: "Preventa", href: "/categoria/preventa" },
-  { label: "Novedades", href: "/productos?section=nuevos" },
+  { label: "Novedades", href: "/novedades" },
   { label: "Ofertas", href: "/productos?section=ofertas" },
 ];
 
@@ -89,6 +89,8 @@ function HeaderContent() {
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
   const lastDirection = useRef<"up" | "down" | null>(null);
+  const accumulatedScroll = useRef(0);
+  const socialBarVisibleRef = useRef(true);
 
   const prevCartCount = useRef(0);
   const prevFavoritesCount = useRef(0);
@@ -238,41 +240,67 @@ function HeaderContent() {
   }, [refreshHeaderCounts]);
 
   useEffect(() => {
-    if (hideSocialLinksBar) return;
+    if (hideSocialLinksBar) {
+      setShowSocialBar(false);
+      socialBarVisibleRef.current = false;
+      return;
+    }
 
-    const HIDE_OFFSET = 18;
-    const SHOW_OFFSET = 12;
-    const TOP_LIMIT = 8;
+    const TOP_LIMIT = 12;
+    const DEAD_ZONE = 5;
+    const HIDE_AFTER = 95;
+    const SHOW_AFTER = 70;
+
+    lastScrollY.current = window.scrollY;
+    accumulatedScroll.current = 0;
+    lastDirection.current = null;
+
+    const setVisible = (visible: boolean) => {
+      if (socialBarVisibleRef.current === visible) return;
+
+      socialBarVisibleRef.current = visible;
+      setShowSocialBar(visible);
+    };
+
+    if (window.scrollY <= TOP_LIMIT) {
+      setVisible(true);
+    }
 
     const updateScroll = () => {
       const currentY = window.scrollY;
       const diff = currentY - lastScrollY.current;
 
       if (currentY <= TOP_LIMIT) {
-        if (!showSocialBar) setShowSocialBar(true);
+        accumulatedScroll.current = 0;
         lastDirection.current = null;
         lastScrollY.current = currentY;
+        setVisible(true);
         ticking.current = false;
         return;
       }
 
-      if (Math.abs(diff) < 2) {
+      if (Math.abs(diff) < DEAD_ZONE) {
         ticking.current = false;
         return;
       }
 
-      if (diff > 0) {
-        if (Math.abs(diff) >= HIDE_OFFSET || lastDirection.current === "down") {
-          if (showSocialBar) setShowSocialBar(false);
-          lastDirection.current = "down";
-        }
+      const direction: "up" | "down" = diff > 0 ? "down" : "up";
+
+      if (lastDirection.current !== direction) {
+        accumulatedScroll.current = 0;
+        lastDirection.current = direction;
       }
 
-      if (diff < 0) {
-        if (Math.abs(diff) >= SHOW_OFFSET || lastDirection.current === "up") {
-          if (!showSocialBar) setShowSocialBar(true);
-          lastDirection.current = "up";
-        }
+      accumulatedScroll.current += Math.abs(diff);
+
+      if (direction === "down" && accumulatedScroll.current >= HIDE_AFTER) {
+        setVisible(false);
+        accumulatedScroll.current = 0;
+      }
+
+      if (direction === "up" && accumulatedScroll.current >= SHOW_AFTER) {
+        setVisible(true);
+        accumulatedScroll.current = 0;
       }
 
       lastScrollY.current = currentY;
@@ -287,8 +315,11 @@ function HeaderContent() {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [hideSocialLinksBar, showSocialBar]);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [hideSocialLinksBar]);
 
   useEffect(() => {
     if (!isMenuOpen) return;
@@ -448,7 +479,7 @@ function HeaderContent() {
 
           {!hideSocialLinksBar && (
             <div
-              className={`overflow-hidden border-t transition-[max-height,opacity] duration-200 ease-out ${
+              className={`overflow-hidden border-t transition-[max-height,opacity,border-color] duration-300 ease-out ${
                 showSocialBar
                   ? "max-h-12 border-[#d9eef7] opacity-100"
                   : "max-h-0 border-transparent opacity-0"

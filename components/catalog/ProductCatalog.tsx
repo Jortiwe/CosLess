@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { FiFilter, FiSearch } from "react-icons/fi";
+import { FiChevronDown, FiFilter, FiSearch } from "react-icons/fi";
 
 export type CatalogProduct = {
   _id: string;
@@ -28,11 +28,7 @@ function formatBs(value?: number) {
 }
 
 function getImage(product: CatalogProduct) {
-  return (
-    product.mainImage ||
-    product.images?.[0] ||
-    "/placeholder-product.png"
-  );
+  return product.mainImage || product.images?.[0] || "/placeholder-product.png";
 }
 
 function normalize(value?: string) {
@@ -115,54 +111,74 @@ export default function ProductCatalog({
 
   return (
     <div>
-      <div className="mb-6 grid gap-3 rounded-[28px] border border-[#cfeaf6] bg-white p-4 shadow-[0_10px_25px_rgba(22,50,74,0.04)] md:grid-cols-[1fr_auto_auto]">
-        <label className="relative block">
+      <div
+        className={`mb-5 grid gap-2 rounded-[24px] border border-[#cfeaf6] bg-white p-3 shadow-[0_10px_25px_rgba(22,50,74,0.04)] sm:mb-6 sm:gap-3 sm:rounded-[28px] sm:p-4 ${
+          showCategoryFilter
+            ? "grid-cols-2 md:grid-cols-[1fr_auto_auto]"
+            : "grid-cols-[1fr_135px] md:grid-cols-[1fr_auto]"
+        }`}
+      >
+        <label
+          className={`relative block ${
+            showCategoryFilter ? "col-span-2 md:col-span-1" : ""
+          }`}
+        >
           <FiSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#6f8798]" />
+
           <input
             value={localSearch}
             onChange={(e) => setLocalSearch(e.target.value)}
-            placeholder="Filtrar dentro de esta lista..."
-            className="h-12 w-full rounded-2xl border border-[#d7edf7] bg-[#f7fdff] pl-11 pr-4 text-sm font-semibold text-[#16324a] outline-none transition focus:border-[#19b7c9] focus:bg-white"
+            placeholder="Buscar..."
+            className="h-11 w-full rounded-[18px] border border-[#d7edf7] bg-[#f7fdff] pl-11 pr-4 text-sm font-semibold text-[#16324a] outline-none transition placeholder:text-[#7d94a5] focus:border-[#19b7c9] focus:bg-white sm:h-12 sm:rounded-2xl"
           />
         </label>
 
         {showCategoryFilter && (
           <label className="relative block">
-            <FiFilter className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#6f8798]" />
+            <FiFilter className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#6f8798] sm:left-4" />
+
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="h-12 min-w-[190px] appearance-none rounded-2xl border border-[#d7edf7] bg-[#f7fdff] pl-11 pr-4 text-sm font-bold text-[#16324a] outline-none transition focus:border-[#19b7c9] focus:bg-white"
+              className="h-11 w-full appearance-none rounded-[18px] border border-[#d7edf7] bg-[#f7fdff] pl-9 pr-9 text-xs font-bold text-[#16324a] outline-none transition focus:border-[#19b7c9] focus:bg-white sm:h-12 sm:min-w-[190px] sm:rounded-2xl sm:pl-11 sm:pr-10 sm:text-sm"
             >
-              <option value="all">Todas las categorías</option>
+              <option value="all">Categorías</option>
+
               {categories.map((item) => (
                 <option key={item} value={item}>
                   {item}
                 </option>
               ))}
             </select>
+
+            <FiChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[17px] text-[#16324a] sm:right-4" />
           </label>
         )}
 
-        <select
-          value={sort}
-          onChange={(e) => setSort(e.target.value)}
-          className="h-12 min-w-[190px] rounded-2xl border border-[#d7edf7] bg-[#f7fdff] px-4 text-sm font-bold text-[#16324a] outline-none transition focus:border-[#19b7c9] focus:bg-white"
-        >
-          <option value="newest">Más recientes</option>
-          <option value="oldest">Más antiguos</option>
-          <option value="az">A-Z</option>
-          <option value="za">Z-A</option>
-          <option value="price-low">Precio menor</option>
-          <option value="price-high">Precio mayor</option>
-        </select>
+        <label className="relative block">
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            className="h-11 w-full appearance-none rounded-[18px] border border-[#d7edf7] bg-[#f7fdff] px-3 pr-9 text-xs font-bold text-[#16324a] outline-none transition focus:border-[#19b7c9] focus:bg-white sm:h-12 sm:min-w-[190px] sm:rounded-2xl sm:px-4 sm:pr-10 sm:text-sm"
+          >
+            <option value="newest">Recientes</option>
+            <option value="oldest">Antiguos</option>
+            <option value="az">A-Z</option>
+            <option value="za">Z-A</option>
+            <option value="price-low">Precio menor</option>
+            <option value="price-high">Precio mayor</option>
+          </select>
+
+          <FiChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[17px] text-[#16324a] sm:right-4" />
+        </label>
       </div>
 
       {filteredProducts.length === 0 ? (
-        <div className="rounded-[32px] border border-[#cfeaf6] bg-white p-8 text-center shadow-[0_10px_25px_rgba(22,50,74,0.04)]">
-          <h2 className="text-2xl font-extrabold text-[#16324a]">
+        <div className="rounded-[28px] border border-[#cfeaf6] bg-white p-6 text-center shadow-[0_10px_25px_rgba(22,50,74,0.04)] sm:rounded-[32px] sm:p-8">
+          <h2 className="text-xl font-extrabold text-[#16324a] sm:text-2xl">
             No hay productos disponibles
           </h2>
+
           <p className="mt-3 text-sm leading-6 text-[#4b6b80]">
             Prueba con otra categoría, cambia el orden o revisa más tarde.
           </p>

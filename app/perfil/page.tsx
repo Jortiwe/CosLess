@@ -31,6 +31,20 @@ type SessionUser = {
   role?: string;
 };
 
+function getInitials(name?: string) {
+  const value = String(name || "U").trim();
+
+  if (!value) return "U";
+
+  const parts = value.split(/\s+/).filter(Boolean);
+
+  if (parts.length === 1) {
+    return parts[0].slice(0, 2).toUpperCase();
+  }
+
+  return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+}
+
 export default async function PerfilPage() {
   const cookieStore = await cookies();
   const token = cookieStore.get("cosless_token")?.value;
@@ -60,24 +74,20 @@ export default async function PerfilPage() {
       <main className="min-h-screen bg-[#eef9ff] text-[#16324a]">
         <Header />
 
-        <section className="mx-auto w-full max-w-[900px] px-4 py-10 sm:px-6 lg:px-8">
-          <div className="rounded-[32px] border border-[#cfeaf6] bg-white p-6 text-center shadow-[0_12px_35px_rgba(22,50,74,0.06)] sm:p-8">
-            <span className="inline-flex items-center rounded-full bg-[#dff4ff] px-4 py-2 text-sm font-semibold text-[#19b7c9]">
-              Mi perfil
-            </span>
-
-            <h1 className="mt-5 text-[2rem] font-extrabold leading-tight text-[#16324a] sm:text-[2.5rem]">
+        <section className="mx-auto w-full max-w-[760px] px-4 pb-10 pt-6 sm:px-6 lg:px-8">
+          <div className="rounded-[30px] border border-[#cfeaf6] bg-white p-6 text-center shadow-[0_12px_32px_rgba(22,50,74,0.06)] sm:p-8">
+            <h1 className="text-[2rem] font-extrabold leading-tight text-[#16324a] sm:text-[2.5rem]">
               Necesitas iniciar sesión
             </h1>
 
-            <p className="mx-auto mt-3 max-w-xl text-base leading-7 text-[#4b6b80]">
+            <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-[#4b6b80] sm:text-base">
               Para ver tu perfil, primero inicia sesión o crea una cuenta.
             </p>
 
-            <div className="mt-6 flex justify-center">
+            <div className="mt-6">
               <Link
                 href="/account"
-                className="inline-flex h-12 items-center justify-center rounded-2xl bg-[#19b7c9] px-6 text-sm font-bold text-white transition hover:bg-[#0ea5b7]"
+                className="inline-flex h-12 items-center justify-center rounded-2xl bg-[#19b7c9] px-6 text-sm font-extrabold text-white transition hover:bg-[#0ea5b7]"
               >
                 Ir a iniciar sesión
               </Link>
@@ -91,6 +101,7 @@ export default async function PerfilPage() {
   }
 
   const displayName = user.nickname || user.fullName || "Mi cuenta";
+  const initials = getInitials(displayName);
   const isAdmin =
     user.role === "admin" ||
     user.role === "superadmin" ||
@@ -100,114 +111,147 @@ export default async function PerfilPage() {
     <main className="min-h-screen bg-[#eef9ff] text-[#16324a]">
       <Header />
 
-      <section className="mx-auto w-full max-w-[1500px] px-4 py-10 sm:px-6 lg:px-8">
-        <div className="rounded-[32px] border border-[#cfeaf6] bg-[#f7fdff] p-6 shadow-[0_12px_35px_rgba(22,50,74,0.06)] sm:p-8 lg:p-10">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-            <div>
-              <span className="inline-flex items-center rounded-full bg-[#dff4ff] px-4 py-2 text-sm font-semibold text-[#19b7c9]">
-                Mi perfil
-              </span>
+      <section className="mx-auto w-full max-w-[1180px] px-4 pb-10 pt-5 sm:px-6 lg:px-8">
+        <div className="mb-5 flex justify-start">
+          <Link
+            href="/"
+            className="group relative inline-flex items-center text-sm font-extrabold text-[#16324a] transition hover:text-[#19b7c9]"
+          >
+            <span className="mr-1">←</span>
+            Inicio
+            <span className="absolute -bottom-1 left-0 h-[2px] w-0 rounded-full bg-[#19b7c9] transition-all duration-300 group-hover:w-full" />
+          </Link>
+        </div>
 
-              <h1 className="mt-5 text-[2.3rem] font-extrabold leading-tight text-[#16324a] sm:text-[3rem] lg:text-[3.4rem]">
-                Hola, {displayName}
-              </h1>
+        <div className="rounded-[30px] border border-[#cfeaf6] bg-white p-5 shadow-[0_12px_32px_rgba(22,50,74,0.06)] sm:rounded-[34px] sm:p-7">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-4">
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[24px] bg-[#dff4ff] text-xl font-black text-[#19b7c9] sm:h-20 sm:w-20 sm:text-2xl">
+                {initials}
+              </div>
 
-              <p className="mt-3 max-w-2xl text-base leading-7 text-[#4b6b80]">
-                Aquí podrás revisar tus datos, pedidos, favoritos y opciones de
-                tu cuenta.
-              </p>
+              <div className="min-w-0">
+                <h1 className="text-[1.9rem] font-extrabold leading-tight text-[#16324a] sm:text-[2.7rem]">
+                  Hola, {displayName}
+                </h1>
+
+                <p className="mt-1 flex items-center gap-2 break-all text-sm font-semibold text-[#4b6b80]">
+                  <FiMail className="shrink-0 text-[#19b7c9]" />
+                  {user.email || "Sin correo"}
+                </p>
+              </div>
             </div>
 
             <a
               href="/api/auth/logout"
-              className="inline-flex h-14 items-center justify-center gap-2 rounded-2xl bg-[#ef3347] px-7 text-sm font-extrabold text-white shadow-[0_12px_28px_rgba(239,51,71,0.18)] transition hover:bg-[#d62839]"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-[#ef3347] px-5 text-sm font-extrabold text-white shadow-[0_12px_28px_rgba(239,51,71,0.16)] transition hover:bg-[#d62839]"
             >
               <FiLogOut />
               Cerrar sesión
             </a>
           </div>
+        </div>
 
-          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            <div className="rounded-[28px] bg-white p-6 shadow-[0_8px_24px_rgba(22,50,74,0.04)]">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
+        <div className="mt-5 grid gap-5 lg:grid-cols-3">
+          <div className="rounded-[30px] border border-[#cfeaf6] bg-white p-5 shadow-[0_10px_26px_rgba(22,50,74,0.05)] sm:p-6 lg:col-span-1">
+            <h2 className="text-xl font-extrabold text-[#16324a]">
+              Datos de cuenta
+            </h2>
+
+            <div className="mt-5 space-y-3">
+              <div className="rounded-[22px] bg-[#f7fdff] p-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
+                    <FiUser className="text-[1.2rem]" />
+                  </div>
+
+                  <div className="min-w-0">
+                    <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#68839a]">
+                      Nickname
+                    </p>
+
+                    <p className="mt-1 break-words text-base font-extrabold text-[#16324a]">
+                      {user.nickname || "Sin nickname"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-[22px] bg-[#f7fdff] p-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
+                    <FiMail className="text-[1.2rem]" />
+                  </div>
+
+                  <div className="min-w-0">
+                    <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#68839a]">
+                      Correo
+                    </p>
+
+                    <p className="mt-1 break-all text-base font-extrabold text-[#16324a]">
+                      {user.email || "Sin correo"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <Link
+            href="/account/orders"
+            className="group rounded-[30px] border border-[#cfeaf6] bg-white p-5 shadow-[0_10px_26px_rgba(22,50,74,0.05)] transition hover:-translate-y-1 hover:border-[#19b7c9] sm:p-6"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
+              <FiShoppingBag className="text-[1.25rem]" />
+            </div>
+
+            <p className="mt-5 text-lg font-extrabold text-[#16324a] group-hover:text-[#19b7c9]">
+              Pedidos
+            </p>
+
+            <p className="mt-1 text-sm font-semibold text-[#4b6b80]">
+              Ver historial de pedidos.
+            </p>
+          </Link>
+
+          <Link
+            href="/favoritos"
+            className="group rounded-[30px] border border-[#cfeaf6] bg-white p-5 shadow-[0_10px_26px_rgba(22,50,74,0.05)] transition hover:-translate-y-1 hover:border-[#19b7c9] sm:p-6"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
+              <FiHeart className="text-[1.25rem]" />
+            </div>
+
+            <p className="mt-5 text-lg font-extrabold text-[#16324a] group-hover:text-[#19b7c9]">
+              Favoritos
+            </p>
+
+            <p className="mt-1 text-sm font-semibold text-[#4b6b80]">
+              Ver productos guardados.
+            </p>
+          </Link>
+        </div>
+
+        <div className="mt-5 grid gap-5 lg:grid-cols-2">
+          {isAdmin && (
+            <Link
+              href="/admin"
+              className="flex min-h-[126px] items-center gap-4 rounded-[30px] border border-[#bfefff] bg-[#eaf8ff] p-5 shadow-[0_10px_26px_rgba(22,50,74,0.04)] transition hover:border-[#19b7c9] hover:bg-white sm:p-6"
+            >
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white text-[#19b7c9]">
                 <FiUser className="text-[1.35rem]" />
               </div>
 
-              <p className="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-[#68839a]">
-                Nickname
-              </p>
+              <div>
+                <h2 className="text-xl font-extrabold text-[#16324a]">
+                  Panel admin
+                </h2>
 
-              <p className="mt-2 break-words text-lg font-extrabold text-[#16324a]">
-                {user.nickname || "Sin nickname"}
-              </p>
-            </div>
-
-            <div className="rounded-[28px] bg-white p-6 shadow-[0_8px_24px_rgba(22,50,74,0.04)]">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
-                <FiMail className="text-[1.35rem]" />
+                <p className="mt-1 text-sm text-[#4b6b80]">
+                  Ir al panel de gestión.
+                </p>
               </div>
-
-              <p className="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-[#68839a]">
-                Correo
-              </p>
-
-              <p className="mt-2 break-words text-lg font-extrabold text-[#16324a]">
-                {user.email || "Sin correo"}
-              </p>
-            </div>
-
-            <Link
-              href="/account/orders"
-              className="rounded-[28px] bg-white p-6 shadow-[0_8px_24px_rgba(22,50,74,0.04)] transition hover:-translate-y-1 hover:text-[#19b7c9]"
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
-                <FiShoppingBag className="text-[1.35rem]" />
-              </div>
-
-              <p className="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-[#68839a]">
-                Pedidos
-              </p>
-
-              <p className="mt-2 text-lg font-extrabold">Ver historial</p>
             </Link>
-
-            <Link
-              href="/favoritos"
-              className="rounded-[28px] bg-white p-6 shadow-[0_8px_24px_rgba(22,50,74,0.04)] transition hover:-translate-y-1 hover:text-[#19b7c9]"
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
-                <FiHeart className="text-[1.35rem]" />
-              </div>
-
-              <p className="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-[#68839a]">
-                Favoritos
-              </p>
-
-              <p className="mt-2 text-lg font-extrabold">Ver favoritos</p>
-            </Link>
-          </div>
-
-          {isAdmin && (
-            <div className="mt-7">
-              <Link
-                href="/admin"
-                className="flex items-center gap-5 rounded-[28px] border border-[#bfefff] bg-[#eaf8ff] p-6 transition hover:border-[#19b7c9] hover:bg-white"
-              >
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white text-[#19b7c9]">
-                  <FiUser className="text-[1.45rem]" />
-                </div>
-
-                <div>
-                  <h2 className="text-xl font-extrabold text-[#16324a]">
-                    Panel admin
-                  </h2>
-
-                  <p className="mt-1 text-sm text-[#4b6b80]">
-                    Ir al panel de gestión principal.
-                  </p>
-                </div>
-              </Link>
-            </div>
           )}
 
           <ChangePasswordForm />

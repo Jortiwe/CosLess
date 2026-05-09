@@ -6,8 +6,6 @@ import User from "../../models/User";
 import Favorite from "../../models/Favorite";
 import News from "../../models/News";
 import AdminToolbar from "../../components/admin/AdminToolbar";
-import AdminSectionCard from "../../components/admin/AdminSectionCard";
-import AdminQuickStat from "../../components/admin/AdminQuickStat";
 
 type AdminOrderItem = {
   _id: string;
@@ -35,6 +33,13 @@ type AdminUserItem = {
   role?: string;
 };
 
+type StatCardProps = {
+  title: string;
+  value: number;
+  subtitle: string;
+  href: string;
+};
+
 function formatBs(value?: number) {
   if (typeof value !== "number") return "Bs0";
   return `Bs${value}`;
@@ -44,6 +49,7 @@ function formatDate(dateValue?: string | Date) {
   if (!dateValue) return "Sin fecha";
 
   const date = new Date(dateValue);
+
   return date.toLocaleString("es-BO", {
     year: "numeric",
     month: "2-digit",
@@ -95,6 +101,33 @@ function statusClass(status?: string) {
   }
 }
 
+function StatCard({ title, value, subtitle, href }: StatCardProps) {
+  return (
+    <Link
+      href={href}
+      className="group block w-full min-w-0 overflow-hidden rounded-[28px] border border-[#cfeaf6] bg-white p-5 shadow-[0_10px_28px_rgba(22,50,74,0.05)] transition hover:-translate-y-1 hover:border-[#19b7c9] hover:shadow-[0_16px_34px_rgba(22,50,74,0.09)] sm:p-6"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <p className="min-w-0 break-words text-[0.7rem] font-extrabold uppercase tracking-[0.16em] text-[#6f8798] group-hover:text-[#19b7c9] sm:text-xs sm:tracking-[0.2em]">
+          {title}
+        </p>
+
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#eaf8ff] text-sm font-extrabold text-[#19b7c9] transition group-hover:bg-[#19b7c9] group-hover:text-white">
+          →
+        </span>
+      </div>
+
+      <p className="mt-6 text-[2.6rem] font-black leading-none text-[#16324a] sm:text-[3rem]">
+        {value}
+      </p>
+
+      <p className="mt-4 text-sm font-semibold leading-6 text-[#4b6b80]">
+        {subtitle}
+      </p>
+    </Link>
+  );
+}
+
 export default async function AdminPage() {
   await connectDB();
 
@@ -131,132 +164,85 @@ export default async function AdminPage() {
   ) as AdminUserItem[];
 
   return (
-    <main className="min-h-screen bg-[#eef9ff] px-5 py-8 text-[#16324a] sm:px-8 lg:px-12">
-      <div className="mx-auto max-w-[1700px]">
-        <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+    <main className="min-h-screen overflow-x-hidden bg-[#eef9ff] px-4 py-6 text-[#16324a] sm:px-6 sm:py-8 lg:px-8">
+      <div className="mx-auto w-full max-w-[1700px]">
+        <div className="mb-6 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <span className="inline-flex rounded-full bg-[#dff4ff] px-4 py-2 text-sm font-semibold text-[#19b7c9]">
+            <span className="inline-flex rounded-full bg-white px-5 py-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[#19b7c9] shadow-[0_8px_20px_rgba(22,50,74,0.04)]">
               Panel admin
             </span>
 
-            <h1 className="mt-4 text-4xl font-extrabold">Gestión CosLess</h1>
+            <h1 className="mt-3 text-[2.2rem] font-extrabold leading-tight text-[#16324a] sm:text-[3.2rem]">
+              Gestión CosLess
+            </h1>
 
-            <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[#4b6b80]">
-              Desde aquí podrás gestionar productos, pedidos, usuarios,
-              favoritos, novedades y estadísticas.
+            <p className="mt-2 hidden max-w-3xl text-sm font-semibold leading-7 text-[#4b6b80] sm:block">
+              Resumen general de pedidos, productos, usuarios y novedades.
             </p>
           </div>
 
           <AdminToolbar />
         </div>
 
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-5">
-          <AdminQuickStat
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <StatCard
             title="Pedidos"
             value={ordersCount}
-            subtitle="Pedidos registrados"
+            subtitle="Registrados"
             href="/admin/pedidos"
           />
 
-          <AdminQuickStat
+          <StatCard
             title="Productos"
             value={productsCount}
-            subtitle="Productos cargados"
+            subtitle="Cargados"
             href="/admin/productos"
           />
 
-          <AdminQuickStat
+          <StatCard
             title="Usuarios"
             value={usersCount}
-            subtitle="Cuentas registradas"
+            subtitle="Cuentas"
             href="/admin/usuarios"
           />
 
-          <AdminQuickStat
+          <StatCard
             title="Favoritos"
             value={favoritesCount}
-            subtitle="Favoritos guardados"
+            subtitle="Guardados"
             href="/admin/favoritos"
           />
 
-          <AdminQuickStat
+          <StatCard
             title="Novedades"
             value={newsCount}
-            subtitle="Noticias publicadas"
+            subtitle="Publicadas"
             href="/admin/novedades"
           />
         </div>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          <AdminSectionCard
-            title="Pedidos"
-            description="Ver pedidos, cambiar estado, marcar pagado, enviado o entregado."
-            href="/admin/pedidos"
-            buttonLabel="Gestionar pedidos"
-          />
-
-          <AdminSectionCard
-            title="Productos"
-            description="Crear productos, editar stock, precio, imágenes y categorías."
-            href="/admin/productos"
-            buttonLabel="Gestionar productos"
-          />
-
-          <AdminSectionCard
-            title="Novedades"
-            description="Crear noticias, anuncios, nuevos ingresos y actualizaciones para clientes."
-            href="/admin/novedades"
-            buttonLabel="Gestionar novedades"
-          />
-
-          <AdminSectionCard
-            title="Usuarios"
-            description="Ver clientes registrados y administradores del sistema."
-            href="/admin/usuarios"
-            buttonLabel="Gestionar usuarios"
-          />
-
-          <AdminSectionCard
-            title="Favoritos"
-            description="Revisar qué productos guarda más la gente en favoritos."
-            href="/admin/favoritos"
-            buttonLabel="Gestionar favoritos"
-          />
-
-          <AdminSectionCard
-            title="Estadísticas"
-            description="Ver productos más vistos, pedidos más frecuentes y resumen general."
-            href="/admin/estadisticas"
-            buttonLabel="Ver estadísticas"
-          />
-
-          <AdminSectionCard
-            title="Configuración"
-            description="Definir costos de envío, estados y opciones del sistema."
-            href="/admin/configuracion"
-            buttonLabel="Abrir configuración"
-          />
-        </div>
-
-        <div className="mt-8 grid gap-8 xl:grid-cols-[1.25fr_0.75fr]">
-          <section className="rounded-[32px] border border-[#cfeaf6] bg-[#f7fdff] p-6 shadow-[0_10px_30px_rgba(22,50,74,0.05)]">
+        <div className="mt-6 grid gap-6 xl:grid-cols-[1.25fr_0.75fr]">
+          <section className="rounded-[30px] border border-[#cfeaf6] bg-white p-5 shadow-[0_12px_32px_rgba(22,50,74,0.06)] sm:rounded-[34px] sm:p-6">
             <div className="mb-5 flex items-center justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-extrabold">Pedidos recientes</h2>
-                <p className="mt-2 text-sm text-[#4b6b80]">
-                  Aquí podrás revisar pedidos nuevos y su estado actual.
-                </p>
+                <span className="inline-flex rounded-full bg-[#dff4ff] px-4 py-2 text-xs font-extrabold text-[#19b7c9]">
+                  Pedidos
+                </span>
+
+                <h2 className="mt-3 text-2xl font-extrabold text-[#16324a]">
+                  Recientes
+                </h2>
               </div>
 
               <Link
                 href="/admin/pedidos"
-                className="rounded-2xl bg-[#19b7c9] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#0ea5b7]"
+                className="shrink-0 rounded-2xl bg-[#19b7c9] px-4 py-2 text-sm font-extrabold text-white transition hover:bg-[#0ea5b7]"
               >
-                Gestionar pedidos
+                Gestionar
               </Link>
             </div>
 
-            <div className="overflow-x-auto">
+            <div className="hidden overflow-x-auto md:block">
               <table className="min-w-full border-separate border-spacing-y-3">
                 <thead>
                   <tr className="text-left text-sm text-[#6f8798]">
@@ -273,14 +259,14 @@ export default async function AdminPage() {
                     <tr>
                       <td
                         colSpan={5}
-                        className="rounded-2xl bg-white px-4 py-6 text-sm text-[#4b6b80]"
+                        className="rounded-2xl bg-[#f7fdff] px-4 py-6 text-sm text-[#4b6b80]"
                       >
                         No hay pedidos todavía.
                       </td>
                     </tr>
                   ) : (
                     recentOrders.map((order) => (
-                      <tr key={order._id} className="bg-white">
+                      <tr key={order._id} className="bg-[#f7fdff]">
                         <td className="rounded-l-2xl px-3 py-4 font-bold">
                           <Link
                             href="/admin/pedidos"
@@ -317,23 +303,78 @@ export default async function AdminPage() {
                 </tbody>
               </table>
             </div>
+
+            <div className="space-y-3 md:hidden">
+              {recentOrders.length === 0 ? (
+                <div className="rounded-2xl bg-[#f7fdff] px-4 py-6 text-sm text-[#4b6b80]">
+                  No hay pedidos todavía.
+                </div>
+              ) : (
+                recentOrders.map((order) => (
+                  <Link
+                    key={order._id}
+                    href="/admin/pedidos"
+                    className="block rounded-[24px] border border-[#e5f3fa] bg-[#f7fdff] p-4 transition hover:border-[#19b7c9]"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-extrabold text-[#16324a]">
+                          {order.orderCode || "Sin código"}
+                        </p>
+
+                        <p className="mt-1 text-sm text-[#4b6b80]">
+                          {order.customerName || "Sin cliente"}
+                        </p>
+                      </div>
+
+                      <p className="shrink-0 text-sm font-extrabold text-[#19b7c9]">
+                        {formatBs(order.total)}
+                      </p>
+                    </div>
+
+                    <div className="mt-3 flex flex-wrap items-center gap-2">
+                      <span
+                        className={`inline-flex rounded-full border px-3 py-1 text-xs font-bold ${statusClass(
+                          order.status
+                        )}`}
+                      >
+                        {statusLabel(order.status)}
+                      </span>
+
+                      <span className="text-xs font-semibold text-[#6f8798]">
+                        {formatDate(order.createdAt)}
+                      </span>
+                    </div>
+                  </Link>
+                ))
+              )}
+            </div>
           </section>
 
-          <div className="space-y-8">
-            <section className="rounded-[32px] border border-[#cfeaf6] bg-[#f7fdff] p-6 shadow-[0_10px_30px_rgba(22,50,74,0.05)]">
-              <div className="mb-4 flex items-center justify-between gap-3">
-                <h2 className="text-2xl font-extrabold">Productos nuevos</h2>
+          <div className="space-y-6">
+            <section className="rounded-[30px] border border-[#cfeaf6] bg-white p-5 shadow-[0_12px_32px_rgba(22,50,74,0.06)] sm:rounded-[34px] sm:p-6">
+              <div className="mb-5 flex items-center justify-between gap-3">
+                <div>
+                  <span className="inline-flex rounded-full bg-[#dff4ff] px-4 py-2 text-xs font-extrabold text-[#19b7c9]">
+                    Productos
+                  </span>
+
+                  <h2 className="mt-3 text-2xl font-extrabold text-[#16324a]">
+                    Nuevos
+                  </h2>
+                </div>
+
                 <Link
                   href="/admin/productos"
-                  className="rounded-2xl bg-[#19b7c9] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#0ea5b7]"
+                  className="shrink-0 rounded-2xl bg-[#19b7c9] px-4 py-2 text-sm font-extrabold text-white transition hover:bg-[#0ea5b7]"
                 >
-                  Gestionar productos
+                  Gestionar
                 </Link>
               </div>
 
               <div className="space-y-3">
                 {recentProducts.length === 0 ? (
-                  <div className="rounded-2xl bg-white px-4 py-4 text-sm text-[#4b6b80]">
+                  <div className="rounded-2xl bg-[#f7fdff] px-4 py-4 text-sm text-[#4b6b80]">
                     No hay productos todavía.
                   </div>
                 ) : (
@@ -341,11 +382,11 @@ export default async function AdminPage() {
                     <Link
                       key={product._id}
                       href="/admin/productos"
-                      className="block rounded-2xl bg-white px-4 py-4 transition hover:border-[#19b7c9] hover:text-[#19b7c9]"
+                      className="block rounded-[22px] bg-[#f7fdff] px-4 py-4 transition hover:text-[#19b7c9]"
                     >
-                      <div className="flex items-center justify-between gap-4">
-                        <div>
-                          <h3 className="font-bold">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="min-w-0">
+                          <h3 className="line-clamp-1 font-extrabold text-[#16324a]">
                             {product.title || "Sin título"}
                           </h3>
 
@@ -355,7 +396,7 @@ export default async function AdminPage() {
                           </p>
                         </div>
 
-                        <div className="text-right">
+                        <div className="shrink-0 text-right">
                           <p className="font-extrabold text-[#19b7c9]">
                             {formatBs(product.price)}
                           </p>
@@ -374,20 +415,29 @@ export default async function AdminPage() {
               </div>
             </section>
 
-            <section className="rounded-[32px] border border-[#cfeaf6] bg-[#f7fdff] p-6 shadow-[0_10px_30px_rgba(22,50,74,0.05)]">
-              <div className="mb-4 flex items-center justify-between gap-3">
-                <h2 className="text-2xl font-extrabold">Usuarios nuevos</h2>
+            <section className="rounded-[30px] border border-[#cfeaf6] bg-white p-5 shadow-[0_12px_32px_rgba(22,50,74,0.06)] sm:rounded-[34px] sm:p-6">
+              <div className="mb-5 flex items-center justify-between gap-3">
+                <div>
+                  <span className="inline-flex rounded-full bg-[#dff4ff] px-4 py-2 text-xs font-extrabold text-[#19b7c9]">
+                    Usuarios
+                  </span>
+
+                  <h2 className="mt-3 text-2xl font-extrabold text-[#16324a]">
+                    Nuevos
+                  </h2>
+                </div>
+
                 <Link
                   href="/admin/usuarios"
-                  className="rounded-2xl bg-[#19b7c9] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#0ea5b7]"
+                  className="shrink-0 rounded-2xl bg-[#19b7c9] px-4 py-2 text-sm font-extrabold text-white transition hover:bg-[#0ea5b7]"
                 >
-                  Gestionar usuarios
+                  Gestionar
                 </Link>
               </div>
 
               <div className="space-y-3">
                 {recentUsers.length === 0 ? (
-                  <div className="rounded-2xl bg-white px-4 py-4 text-sm text-[#4b6b80]">
+                  <div className="rounded-2xl bg-[#f7fdff] px-4 py-4 text-sm text-[#4b6b80]">
                     No hay usuarios todavía.
                   </div>
                 ) : (
@@ -395,17 +445,17 @@ export default async function AdminPage() {
                     <Link
                       key={user._id}
                       href="/admin/usuarios"
-                      className="block rounded-2xl bg-white px-4 py-4 transition hover:border-[#19b7c9] hover:text-[#19b7c9]"
+                      className="block rounded-[22px] bg-[#f7fdff] px-4 py-4 transition hover:text-[#19b7c9]"
                     >
-                      <h3 className="font-bold">
+                      <h3 className="font-extrabold text-[#16324a]">
                         {user.fullName || "Sin nombre"}
                       </h3>
 
-                      <p className="mt-1 text-sm text-[#4b6b80]">
+                      <p className="mt-1 break-all text-sm text-[#4b6b80]">
                         {user.email || "Sin correo"}
                       </p>
 
-                      <p className="mt-2 inline-flex rounded-full bg-[#eaf8ff] px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#19b7c9]">
+                      <p className="mt-3 inline-flex rounded-full bg-[#eaf8ff] px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#19b7c9]">
                         {user.role || "Sin rol"}
                       </p>
                     </Link>

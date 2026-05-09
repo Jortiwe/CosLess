@@ -34,22 +34,21 @@ function getPageInfo(section?: string) {
   }
 
   if (section === "nuevos-cosplays") {
-  return {
-    badge: "Nuevos cosplays",
-    title: "Nuevos cosplays",
-    description:
-      "Cosplays recién agregados o marcados como novedades de la semana.",
-  };
-}
+    return {
+      badge: "Nuevos cosplays",
+      title: "Nuevos cosplays",
+      description:
+        "Cosplays recién agregados o marcados como novedades de la semana.",
+    };
+  }
 
-if (section === "destacados") {
-  return {
-    badge: "Destacados",
-    title: "Productos destacados",
-    description:
-      "Productos seleccionados y recomendados por CosLess.",
-  };
-}
+  if (section === "destacados") {
+    return {
+      badge: "Destacados",
+      title: "Productos destacados",
+      description: "Productos seleccionados y recomendados por CosLess.",
+    };
+  }
 
   return {
     badge: "Ver todo",
@@ -78,14 +77,15 @@ export default async function ProductsPage({
   if (section === "nuevos") {
     query.isWeeklyNew = true;
   }
-  if (section === "nuevos-cosplays") {
-  query.isWeeklyNew = true;
-  query.category = "cosplays";
-}
 
-if (section === "destacados") {
-  query.isFeatured = true;
-}
+  if (section === "nuevos-cosplays") {
+    query.isWeeklyNew = true;
+    query.category = "cosplays";
+  }
+
+  if (section === "destacados") {
+    query.isFeatured = true;
+  }
 
   const rawProducts = await Product.find(query)
     .sort({ createdAt: -1 })
@@ -99,17 +99,17 @@ if (section === "destacados") {
     <main className="min-h-screen bg-[#eef9ff] text-[#16324a]">
       <Header />
 
-      <section className="mx-auto w-full max-w-[1380px] px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-6">
+      <section className="mx-auto w-full max-w-[1380px] px-4 pb-8 pt-5 sm:px-6 sm:py-8 lg:px-8">
+        <div className="mb-4 sm:mb-6">
           <span className="inline-flex rounded-full bg-[#dff4ff] px-4 py-2 text-sm font-bold text-[#19b7c9]">
             {pageInfo.badge}
           </span>
 
-          <h1 className="mt-4 text-[2.3rem] font-extrabold leading-tight sm:text-[3rem]">
+          <h1 className="mt-4 hidden text-[2.3rem] font-extrabold leading-tight sm:block sm:text-[3rem]">
             {pageInfo.title}
           </h1>
 
-          <p className="mt-3 max-w-2xl text-base leading-7 text-[#4b6b80]">
+          <p className="mt-3 hidden max-w-2xl text-base leading-7 text-[#4b6b80] sm:block">
             {pageInfo.description}
           </p>
         </div>

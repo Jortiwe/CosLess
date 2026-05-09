@@ -6,11 +6,59 @@ import { FaFacebookF, FaGoogle, FaInstagram } from "react-icons/fa";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
 type Mode = "login" | "register";
+type FieldState = "neutral" | "valid" | "invalid";
 
 type AuthCardProps = {
   mode: Mode;
   onModeChange: (mode: Mode) => void;
 };
+
+function getFieldState(value: string, valid: boolean, touched: boolean) {
+  if (!touched && !value.trim()) return "neutral";
+  return valid ? "valid" : "invalid";
+}
+
+function getInputClass(state: FieldState) {
+  const base =
+    "w-full rounded-[18px] border bg-white px-4 py-3 text-[15px] text-[#16324a] outline-none transition duration-200 placeholder:text-[#6f8798]";
+
+  if (state === "valid") {
+    return `${base} border-emerald-300 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100`;
+  }
+
+  if (state === "invalid") {
+    return `${base} border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100`;
+  }
+
+  return `${base} border-[#cfeaf6] focus:border-[#19b7c9] focus:ring-2 focus:ring-[#bfefff]`;
+}
+
+function FloatingMessage({
+  show,
+  type,
+  children,
+}: {
+  show: boolean;
+  type: "valid" | "invalid" | "info";
+  children: React.ReactNode;
+}) {
+  if (!show) return null;
+
+  const classes =
+    type === "valid"
+      ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+      : type === "invalid"
+      ? "border-red-200 bg-red-50 text-red-600"
+      : "border-[#cfeaf6] bg-white text-[#6f8798]";
+
+  return (
+    <span
+      className={`pointer-events-none absolute right-3 top-full z-20 mt-1 rounded-full border px-3 py-1 text-[11px] font-extrabold shadow-[0_8px_20px_rgba(22,50,74,0.10)] ${classes}`}
+    >
+      {children}
+    </span>
+  );
+}
 
 export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
   const router = useRouter();
@@ -20,21 +68,87 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [touched, setTouched] = useState({
+    nickname: false,
+    fullName: false,
+    email: false,
+    password: false,
+  });
+
   const [errorText, setErrorText] = useState("");
   const [successText, setSuccessText] = useState("");
   const [loading, setLoading] = useState(false);
   const [showDevMessage, setShowDevMessage] = useState(false);
 
-  const inputBase =
-    "w-full rounded-[18px] border border-[#cfeaf6] bg-white px-4 py-3 text-[15px] text-[#16324a] outline-none transition duration-200 placeholder:text-[#6f8798] focus:border-[#19b7c9] focus:ring-2 focus:ring-[#bfefff]";
+  const nicknameValid = mode === "login" || nickname.trim().length >= 3;
+  const fullNameValid = mode === "login" || fullName.trim().length >= 3;
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  const passwordValid =
+    mode === "login" ? password.trim().length > 0 : password.length >= 8;
+
+  const nicknameState = getFieldState(
+    nickname,
+    nicknameValid,
+    touched.nickname
+  );
+  const fullNameState = getFieldState(
+    fullName,
+    fullNameValid,
+    touched.fullName
+  );
+  const emailState = getFieldState(email, emailValid, touched.email);
+  const passwordState = getFieldState(
+    password,
+    passwordValid,
+    touched.password
+  );
 
   const socialBase =
     "flex items-center justify-center gap-2 rounded-[18px] border border-[#cfeaf6] bg-white text-[#16324a] transition duration-200 hover:-translate-y-0.5 hover:border-[#19b7c9] hover:text-[#19b7c9]";
+
+  function markTouched(field: keyof typeof touched) {
+    setTouched((current) => ({
+      ...current,
+      [field]: true,
+    }));
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErrorText("");
     setSuccessText("");
+
+    setTouched({
+      nickname: true,
+      fullName: true,
+      email: true,
+      password: true,
+    });
+
+    if (mode === "register" && !nicknameValid) {
+      setErrorText("El nickname debe tener mínimo 3 caracteres.");
+      return;
+    }
+
+    if (mode === "register" && !fullNameValid) {
+      setErrorText("Escribe tu nombre completo.");
+      return;
+    }
+
+    if (!emailValid) {
+      setErrorText("Escribe un correo electrónico válido.");
+      return;
+    }
+
+    if (!passwordValid) {
+      setErrorText(
+        mode === "login"
+          ? "Escribe tu contraseña."
+          : "La contraseña debe tener mínimo 8 caracteres."
+      );
+      return;
+    }
 
     try {
       setLoading(true);
@@ -206,48 +320,90 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
         >
           {mode === "register" && (
             <>
-              <div>
+              <div className="relative">
                 <label className="mb-2 block text-sm font-semibold text-[#16324a]">
                   Nickname
                 </label>
+
                 <input
                   type="text"
                   placeholder="Tu nickname"
-                  className={inputBase}
+                  className={getInputClass(nicknameState)}
                   value={nickname}
+                  onBlur={() => markTouched("nickname")}
                   onChange={(e) => setNickname(e.target.value)}
                 />
+
+                <FloatingMessage
+                  show={nicknameState === "valid"}
+                  type="valid"
+                >
+                  Correcto
+                </FloatingMessage>
+
+                <FloatingMessage
+                  show={nicknameState === "invalid"}
+                  type="invalid"
+                >
+                  Mínimo 3 caracteres
+                </FloatingMessage>
               </div>
 
-              <div>
+              <div className="relative">
                 <label className="mb-2 block text-sm font-semibold text-[#16324a]">
                   Nombre completo
                 </label>
+
                 <input
                   type="text"
                   placeholder="Tu nombre completo"
-                  className={inputBase}
+                  className={getInputClass(fullNameState)}
                   value={fullName}
+                  onBlur={() => markTouched("fullName")}
                   onChange={(e) => setFullName(e.target.value)}
                 />
+
+                <FloatingMessage
+                  show={fullNameState === "valid"}
+                  type="valid"
+                >
+                  Correcto
+                </FloatingMessage>
+
+                <FloatingMessage
+                  show={fullNameState === "invalid"}
+                  type="invalid"
+                >
+                  Escribe tu nombre
+                </FloatingMessage>
               </div>
             </>
           )}
 
-          <div>
+          <div className="relative">
             <label className="mb-2 block text-sm font-semibold text-[#16324a]">
               Correo electrónico
             </label>
+
             <input
               type="email"
               placeholder="correo@ejemplo.com"
-              className={inputBase}
+              className={getInputClass(emailState)}
               value={email}
+              onBlur={() => markTouched("email")}
               onChange={(e) => setEmail(e.target.value)}
             />
+
+            <FloatingMessage show={emailState === "valid"} type="valid">
+              Correo válido
+            </FloatingMessage>
+
+            <FloatingMessage show={emailState === "invalid"} type="invalid">
+              Formato inválido
+            </FloatingMessage>
           </div>
 
-          <div>
+          <div className="relative">
             <label className="mb-2 block text-sm font-semibold text-[#16324a]">
               Contraseña
             </label>
@@ -256,8 +412,9 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Tu contraseña"
-                className={`${inputBase} pr-12`}
+                className={`${getInputClass(passwordState)} pr-12`}
                 value={password}
+                onBlur={() => markTouched("password")}
                 onChange={(e) => setPassword(e.target.value)}
               />
 
@@ -273,6 +430,17 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
                 )}
               </button>
             </div>
+
+            <FloatingMessage show={passwordState === "valid"} type="valid">
+              {mode === "login" ? "Lista" : "Contraseña válida"}
+            </FloatingMessage>
+
+            <FloatingMessage
+              show={passwordState === "invalid"}
+              type="invalid"
+            >
+              {mode === "login" ? "Requerida" : "Mínimo 8 caracteres"}
+            </FloatingMessage>
           </div>
 
           {mode === "login" && (
@@ -372,32 +540,32 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
       <div className="hidden lg:block">
         <div className="w-full rounded-[34px] border border-[#cfeaf6] bg-[#f7fcff] p-8">
           <div className="rounded-full bg-[#e2f3fb] p-2">
-  <div className="grid grid-cols-2 gap-2">
-    <button
-      type="button"
-      onClick={() => onModeChange("login")}
-      className={`h-[58px] rounded-full text-[16px] font-semibold transition-all xl:h-[60px] xl:text-[17px] ${
-        mode === "login"
-          ? "bg-[#26b8cb] text-white shadow-[0_8px_20px_rgba(38,184,203,0.18)]"
-          : "bg-transparent text-[#5f7890]"
-      }`}
-    >
-      Iniciar sesión
-    </button>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => onModeChange("login")}
+                className={`h-[58px] rounded-full text-[16px] font-semibold transition-all xl:h-[60px] xl:text-[17px] ${
+                  mode === "login"
+                    ? "bg-[#26b8cb] text-white shadow-[0_8px_20px_rgba(38,184,203,0.18)]"
+                    : "bg-transparent text-[#5f7890]"
+                }`}
+              >
+                Iniciar sesión
+              </button>
 
-    <button
-      type="button"
-      onClick={() => onModeChange("register")}
-      className={`h-[58px] rounded-full text-[16px] font-semibold transition-all xl:h-[60px] xl:text-[17px] ${
-        mode === "register"
-          ? "bg-[#26b8cb] text-white shadow-[0_8px_20px_rgba(38,184,203,0.18)]"
-          : "bg-transparent text-[#5f7890]"
-      }`}
-    >
-      Crear cuenta
-    </button>
-  </div>
-</div>
+              <button
+                type="button"
+                onClick={() => onModeChange("register")}
+                className={`h-[58px] rounded-full text-[16px] font-semibold transition-all xl:h-[60px] xl:text-[17px] ${
+                  mode === "register"
+                    ? "bg-[#26b8cb] text-white shadow-[0_8px_20px_rgba(38,184,203,0.18)]"
+                    : "bg-transparent text-[#5f7890]"
+                }`}
+              >
+                Crear cuenta
+              </button>
+            </div>
+          </div>
 
           {renderFormContent(false)}
         </div>

@@ -35,15 +35,15 @@ export default function HomeProductRail({
   viewAllHref,
 }: Props) {
   return (
-    <section className="mt-12">
-      <div className="mb-5 flex items-end justify-between gap-4">
-        <div>
+    <section className="mt-10 sm:mt-12">
+      <div className="mb-5 flex items-start justify-between gap-3 sm:gap-4">
+        <div className="min-w-0 flex-1">
           <h2 className="text-[2rem] font-extrabold leading-tight tracking-tight text-[#16324a] sm:text-[2.3rem] lg:text-[2.6rem]">
             {title}
           </h2>
 
           {subtitle && (
-            <p className="mt-2 max-w-2xl text-base leading-7 text-[#4b6b80]">
+            <p className="mt-2 max-w-2xl text-[0.95rem] leading-6 text-[#4b6b80] sm:text-base sm:leading-7">
               {subtitle}
             </p>
           )}
@@ -51,7 +51,7 @@ export default function HomeProductRail({
 
         <Link
           href={viewAllHref}
-          className="hidden shrink-0 rounded-2xl border border-[#cfeaf6] bg-white px-6 py-3 text-sm font-extrabold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9] sm:inline-flex"
+          className="mt-1 inline-flex shrink-0 rounded-2xl border border-[#cfeaf6] bg-white px-4 py-2 text-xs font-extrabold text-[#16324a] shadow-[0_8px_20px_rgba(22,50,74,0.04)] transition hover:border-[#19b7c9] hover:text-[#19b7c9] sm:mt-0 sm:px-6 sm:py-3 sm:text-sm"
         >
           Ver todo
         </Link>
@@ -100,15 +100,6 @@ export default function HomeProductRail({
             </div>
           </Link>
         ))}
-      </div>
-
-      <div className="mt-4 sm:hidden">
-        <Link
-          href={viewAllHref}
-          className="inline-flex rounded-2xl border border-[#cfeaf6] bg-white px-6 py-3 text-sm font-extrabold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9]"
-        >
-          Ver todo
-        </Link>
       </div>
     </section>
   );
