@@ -84,7 +84,7 @@ export default async function PublicNewsPage({ searchParams }: PageProps) {
           <>
             {mainNews && (
               <article className="mb-7 overflow-hidden rounded-[30px] border border-[#cfeaf6] bg-white shadow-[0_12px_32px_rgba(22,50,74,0.06)] sm:mb-8 sm:rounded-[34px] lg:grid lg:grid-cols-[0.95fr_1.05fr]">
-                <div className="h-[270px] overflow-hidden bg-[#eaf8ff] sm:h-[380px] lg:h-[560px]">
+                <div className="h-[270px] overflow-hidden bg-[#eaf8ff] sm:h-[380px] lg:min-h-[560px]">
                   <img
                     src={mainNews.image || "/placeholder-product.png"}
                     alt={mainNews.title || "Novedad"}
@@ -92,23 +92,23 @@ export default async function PublicNewsPage({ searchParams }: PageProps) {
                   />
                 </div>
 
-                <div className="flex flex-col p-5 sm:p-8 lg:h-[560px] lg:p-10">
+                <div className="flex flex-col p-5 sm:p-8 lg:min-h-[560px] lg:p-10">
                   <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-[#19b7c9] sm:text-sm">
                     {formatDate(mainNews.createdAt)}
                   </p>
 
-                  <h2 className="mt-3 line-clamp-3 text-[2rem] font-extrabold leading-tight tracking-tight text-[#16324a] sm:mt-4 sm:text-[2.8rem]">
+                  <h2 className="mt-4 max-w-[850px] text-[1.95rem] font-extrabold leading-[1.16] tracking-[-0.03em] text-[#16324a] sm:text-[2.45rem] lg:text-[2.75rem] xl:text-[3rem]">
                     {mainNews.title}
                   </h2>
 
-                  {(mainNews.summary || mainNews.content) && (
-                    <p className="mt-3 line-clamp-2 text-[0.95rem] leading-7 text-[#4b6b80] sm:mt-4 sm:text-base">
-                      {mainNews.summary || mainNews.content}
+                  {mainNews.summary && (
+                    <p className="mt-4 text-[0.95rem] leading-7 text-[#4b6b80] sm:text-base lg:text-[1.05rem]">
+                      {mainNews.summary}
                     </p>
                   )}
 
                   {mainNews.content && (
-                    <div className="mt-5 max-h-[230px] overflow-y-auto overscroll-contain whitespace-pre-line border-t border-[#e5f3fa] pt-5 text-[0.92rem] leading-7 text-[#16324a] [-ms-overflow-style:none] [scrollbar-width:none] sm:max-h-[280px] sm:text-[15px] sm:leading-8 lg:max-h-[310px] [&::-webkit-scrollbar]:hidden">
+                    <div className="mt-5 max-h-none overflow-visible whitespace-pre-line border-t border-[#e5f3fa] pt-5 text-[0.92rem] leading-7 text-[#16324a] sm:text-[15px] sm:leading-8 lg:max-h-[300px] lg:overflow-y-auto lg:overscroll-contain lg:[-ms-overflow-style:none] lg:[scrollbar-width:none] lg:[&::-webkit-scrollbar]:hidden">
                       {mainNews.content}
                     </div>
                   )}
@@ -136,7 +136,7 @@ export default async function PublicNewsPage({ searchParams }: PageProps) {
                         {formatDate(item.createdAt)}
                       </p>
 
-                      <h2 className="mt-3 line-clamp-2 min-h-[56px] text-xl font-extrabold leading-tight text-[#16324a]">
+                      <h2 className="mt-3 line-clamp-2 min-h-[60px] text-xl font-extrabold leading-[1.18] tracking-[-0.02em] text-[#16324a]">
                         {item.title}
                       </h2>
 

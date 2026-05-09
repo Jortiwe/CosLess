@@ -1,70 +1,30 @@
 import Link from "next/link";
 import { CATEGORY_LIST } from "../../lib/categories";
 
-
-const categories = [
-  {
-    title: "Cosplays",
-    description: "Trajes completos",
-    href: "/buscar?q=cosplays",
-    image: "/images/home/cat-cosplays.png",
-  },
-  {
-    title: "Pelucas",
-    description: "Estilos y colores",
-    href: "/buscar?q=pelucas",
-    image: "/images/home/cat-pelucas.png",
-  },
-  {
-    title: "Lentes",
-    description: "Para tu personaje",
-    href: "/buscar?q=lentes",
-    image: "/images/home/cat-lentes.png",
-  },
-  {
-    title: "Mallas",
-    description: "Base para cosplay",
-    href: "/buscar?q=mallas",
-    image: "/images/home/cat-mallas.png",
-  },
-  {
-    title: "Accesorios",
-    description: "Detalles finales",
-    href: "/buscar?q=accesorios",
-    image: "/images/home/cat-accesorios.png",
-  },
-  {
-    title: "Preventa",
-    description: "Próximos ingresos",
-    href: "/buscar?q=preventa",
-    image: "/images/home/cat-preventa.png",
-  },
-];
-
 export default function Categories() {
   return (
     <section className="mt-10 sm:mt-12">
-      <div className="mb-5 flex flex-col gap-2 sm:mb-6 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <span className="inline-flex rounded-full bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-[#19b7c9] shadow-sm">
-            Explora
-          </span>
+      <div className="mb-5 sm:mb-6">
+        <span className="inline-flex rounded-full bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-[#19b7c9] shadow-sm">
+          Explora
+        </span>
 
-          <h2 className="mt-3 text-[1.9rem] font-extrabold leading-tight text-[#16324a] sm:text-[2.35rem]">
+        <div className="mt-3 flex items-center justify-between gap-4">
+          <h2 className="text-[1.9rem] font-extrabold leading-tight text-[#16324a] sm:text-[2.35rem]">
             Categorías
           </h2>
 
-          <p className="mt-2 max-w-xl text-sm leading-6 text-[#4b6b80] sm:text-base">
-            Encuentra rápido lo que necesitas para armar tu cosplay.
-          </p>
+          <Link
+            href="/productos"
+            className="inline-flex shrink-0 rounded-2xl border border-[#bfefff] bg-white px-5 py-3 text-sm font-bold text-[#16324a] shadow-sm transition hover:border-[#19b7c9] hover:text-[#19b7c9] active:scale-95"
+          >
+            Ver todo
+          </Link>
         </div>
 
-        <Link
-          href="/productos"
-          className="hidden rounded-2xl border border-[#bfefff] bg-white px-5 py-3 text-sm font-bold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9] sm:inline-flex"
-        >
-          Ver todo
-        </Link>
+        <p className="mt-2 hidden max-w-xl text-sm leading-6 text-[#4b6b80] sm:block sm:text-base">
+          Encuentra rápido lo que necesitas para armar tu cosplay.
+        </p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-6">

@@ -23,3 +23,35 @@ a,
 .cursor-pointer-target {
   cursor: pointer;
 }
+/* Scrollbar global CosLess */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(25, 183, 201, 0.65) transparent;
+}
+
+/* Chrome, Edge, Brave */
+*::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(25, 183, 201, 0.55);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(25, 183, 201, 0.85);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}

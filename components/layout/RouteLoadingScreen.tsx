@@ -1,0 +1,165 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+
+const SHOW_AFTER_MS = 650;
+const MIN_VISIBLE_MS = 350;
+const MAX_LOADING_MS = 2200;
+
+export default function RouteLoadingScreen() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const routeKey = `${pathname}?${searchParams.toString()}`;
+
+  const previousRoute = useRef(routeKey);
+  const showTimer = useRef<number | null>(null);
+  const hideTimer = useRef<number | null>(null);
+  const safetyTimer = useRef<number | null>(null);
+  const shownAt = useRef<number>(0);
+
+  const [visible, setVisible] = useState(false);
+
+  function clearShowTimer() {
+    if (showTimer.current) {
+      window.clearTimeout(showTimer.current);
+      showTimer.current = null;
+    }
+  }
+
+  function clearHideTimer() {
+    if (hideTimer.current) {
+      window.clearTimeout(hideTimer.current);
+      hideTimer.current = null;
+    }
+  }
+
+  function clearSafetyTimer() {
+    if (safetyTimer.current) {
+      window.clearTimeout(safetyTimer.current);
+      safetyTimer.current = null;
+    }
+  }
+
+  function clearAllTimers() {
+    clearShowTimer();
+    clearHideTimer();
+    clearSafetyTimer();
+  }
+
+  function forceStopLoading() {
+    clearAllTimers();
+    setVisible(false);
+  }
+
+  function startPossibleLoading() {
+    clearAllTimers();
+
+    showTimer.current = window.setTimeout(() => {
+      shownAt.current = Date.now();
+      setVisible(true);
+
+      safetyTimer.current = window.setTimeout(() => {
+        forceStopLoading();
+      }, MAX_LOADING_MS);
+    }, SHOW_AFTER_MS);
+  }
+
+  function stopLoading() {
+    clearShowTimer();
+    clearSafetyTimer();
+
+    const elapsed = Date.now() - shownAt.current;
+    const remaining = visible ? Math.max(0, MIN_VISIBLE_MS - elapsed) : 0;
+
+    clearHideTimer();
+
+    hideTimer.current = window.setTimeout(() => {
+      setVisible(false);
+    }, remaining);
+  }
+
+  useEffect(() => {
+    const handleClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      const link = target?.closest("a") as HTMLAnchorElement | null;
+
+      if (!link) return;
+
+      const href = link.getAttribute("href");
+      if (!href) return;
+
+      const isExternal =
+        link.target === "_blank" ||
+        href.startsWith("http") ||
+        href.startsWith("mailto:") ||
+        href.startsWith("tel:") ||
+        href.startsWith("#");
+
+      if (isExternal) return;
+
+      const nextUrl = new URL(href, window.location.origin);
+      const currentUrl = new URL(window.location.href);
+
+      const sameRoute =
+        nextUrl.pathname === currentUrl.pathname &&
+        nextUrl.search === currentUrl.search;
+
+      if (sameRoute) return;
+
+      startPossibleLoading();
+    };
+
+    const handlePageShow = () => {
+      forceStopLoading();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        forceStopLoading();
+      }
+    };
+
+    document.addEventListener("click", handleClick, true);
+    window.addEventListener("pageshow", handlePageShow);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("click", handleClick, true);
+      window.removeEventListener("pageshow", handlePageShow);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      clearAllTimers();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (previousRoute.current !== routeKey) {
+      previousRoute.current = routeKey;
+      stopLoading();
+    }
+  }, [routeKey]);
+
+  if (!visible) return null;
+
+  return (
+    <div className="fixed inset-x-0 bottom-0 top-[104px] z-[45] flex items-start justify-center bg-[#eef9ff]/68 px-5 pt-24 backdrop-blur-[3px] sm:top-[112px] lg:top-[118px]">
+      <div className="pointer-events-none flex flex-col items-center justify-center rounded-[30px] bg-white/76 px-9 py-8 shadow-[0_18px_55px_rgba(22,50,74,0.10)] backdrop-blur-md">
+        <div className="relative flex h-20 w-20 items-center justify-center">
+          <div className="absolute inset-0 rounded-full border-[7px] border-[#d8eef8]" />
+          <div className="absolute inset-0 animate-spin rounded-full border-[7px] border-transparent border-b-[#19b7c9] border-r-[#19b7c9]" />
+
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#eaf8ff] text-[1.7rem] font-extrabold text-[#19b7c9] shadow-sm">
+            C
+          </div>
+        </div>
+
+        <div className="mt-5 flex items-center gap-2">
+          <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#19b7c9] [animation-delay:0ms]" />
+          <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#19b7c9] [animation-delay:150ms]" />
+          <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#19b7c9] [animation-delay:300ms]" />
+        </div>
+      </div>
+    </div>
+  );
+}

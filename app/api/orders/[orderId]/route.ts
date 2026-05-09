@@ -20,7 +20,7 @@ function statusShouldHaveStockDeducted(status?: string) {
 }
 
 function orderAlreadyDeducted(order: any) {
-  return Boolean(order.inventoryDeducted) || statusShouldHaveStockDeducted(order.status);
+  return Boolean(order.inventoryDeducted);
 }
 
 async function deductInventory(order: any) {
@@ -121,11 +121,17 @@ export async function PATCH(
 
     const wasDeducted = orderAlreadyDeducted(order);
     const nextShouldDeduct = statusShouldHaveStockDeducted(nextStatus);
-    const nextShouldRestore =
-      !nextShouldDeduct || nextStatus === "cancelled";
+    const nextShouldRestore = !nextShouldDeduct || nextStatus === "cancelled";
 
-    // Caso 1: pasa de pendiente/contactado/cancelado a pagado/preparando/enviado/entregado.
-    // Ahí recién descuenta stock.
+    /*
+      Si pasa de pendiente/contactado/cancelado a:
+      paid / preparing / shipped / delivered
+      recién ahí se descuenta stock.
+
+      IMPORTANTE:
+      Preventa también usa stock.
+      Ya no se ignora el stock por ser preventa.
+    */
     if (nextShouldDeduct && !wasDeducted) {
       for (const item of order.items || []) {
         const product = await Product.findById(item.productId);
@@ -137,11 +143,10 @@ export async function PATCH(
           );
         }
 
-        const isPreventa = product.status === "preventa";
         const currentStock = Number(product.stock || 0);
         const requestedQuantity = Number(item.quantity || 0);
 
-        if (!isPreventa && currentStock < requestedQuantity) {
+        if (currentStock < requestedQuantity) {
           return NextResponse.json(
             {
               error: `Stock insuficiente para ${item.title}. Stock actual: ${currentStock}`,
@@ -154,8 +159,11 @@ export async function PATCH(
       await deductInventory(order);
     }
 
-    // Caso 2: pasa de pagado/preparando/enviado/entregado a cancelado,
-    // pendiente o contactado. Ahí devuelve el stock.
+    /*
+      Si vuelve de pagado/preparando/enviado/entregado a:
+      pending / contacted / cancelled
+      se devuelve el stock.
+    */
     if (nextShouldRestore && wasDeducted) {
       await restoreInventory(order);
     }
@@ -205,8 +213,11 @@ export async function DELETE(
 
     const wasDeducted = orderAlreadyDeducted(order);
 
-    // Si el pedido ya había descontado stock, eliminarlo devuelve el stock.
-    // Así queda como si el movimiento nunca hubiera existido.
+    /*
+      Si el pedido ya había descontado stock,
+      al eliminarlo se devuelve el stock.
+      Así queda como si ese movimiento nunca hubiera existido.
+    */
     if (wasDeducted) {
       await restoreInventory(order);
     }

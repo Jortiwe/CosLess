@@ -80,7 +80,7 @@ export default function Footer() {
     "inline-block text-[14px] text-[#4b6b80] transition duration-200 hover:text-[#19b7c9] hover:underline hover:underline-offset-4 sm:text-[15px]";
 
   const socialClass =
-    "flex h-10 w-10 items-center justify-center rounded-full border border-[#cfeaf6] bg-white text-[#16324a] transition duration-200 hover:-translate-y-1 hover:scale-110 hover:border-[#19b7c9] hover:text-[#19b7c9] sm:h-11 sm:w-11";
+    "flex h-9 w-9 items-center justify-center rounded-full border border-[#cfeaf6] bg-white text-[#16324a] transition duration-200 hover:-translate-y-1 hover:scale-110 hover:border-[#19b7c9] hover:text-[#19b7c9] sm:h-11 sm:w-11";
 
   return (
     <footer
@@ -94,70 +94,27 @@ export default function Footer() {
       <div className="mx-auto w-full max-w-[1700px] px-5 py-8 sm:px-6 sm:py-10 md:px-8 md:py-11 lg:px-12 xl:px-20 xl:py-12 2xl:px-24">
         {/* MOBILE / TABLET */}
         <div className="xl:hidden">
-          <div className="mb-5 flex items-center justify-between gap-4">
-            <div className="min-w-0">
+          <div className="mb-6 flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1 text-center">
               <h3 className="text-[2rem] font-extrabold tracking-wide text-[#19b7c9] sm:text-[2.2rem]">
                 CosLess
               </h3>
 
-              <p className="mt-2 max-w-[230px] text-[14px] leading-6 text-[#4b6b80] sm:max-w-[420px] sm:text-[16px] sm:leading-8">
+              <p className="mx-auto mt-2 max-w-[260px] text-[14px] leading-6 text-[#4b6b80] sm:max-w-[420px] sm:text-[16px] sm:leading-8">
                 Tienda online de cosplay en Bolivia.
               </p>
             </div>
 
             <Link
               href="/novedades"
-              className="group inline-flex shrink-0 items-center gap-2 rounded-2xl border border-[#cfeaf6] bg-white px-3 py-3 text-[12px] font-extrabold text-[#16324a] shadow-[0_10px_24px_rgba(22,50,74,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-[#19b7c9] hover:text-[#19b7c9] sm:px-5 sm:text-[13px]"
+              className="group mt-1 inline-flex shrink-0 items-center gap-2 rounded-2xl border border-[#cfeaf6] bg-white px-3 py-3 text-[12px] font-extrabold text-[#16324a] shadow-[0_10px_24px_rgba(22,50,74,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-[#19b7c9] hover:text-[#19b7c9] sm:px-5 sm:text-[13px]"
             >
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#eaf8ff] text-[#19b7c9] transition group-hover:bg-[#19b7c9] group-hover:text-white">
                 <FiBell className="text-[1rem]" />
               </span>
 
-              <span className="leading-tight">
-                Novedades
-                <span className="block text-[10px] font-bold text-[#6f8798] group-hover:text-[#19b7c9] sm:text-[11px]">
-                  Ver noticias
-                </span>
-              </span>
+              <span className="leading-tight">Novedades</span>
             </Link>
-          </div>
-
-          <div className="mb-7 flex flex-wrap justify-center gap-2 sm:mb-8 sm:gap-3">
-            <a
-              href={WHATSAPP_HELP_URL}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="WhatsApp"
-              className={socialClass}
-            >
-              <FaWhatsapp className="text-[0.95rem]" />
-            </a>
-
-            <a
-              href={FACEBOOK_URL}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Facebook"
-              className={socialClass}
-            >
-              <FaFacebookF className="text-[0.9rem]" />
-            </a>
-
-            <a
-              href={INSTAGRAM_URL}
-              aria-label="Instagram"
-              className={socialClass}
-            >
-              <FaInstagram className="text-[0.95rem]" />
-            </a>
-
-            <a href={TIKTOK_URL} aria-label="TikTok" className={socialClass}>
-              <FaTiktok className="text-[0.9rem]" />
-            </a>
-
-            <a href={YOUTUBE_URL} aria-label="YouTube" className={socialClass}>
-              <FaYoutube className="text-[0.95rem]" />
-            </a>
           </div>
 
           <div className="grid grid-cols-2 gap-x-7 gap-y-7 sm:gap-x-10">
@@ -217,14 +174,51 @@ export default function Footer() {
                   </span>
                 </a>
 
-                <a
-                  href={WHATSAPP_HELP_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-3 inline-flex rounded-2xl bg-[#19b7c9] px-4 py-3 text-[12px] font-semibold text-white transition duration-200 hover:scale-105 hover:bg-[#0ea5b7] sm:text-sm"
-                >
-                  Escribir
-                </a>
+                <div className="mt-4 grid w-fit grid-cols-3 gap-2">
+                  <a
+                    href={WHATSAPP_HELP_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="WhatsApp"
+                    className={socialClass}
+                  >
+                    <FaWhatsapp className="text-[0.95rem]" />
+                  </a>
+
+                  <a
+                    href={FACEBOOK_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Facebook"
+                    className={socialClass}
+                  >
+                    <FaFacebookF className="text-[0.9rem]" />
+                  </a>
+
+                  <a
+                    href={INSTAGRAM_URL}
+                    aria-label="Instagram"
+                    className={socialClass}
+                  >
+                    <FaInstagram className="text-[0.95rem]" />
+                  </a>
+
+                  <a
+                    href={TIKTOK_URL}
+                    aria-label="TikTok"
+                    className={socialClass}
+                  >
+                    <FaTiktok className="text-[0.9rem]" />
+                  </a>
+
+                  <a
+                    href={YOUTUBE_URL}
+                    aria-label="YouTube"
+                    className={socialClass}
+                  >
+                    <FaYoutube className="text-[0.95rem]" />
+                  </a>
+                </div>
               </div>
             </div>
           </div>

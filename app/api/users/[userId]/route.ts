@@ -2,6 +2,20 @@ import { NextResponse } from "next/server";
 import { connectDB } from "../../../../lib/mongodb";
 import User from "../../../../models/User";
 
+const VALID_ROLES = ["admin", "customer"];
+
+function normalizeRole(role: unknown) {
+  const value = String(role || "").trim().toLowerCase();
+
+  if (value === "user") return "customer";
+  if (value === "client") return "customer";
+  if (value === "cliente") return "customer";
+
+  if (VALID_ROLES.includes(value)) return value;
+
+  return null;
+}
+
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ userId: string }> }
@@ -21,10 +35,19 @@ export async function PATCH(
       );
     }
 
-    user.fullName = body.fullName;
-    user.email = body.email;
-    user.nickname = body.nickname;
-    user.role = body.role;
+    const nextRole = normalizeRole(body.role);
+
+    if (!nextRole) {
+      return NextResponse.json(
+        { error: "Rol inválido. Solo se permite admin o customer." },
+        { status: 400 }
+      );
+    }
+
+    user.fullName = String(body.fullName || "").trim();
+    user.email = String(body.email || "").trim().toLowerCase();
+    user.nickname = String(body.nickname || "").trim();
+    user.role = nextRole;
     user.isActive = body.isActive !== false;
 
     await user.save();
@@ -37,7 +60,10 @@ export async function PATCH(
     console.error("Error actualizando usuario:", error);
 
     return NextResponse.json(
-      { error: "No se pudo actualizar el usuario." },
+      {
+        error: "No se pudo actualizar el usuario.",
+        detail: error instanceof Error ? error.message : "Error desconocido",
+      },
       { status: 500 }
     );
   }

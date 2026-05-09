@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiHeart } from "react-icons/fi";
 import {
   getFavoriteItems,
@@ -21,10 +21,38 @@ type Props = {
 };
 
 export default function AddToFavoritesButton({ product }: Props) {
+  const [isFavorite, setIsFavorite] = useState(false);
   const [animate, setAnimate] = useState(false);
-  const [saved, setSaved] = useState(false);
 
-  function handleAddToFavorites() {
+  function syncFavoriteState() {
+    const currentFavorites = getFavoriteItems();
+
+    const exists = currentFavorites.some(
+      (item) => item.productId === product.productId
+    );
+
+    setIsFavorite(exists);
+  }
+
+  useEffect(() => {
+    syncFavoriteState();
+
+    const handleFavoritesUpdate = () => syncFavoriteState();
+    const handleStorage = () => syncFavoriteState();
+
+    window.addEventListener("cosless-favorites-updated", handleFavoritesUpdate);
+    window.addEventListener("storage", handleStorage);
+
+    return () => {
+      window.removeEventListener(
+        "cosless-favorites-updated",
+        handleFavoritesUpdate
+      );
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, [product.productId]);
+
+  function handleToggleFavorite() {
     const currentFavorites = getFavoriteItems();
 
     const alreadyExists = currentFavorites.some(
@@ -34,7 +62,9 @@ export default function AddToFavoritesButton({ product }: Props) {
     let updatedFavorites: FavoriteItem[];
 
     if (alreadyExists) {
-      updatedFavorites = currentFavorites;
+      updatedFavorites = currentFavorites.filter(
+        (item) => item.productId !== product.productId
+      );
     } else {
       updatedFavorites = [
         ...currentFavorites,
@@ -45,35 +75,41 @@ export default function AddToFavoritesButton({ product }: Props) {
           mainImage: product.mainImage,
           slug: product.slug,
           category: product.category,
-          status: product.status,
+          status: product.status || "stock",
         },
       ];
-      saveFavoriteItems(updatedFavorites);
     }
 
-    setSaved(true);
+    saveFavoriteItems(updatedFavorites);
+
+    setIsFavorite(!alreadyExists);
     setAnimate(false);
 
     requestAnimationFrame(() => {
       setAnimate(true);
     });
 
-    setTimeout(() => setAnimate(false), 700);
-    setTimeout(() => setSaved(false), 1200);
+    window.setTimeout(() => setAnimate(false), 500);
+    window.dispatchEvent(new Event("cosless-favorites-updated"));
   }
 
   return (
     <button
       type="button"
-      onClick={handleAddToFavorites}
-      className="inline-flex min-w-[220px] items-center justify-center gap-2 rounded-2xl border border-[#cfeaf6] bg-white px-6 py-4 text-sm font-bold text-[#16324a] transition duration-200 hover:border-[#19b7c9] hover:text-[#19b7c9]"
+      onClick={handleToggleFavorite}
+      className={`inline-flex min-w-[220px] items-center justify-center gap-2 rounded-2xl border px-6 py-4 text-sm font-bold transition duration-200 ${
+        isFavorite
+          ? "border-[#19b7c9] bg-[#eaf8ff] text-[#19b7c9] hover:bg-white"
+          : "border-[#cfeaf6] bg-white text-[#16324a] hover:border-[#19b7c9] hover:text-[#19b7c9]"
+      }`}
     >
       <FiHeart
-        className={`text-[1.05rem] transition-transform duration-300 ${
-          animate ? "scale-125 text-[#19b7c9]" : ""
-        }`}
+        className={`text-[1.05rem] transition-all duration-300 ${
+          isFavorite ? "fill-[#19b7c9] text-[#19b7c9]" : ""
+        } ${animate ? "scale-125" : ""}`}
       />
-      {saved ? "Añadido a favoritos" : "Añadir a favoritos"}
+
+      {isFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}
     </button>
   );
 }

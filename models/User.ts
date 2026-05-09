@@ -8,12 +8,14 @@ const UserSchema = new Schema(
       trim: true,
       maxlength: 40,
     },
+
     fullName: {
       type: String,
       required: true,
       trim: true,
       maxlength: 120,
     },
+
     email: {
       type: String,
       required: true,
@@ -21,15 +23,18 @@ const UserSchema = new Schema(
       lowercase: true,
       trim: true,
     },
+
     passwordHash: {
       type: String,
       required: true,
     },
+
     role: {
       type: String,
       enum: ["admin", "customer"],
       default: "customer",
     },
+
     isActive: {
       type: Boolean,
       default: true,

@@ -1,5 +1,7 @@
+import { Suspense } from "react";
 import "./globals.css";
 import FloatingActions from "../components/layout/FloatingActions";
+import RouteLoadingScreen from "../components/layout/RouteLoadingScreen";
 
 export const metadata = {
   title: "CosLess",
@@ -14,6 +16,10 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body>
+        <Suspense fallback={null}>
+          <RouteLoadingScreen />
+        </Suspense>
+
         {children}
         <FloatingActions />
       </body>

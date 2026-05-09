@@ -211,14 +211,13 @@ export async function POST(request: Request) {
         throw new Error(`Producto no encontrado: ${item.productId}`);
       }
 
-      const isPreventa = product.status === "preventa";
       const currentStock = Number(product.stock || 0);
 
-      if (!isPreventa && currentStock < item.quantity) {
-        throw new Error(
-          `Stock insuficiente para ${product.title}. Stock actual: ${currentStock}`
-        );
-      }
+if (currentStock < item.quantity) {
+  throw new Error(
+    `Stock insuficiente para ${product.title}. Stock actual: ${currentStock}`
+  );
+}
 
       return {
         productId: product._id,

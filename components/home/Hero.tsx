@@ -1,8 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiArrowUpRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+
+const AUTO_SLIDE_DELAY = 8000;
+const MANUAL_PAUSE_DELAY = 15000;
 
 const slides = [
   {
@@ -37,20 +40,37 @@ const slides = [
 
 export default function Hero() {
   const [current, setCurrent] = useState(0);
+  const nextAutoChangeAt = useRef(Date.now() + AUTO_SLIDE_DELAY);
 
   useEffect(() => {
     const interval = window.setInterval(() => {
+      const now = Date.now();
+
+      if (now < nextAutoChangeAt.current) return;
+
       setCurrent((prev) => (prev + 1) % slides.length);
-    }, 4800);
+      nextAutoChangeAt.current = now + AUTO_SLIDE_DELAY;
+    }, 500);
 
     return () => window.clearInterval(interval);
   }, []);
 
+  function pauseAutoAfterManualAction() {
+    nextAutoChangeAt.current = Date.now() + MANUAL_PAUSE_DELAY;
+  }
+
+  function goToSlide(index: number) {
+    pauseAutoAfterManualAction();
+    setCurrent(index);
+  }
+
   function prevSlide() {
+    pauseAutoAfterManualAction();
     setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
   }
 
   function nextSlide() {
+    pauseAutoAfterManualAction();
     setCurrent((prev) => (prev + 1) % slides.length);
   }
 
@@ -110,7 +130,7 @@ export default function Hero() {
             <button
               key={slide.id}
               type="button"
-              onClick={() => setCurrent(index)}
+              onClick={() => goToSlide(index)}
               aria-label={`Ir al slide ${index + 1}`}
               className={`h-2.5 rounded-full transition-all duration-300 ${
                 index === current
