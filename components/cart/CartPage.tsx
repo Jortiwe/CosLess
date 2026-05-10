@@ -173,11 +173,11 @@ export default function CartPage() {
             }
 
             if (product.stock <= 0) {
-  changed = true;
-  return null;
-}
+              changed = true;
+              return null;
+            }
 
-const nextQuantity = Math.min(item.quantity, product.stock);
+            const nextQuantity = Math.min(item.quantity, product.stock);
 
             if (
               nextQuantity !== item.quantity ||
@@ -261,14 +261,14 @@ const nextQuantity = Math.min(item.quantity, product.stock);
     if (!currentItem) return;
 
     if (product.stock <= 0) {
-  setErrorMessage("Este producto ya no tiene stock disponible.");
-  return;
-}
+      setErrorMessage("Este producto ya no tiene stock disponible.");
+      return;
+    }
 
-if (currentItem.quantity + 1 > product.stock) {
-  setErrorMessage(`Solo hay ${product.stock} unidad(es) disponibles.`);
-  return;
-}
+    if (currentItem.quantity + 1 > product.stock) {
+      setErrorMessage(`Solo hay ${product.stock} unidad(es) disponibles.`);
+      return;
+    }
 
     const nextCart = cartItems.map((item) =>
       item.productId === productId
@@ -395,8 +395,13 @@ if (currentItem.quantity + 1 > product.stock) {
                     {cartItems.map((item: CartItem) => {
                       const product = stockMap[item.productId];
                       const isPreventa = product?.status === "preventa";
-const stock = product?.stock ?? 0;
-const reachedLimit = Boolean(product && item.quantity >= stock);
+                      const stock = product?.stock ?? 0;
+                      const reachedLimit = Boolean(
+                        product && item.quantity >= stock
+                      );
+                      const productHref = item.slug
+                        ? `/producto/${item.slug}`
+                        : "";
 
                       return (
                         <article
@@ -404,22 +409,48 @@ const reachedLimit = Boolean(product && item.quantity >= stock);
                           className="rounded-[24px] border border-[#d9eef7] bg-white p-4"
                         >
                           <div className="flex flex-row items-start gap-3 sm:gap-4">
-                            <div className="w-[88px] shrink-0 overflow-hidden rounded-[16px] bg-[#eef9ff] sm:w-[105px]">
-                              <img
-                                src={getSafeImage(item.mainImage)}
-                                alt={item.title}
-                                className="aspect-[4/5] w-full object-cover"
-                                onError={(event) => {
-                                  event.currentTarget.src =
-                                    "/placeholder-product.png";
-                                }}
-                              />
-                            </div>
+                            {productHref ? (
+                              <Link
+                                href={productHref}
+                                className="block w-[88px] shrink-0 overflow-hidden rounded-[16px] bg-[#eef9ff] transition hover:scale-[1.02] hover:ring-2 hover:ring-[#19b7c9]/40 sm:w-[105px]"
+                              >
+                                <img
+                                  src={getSafeImage(item.mainImage)}
+                                  alt={item.title}
+                                  className="aspect-[4/5] w-full object-cover"
+                                  onError={(event) => {
+                                    event.currentTarget.src =
+                                      "/placeholder-product.png";
+                                  }}
+                                />
+                              </Link>
+                            ) : (
+                              <div className="w-[88px] shrink-0 overflow-hidden rounded-[16px] bg-[#eef9ff] sm:w-[105px]">
+                                <img
+                                  src={getSafeImage(item.mainImage)}
+                                  alt={item.title}
+                                  className="aspect-[4/5] w-full object-cover"
+                                  onError={(event) => {
+                                    event.currentTarget.src =
+                                      "/placeholder-product.png";
+                                  }}
+                                />
+                              </div>
+                            )}
 
                             <div className="flex min-w-0 flex-1 flex-col">
-                              <h3 className="line-clamp-2 text-[1.15rem] font-extrabold leading-6 text-[#16324a] sm:text-[1.35rem] sm:leading-7">
-                                {item.title}
-                              </h3>
+                              {productHref ? (
+                                <Link
+                                  href={productHref}
+                                  className="line-clamp-2 text-[1.15rem] font-extrabold leading-6 text-[#16324a] transition hover:text-[#19b7c9] sm:text-[1.35rem] sm:leading-7"
+                                >
+                                  {item.title}
+                                </Link>
+                              ) : (
+                                <h3 className="line-clamp-2 text-[1.15rem] font-extrabold leading-6 text-[#16324a] sm:text-[1.35rem] sm:leading-7">
+                                  {item.title}
+                                </h3>
+                              )}
 
                               <p className="mt-2 text-lg font-bold text-[#19b7c9]">
                                 {formatBs(item.price)}
@@ -427,10 +458,10 @@ const reachedLimit = Boolean(product && item.quantity >= stock);
 
                               <p className="mt-1 text-sm font-semibold text-[#6a8798]">
                                 {product
-  ? isPreventa
-    ? `Preventa · Stock disponible: ${stock}`
-    : `Stock disponible: ${stock}`
-  : "Verificando stock..."}
+                                  ? isPreventa
+                                    ? `Preventa · Stock disponible: ${stock}`
+                                    : `Stock disponible: ${stock}`
+                                  : "Verificando stock..."}
                               </p>
 
                               {reachedLimit && (
@@ -470,9 +501,9 @@ const reachedLimit = Boolean(product && item.quantity >= stock);
                                 </div>
 
                                 <div className="flex flex-wrap gap-2 sm:gap-3">
-                                  {item.slug && (
+                                  {productHref && (
                                     <Link
-                                      href={`/producto/${item.slug}`}
+                                      href={productHref}
                                       className="rounded-2xl border border-[#cfeaf6] bg-white px-4 py-2.5 text-sm font-bold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9]"
                                     >
                                       Ver producto

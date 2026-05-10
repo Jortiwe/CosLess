@@ -7,10 +7,10 @@ import ChangePasswordForm from "../../components/account/ChangePasswordForm";
 import { connectDB } from "../../lib/mongodb";
 import User from "../../models/User";
 import {
+  FiClipboard,
   FiHeart,
   FiLogOut,
   FiMail,
-  FiShoppingBag,
   FiUser,
 } from "react-icons/fi";
 
@@ -102,10 +102,7 @@ export default async function PerfilPage() {
 
   const displayName = user.nickname || user.fullName || "Mi cuenta";
   const initials = getInitials(displayName);
-  const isAdmin =
-    user.role === "admin" ||
-    user.role === "superadmin" ||
-    user.role === "superadministrador";
+  const isAdmin = user.role === "admin";
 
   return (
     <main className="min-h-screen bg-[#eef9ff] text-[#16324a]">
@@ -202,7 +199,7 @@ export default async function PerfilPage() {
             className="group rounded-[30px] border border-[#cfeaf6] bg-white p-5 shadow-[0_10px_26px_rgba(22,50,74,0.05)] transition hover:-translate-y-1 hover:border-[#19b7c9] sm:p-6"
           >
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
-              <FiShoppingBag className="text-[1.25rem]" />
+              <FiClipboard className="text-[1.25rem]" />
             </div>
 
             <p className="mt-5 text-lg font-extrabold text-[#16324a] group-hover:text-[#19b7c9]">

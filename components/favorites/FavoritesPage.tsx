@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
@@ -17,6 +16,27 @@ import { FiHeart, FiTrash2, FiEye } from "react-icons/fi";
 
 function formatBs(value: number) {
   return `Bs${value}`;
+}
+
+function getSafeImage(src?: string) {
+  if (!src) return "/placeholder-product.png";
+  const value = src.trim();
+  return value || "/placeholder-product.png";
+}
+
+function categoryLabel(value?: string) {
+  if (!value) return "Producto";
+
+  const labels: Record<string, string> = {
+    cosplays: "Cosplays",
+    pelucas: "Pelucas",
+    lentes: "Lentes",
+    mallas: "Mallas",
+    accesorios: "Accesorios",
+    preventa: "Preventa",
+  };
+
+  return labels[value] || value;
 }
 
 export default function FavoritesPage() {
@@ -43,6 +63,7 @@ export default function FavoritesPage() {
     const updated = favorites.filter((item) => item.productId !== productId);
     setFavorites(updated);
     saveFavoriteItems(updated);
+    window.dispatchEvent(new Event("cosless-favorites-updated"));
   }
 
   function addAllToCart() {
@@ -74,6 +95,7 @@ export default function FavoritesPage() {
     });
 
     saveCartItems(Array.from(cartMap.values()));
+    window.dispatchEvent(new Event("cosless-cart-updated"));
   }
 
   return (
@@ -93,6 +115,7 @@ export default function FavoritesPage() {
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#68839a]">
               Guardados
             </p>
+
             <p className="mt-1 text-2xl font-extrabold text-[#16324a]">
               {totalFavorites}
             </p>
@@ -102,6 +125,7 @@ export default function FavoritesPage() {
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#68839a]">
               Stock
             </p>
+
             <p className="mt-1 text-2xl font-extrabold text-[#16324a]">
               {stockCount}
             </p>
@@ -111,6 +135,7 @@ export default function FavoritesPage() {
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#68839a]">
               Preventa
             </p>
+
             <p className="mt-1 text-2xl font-extrabold text-[#16324a]">
               {preventaCount}
             </p>
@@ -143,91 +168,90 @@ export default function FavoritesPage() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+            <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4">
               {favorites.map((item) => {
                 const status = item.status || "stock";
-                const category = item.category || "Sin categoría";
+                const category = categoryLabel(item.category);
+                const productHref = item.slug
+                  ? `/producto/${item.slug}`
+                  : "/";
 
                 return (
                   <article
                     key={item.productId}
-                    className="overflow-hidden rounded-[28px] border border-[#cfeaf6] bg-white shadow-[0_8px_24px_rgba(22,50,74,0.04)]"
+                    className="group relative flex h-full flex-col overflow-hidden rounded-[26px] border border-[#cfeaf6] bg-white shadow-[0_8px_24px_rgba(22,50,74,0.04)] transition hover:-translate-y-1 hover:border-[#19b7c9] hover:shadow-[0_16px_34px_rgba(22,50,74,0.10)]"
                   >
-                    <div className="relative aspect-square overflow-hidden bg-[#eaf8ff]">
-                      <Image
-                        src={item.mainImage || "/placeholder-product.png"}
-                        alt={item.title}
-                        fill
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
-                        className="object-cover"
-                      />
+                    <Link
+                      href={productHref}
+                      aria-label={`Ver producto ${item.title}`}
+                      className="absolute inset-0 z-0"
+                    />
 
-                      <div className="absolute left-3 top-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                        <span className="rounded-full bg-[#dff4ff] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#19b7c9] shadow-sm sm:text-[11px]">
-                          {category}
-                        </span>
+                    <div className="relative z-10 pointer-events-none">
+                      <div className="relative aspect-square overflow-hidden bg-[#eaf8ff]">
+                        <img
+                          src={getSafeImage(item.mainImage)}
+                          alt={item.title}
+                          className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                          onError={(event) => {
+                            event.currentTarget.src =
+                              "/placeholder-product.png";
+                          }}
+                        />
 
-                        <span
-                          className={`rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] shadow-sm sm:text-[11px] ${
-                            status === "stock"
-                              ? "bg-[#e6f6ed] text-[#16824c]"
-                              : "bg-[#fff3dc] text-[#b87d00]"
-                          }`}
-                        >
-                          {status === "stock" ? "En stock" : "Preventa"}
-                        </span>
+                        <div className="absolute left-3 top-3 flex flex-wrap gap-2">
+                          <span className="rounded-full bg-white/90 px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#16324a] shadow-sm">
+                            {category}
+                          </span>
+
+                          <span
+                            className={`rounded-full px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] shadow-sm ${
+                              status === "preventa"
+                                ? "bg-[#fff3dc] text-[#b87d00]"
+                                : "bg-[#e6f6ed] text-[#16824c]"
+                            }`}
+                          >
+                            {status === "preventa" ? "Preventa" : "Stock"}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-1 flex-col p-4">
+                        <h3 className="line-clamp-2 text-[0.98rem] font-extrabold leading-6 text-[#16324a] transition group-hover:text-[#19b7c9] sm:text-[1.08rem]">
+                          {item.title}
+                        </h3>
+
+                        <p className="mt-3 text-[1.08rem] font-extrabold text-[#19b7c9]">
+                          {formatBs(item.price)}
+                        </p>
                       </div>
                     </div>
 
-                    <div className="space-y-3 p-4 sm:p-5">
-                      <h3 className="line-clamp-2 min-h-[52px] text-[1.1rem] font-extrabold leading-6 text-[#16324a] sm:text-[1.25rem]">
-                        {item.title}
-                      </h3>
+                    <div className="relative z-20 mt-auto grid grid-cols-2 gap-2 px-4 pb-4">
+                      <Link
+                        href={productHref}
+                        aria-label="Ver producto"
+                        title="Ver producto"
+                        className="inline-flex h-11 items-center justify-center rounded-2xl bg-[#19b7c9] px-3 text-sm font-bold text-white transition hover:bg-[#0ea5b7] sm:h-12"
+                      >
+                        <span className="hidden sm:inline">Ver producto</span>
+                        <FiEye className="text-[1.15rem] sm:hidden" />
+                      </Link>
 
-                      <p className="text-[1.15rem] font-extrabold text-[#19b7c9] sm:text-[1.3rem]">
-                        {formatBs(item.price)}
-                      </p>
-
-                      {/* móvil: solo iconos */}
-                      <div className="flex items-center gap-2 pt-1 sm:hidden">
-                        <Link
-                          href={item.slug ? `/producto/${item.slug}` : "/"}
-                          aria-label="Ver producto"
-                          title="Ver producto"
-                          className="inline-flex h-12 flex-1 items-center justify-center rounded-2xl bg-[#19b7c9] text-white transition hover:bg-[#0ea5b7]"
-                        >
-                          <FiEye className="text-[1.2rem]" />
-                        </Link>
-
-                        <button
-                          type="button"
-                          onClick={() => removeFavorite(item.productId)}
-                          aria-label="Quitar de favoritos"
-                          title="Quitar de favoritos"
-                          className="inline-flex h-12 flex-1 items-center justify-center rounded-2xl border border-[#d7e8f2] bg-white text-[#16324a] transition hover:border-[#f0c9c9] hover:text-[#c94b4b]"
-                        >
-                          <FiTrash2 className="text-[1.1rem]" />
-                        </button>
-                      </div>
-
-                      {/* pc: texto normal */}
-                      <div className="hidden grid-cols-2 gap-3 pt-1 sm:grid">
-                        <Link
-                          href={item.slug ? `/producto/${item.slug}` : "/"}
-                          className="inline-flex h-12 items-center justify-center rounded-2xl bg-[#19b7c9] px-4 text-sm font-bold text-white transition hover:bg-[#0ea5b7]"
-                        >
-                          Ver producto
-                        </Link>
-
-                        <button
-                          type="button"
-                          onClick={() => removeFavorite(item.productId)}
-                          className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl border border-[#d7e8f2] bg-white px-4 text-sm font-bold text-[#16324a] transition hover:border-[#f0c9c9] hover:text-[#c94b4b]"
-                        >
-                          <FiTrash2 />
-                          Quitar
-                        </button>
-                      </div>
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          removeFavorite(item.productId);
+                        }}
+                        aria-label="Quitar de favoritos"
+                        title="Quitar de favoritos"
+                        className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl border border-[#d7e8f2] bg-white px-3 text-sm font-bold text-[#16324a] transition hover:border-[#f0c9c9] hover:text-[#c94b4b] sm:h-12"
+                      >
+                        <FiTrash2 className="text-[1.05rem]" />
+                        <span className="hidden sm:inline">Quitar</span>
+                      </button>
                     </div>
                   </article>
                 );

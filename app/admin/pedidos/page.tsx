@@ -95,7 +95,16 @@ export default async function AdminOrdersPage() {
             </p>
           </div>
 
-          <AdminBackButton />
+          <div className="flex flex-wrap gap-3">
+            <AdminBackButton />
+
+            <Link
+              href="/admin/pedidos/reporte"
+              className="rounded-2xl border border-[#cfeaf6] bg-white px-5 py-3 text-sm font-bold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9]"
+            >
+              Reporte PDF
+            </Link>
+          </div>
         </div>
 
         <section className="rounded-[32px] border border-[#cfeaf6] bg-[#f7fdff] p-6 shadow-[0_10px_30px_rgba(22,50,74,0.05)]">
@@ -173,7 +182,7 @@ export default async function AdminOrdersPage() {
                         <div className="flex flex-wrap gap-2">
                           <Link
                             href={`/admin/pedidos/${order._id}`}
-                            className="inline-flex rounded-xl bg-[#19b7c9] px-4 py-2 text-sm font-bold text-white"
+                            className="inline-flex rounded-xl bg-[#19b7c9] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#0ea5b7]"
                           >
                             Ver / editar
                           </Link>

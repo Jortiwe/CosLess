@@ -2,6 +2,7 @@ import Link from "next/link";
 import { connectDB } from "../../../lib/mongodb";
 import Product from "../../../models/Product";
 import AdminBackButton from "../../../components/admin/AdminBackButton";
+import ProductAdminActions from "../../../components/admin/ProductAdminActions";
 
 export const dynamic = "force-dynamic";
 
@@ -61,8 +62,15 @@ export default async function AdminProductsPage() {
             <AdminBackButton />
 
             <Link
+              href="/admin/productos/reporte"
+              className="rounded-2xl border border-[#cfeaf6] bg-white px-5 py-3 text-sm font-bold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9]"
+            >
+              Reporte PDF
+            </Link>
+
+            <Link
               href="/admin/productos/nuevo"
-              className="rounded-2xl bg-[#19b7c9] px-5 py-3 text-sm font-bold text-white"
+              className="rounded-2xl bg-[#19b7c9] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#0ea5b7]"
             >
               Crear producto
             </Link>
@@ -153,17 +161,22 @@ export default async function AdminProductsPage() {
                   <div className="mt-5 flex flex-wrap gap-3">
                     <Link
                       href={`/admin/productos/${product._id}`}
-                      className="rounded-xl bg-[#19b7c9] px-4 py-2 text-sm font-bold text-white"
+                      className="rounded-xl bg-[#19b7c9] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#0ea5b7]"
                     >
                       Editar
                     </Link>
 
                     <Link
                       href={`/producto/${product.slug}`}
-                      className="rounded-xl border border-[#cfeaf6] bg-white px-4 py-2 text-sm font-bold text-[#16324a]"
+                      className="rounded-xl border border-[#cfeaf6] bg-white px-4 py-2 text-sm font-bold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9]"
                     >
                       Ver en tienda
                     </Link>
+
+                    <ProductAdminActions
+                      productId={product._id}
+                      productTitle={product.title || "Sin título"}
+                    />
                   </div>
                 </article>
               ))

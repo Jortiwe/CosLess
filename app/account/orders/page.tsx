@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import Header from "../../../components/layout/Header";
 import Footer from "../../../components/layout/Footer";
-import { FiCalendar, FiPackage, FiShoppingBag } from "react-icons/fi";
+import { FiCalendar, FiClipboard, FiPackage } from "react-icons/fi";
 
 type OrderItem = {
   productId?: string;
@@ -339,7 +339,7 @@ export default function AccountOrdersPage() {
       return (
         <div className="rounded-[30px] border border-[#cfeaf6] bg-white px-6 py-10 text-center shadow-[0_12px_32px_rgba(22,50,74,0.06)]">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
-            <FiShoppingBag className="text-[1.7rem]" />
+            <FiClipboard className="text-[1.7rem]" />
           </div>
 
           <h2 className="mt-5 text-2xl font-extrabold text-[#16324a]">

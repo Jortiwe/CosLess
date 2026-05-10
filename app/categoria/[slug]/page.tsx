@@ -31,14 +31,26 @@ export default async function CategoryPage({ params }: PageProps) {
 
   await connectDB();
 
-  const rawProducts = await Product.find({
-    category: { $in: category.queryValues },
+  const activeFilter = {
     $or: [
       { isActive: true },
       { active: true },
       { isActive: { $exists: false } },
     ],
-  })
+  };
+
+  const productFilter =
+    slug === "preventa"
+      ? {
+          status: "preventa",
+          ...activeFilter,
+        }
+      : {
+          category: { $in: category.queryValues },
+          ...activeFilter,
+        };
+
+  const rawProducts = await Product.find(productFilter)
     .sort({ createdAt: -1 })
     .lean();
 

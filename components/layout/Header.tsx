@@ -364,7 +364,7 @@ function HeaderContent() {
         </div>
       )}
 
-      <header className="sticky top-0 z-50 select-none border-b border-[#cfeaf6] bg-[#f7fdff]/95 backdrop-blur">
+      <header className="sticky top-0 z-[110] select-none border-b border-[#cfeaf6] bg-[#f7fdff]/95 backdrop-blur">
         <div className="mx-auto w-full max-w-[1700px] px-3 sm:px-5 md:px-10 lg:px-14 xl:px-20 2xl:px-24">
           <div className="grid min-h-[72px] grid-cols-[54px_1fr_auto] items-center gap-1 sm:min-h-[84px] sm:grid-cols-[72px_1fr_auto] sm:gap-2 md:grid-cols-[120px_1fr_120px] md:min-h-[92px] lg:grid-cols-[220px_1fr_220px] lg:min-h-[100px]">
             <div className="flex items-center justify-start">
@@ -522,7 +522,7 @@ function HeaderContent() {
       </header>
 
       <div
-        className={`fixed inset-0 z-[80] transition duration-300 ${
+        className={`fixed inset-0 z-[120] transition duration-300 ${
           isMenuOpen
             ? "pointer-events-auto bg-black/35 opacity-100"
             : "pointer-events-none bg-black/0 opacity-0"
@@ -531,7 +531,7 @@ function HeaderContent() {
       />
 
       <aside
-        className={`fixed left-2 top-2 z-[90] h-[calc(100dvh-16px)] w-[92%] max-w-[420px] overflow-hidden rounded-[32px] border border-[#d7eef7] bg-[#f8fcff] shadow-[0_24px_70px_rgba(20,50,80,0.18)] transition duration-300 select-none sm:left-3 sm:top-3 sm:h-[calc(100dvh-24px)] sm:w-[88%] sm:rounded-[34px] ${
+        className={`fixed left-2 top-2 z-[130] h-[calc(100dvh-16px)] w-[92%] max-w-[420px] overflow-hidden rounded-[32px] border border-[#d7eef7] bg-[#f8fcff] shadow-[0_24px_70px_rgba(20,50,80,0.18)] transition duration-300 select-none sm:left-3 sm:top-3 sm:h-[calc(100dvh-24px)] sm:w-[88%] sm:rounded-[34px] ${
           isMenuOpen ? "translate-x-0" : "-translate-x-[110%]"
         }`}
       >

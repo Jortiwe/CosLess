@@ -11,6 +11,7 @@ export type CatalogProduct = {
   category?: string;
   status?: string;
   price?: number;
+  oldPrice?: number;
   stock?: number;
   mainImage?: string;
   images?: string[];
@@ -189,12 +190,16 @@ export default function ProductCatalog({
             const href = product.slug ? `/producto/${product.slug}` : "#";
             const image = getImage(product);
             const status = product.status || "stock";
+            const hasOldPrice =
+              typeof product.oldPrice === "number" &&
+              typeof product.price === "number" &&
+              product.oldPrice > product.price;
 
             return (
               <Link
                 key={product._id}
                 href={href}
-                className="group overflow-hidden rounded-[26px] border border-[#cfeaf6] bg-white shadow-[0_8px_24px_rgba(22,50,74,0.04)] transition hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(22,50,74,0.10)]"
+                className="group flex h-full flex-col overflow-hidden rounded-[26px] border border-[#cfeaf6] bg-white shadow-[0_8px_24px_rgba(22,50,74,0.04)] transition hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(22,50,74,0.10)]"
               >
                 <div className="relative aspect-square overflow-hidden bg-[#eaf8ff]">
                   <img
@@ -220,17 +225,25 @@ export default function ProductCatalog({
                   </div>
                 </div>
 
-                <div className="p-4">
-                  <h3 className="line-clamp-2 min-h-[48px] text-[0.98rem] font-extrabold leading-6 text-[#16324a] sm:text-[1.08rem]">
+                <div className="flex flex-1 flex-col p-4">
+                  <h3 className="line-clamp-2 text-[0.98rem] font-extrabold leading-6 text-[#16324a] sm:text-[1.08rem]">
                     {product.title || "Producto sin título"}
                   </h3>
 
-                  <div className="mt-3 flex items-center justify-between gap-3">
-                    <p className="text-[1.08rem] font-extrabold text-[#19b7c9]">
-                      {formatBs(product.price)}
-                    </p>
+                  <div className="mt-auto flex items-end justify-between gap-3 pt-4">
+                    <div>
+                      {hasOldPrice && (
+                        <p className="text-xs font-bold text-[#8ba4b3] line-through">
+                          {formatBs(product.oldPrice)}
+                        </p>
+                      )}
 
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#eaf8ff] text-sm font-extrabold text-[#19b7c9] transition group-hover:bg-[#19b7c9] group-hover:text-white">
+                      <p className="text-[1.08rem] font-extrabold text-[#19b7c9]">
+                        {formatBs(product.price)}
+                      </p>
+                    </div>
+
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#eaf8ff] text-sm font-extrabold text-[#19b7c9] transition group-hover:bg-[#19b7c9] group-hover:text-white">
                       →
                     </span>
                   </div>

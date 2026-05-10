@@ -143,7 +143,7 @@ export default function RouteLoadingScreen() {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 top-[104px] z-[45] flex items-start justify-center bg-[#eef9ff]/68 px-5 pt-24 backdrop-blur-[3px] sm:top-[112px] lg:top-[118px]">
+    <div className="fixed inset-0 z-[95] flex items-center justify-center bg-[#eef9ff]/68 px-5 backdrop-blur-[3px]">
       <div className="pointer-events-none flex flex-col items-center justify-center rounded-[30px] bg-white/76 px-9 py-8 shadow-[0_18px_55px_rgba(22,50,74,0.10)] backdrop-blur-md">
         <div className="relative flex h-20 w-20 items-center justify-center">
           <div className="absolute inset-0 rounded-full border-[7px] border-[#d8eef8]" />
