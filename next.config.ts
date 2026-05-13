@@ -19,6 +19,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "ae01.alicdn.com",
       },
+      {
+        protocol: "https",
+        hostname: "instagram.fcbb3-1.fna.fbcdn.net",
+      },
     ],
   },
 };
