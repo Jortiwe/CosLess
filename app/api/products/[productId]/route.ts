@@ -12,6 +12,26 @@ function cleanImage(value: unknown) {
   return image;
 }
 
+function cleanCategory(value: unknown) {
+  return String(value || "")
+    .trim()
+    .toLowerCase();
+}
+
+function cleanCategories(value: unknown, fallbackCategory: string) {
+  const receivedCategories = Array.isArray(value) ? value : [];
+
+  const categories = receivedCategories
+    .map((item) => cleanCategory(item))
+    .filter(Boolean);
+
+  if (fallbackCategory) {
+    categories.unshift(fallbackCategory);
+  }
+
+  return Array.from(new Set(categories));
+}
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ productId: string }> }
@@ -66,9 +86,13 @@ export async function PATCH(
       );
     }
 
+    const category = cleanCategory(body.category || "cosplays");
+    const categories = cleanCategories(body.categories, category);
+
     product.title = String(body.title || "").trim();
     product.slug = String(body.slug || "").trim().toLowerCase();
-    product.category = String(body.category || "").trim().toLowerCase();
+    product.category = category;
+    product.categories = categories;
     product.status = body.status === "preventa" ? "preventa" : "stock";
     product.price = Number(body.price || 0);
     product.oldPrice = Number(body.oldPrice || 0);

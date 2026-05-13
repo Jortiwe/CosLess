@@ -1,9 +1,11 @@
 import { Types } from "mongoose";
 import { connectDB } from "../../../lib/mongodb";
+import AccountStore from "../../../models/AccountStore";
 import Favorite from "../../../models/Favorite";
 import Product from "../../../models/Product";
-import User from "../../../models/User";
 import AdminFavoritesClient from "../../../components/admin/AdminFavoritesClient";
+
+export const dynamic = "force-dynamic";
 
 type RawFavorite = {
   _id?: string;
@@ -11,14 +13,21 @@ type RawFavorite = {
   productId?: string | { _id?: string } | null;
 };
 
-type RawUser = {
+type RawAccountStoreFavorite = {
+  productId?: unknown;
+  title?: string;
+  price?: number;
+  mainImage?: string;
+  slug?: string;
+  category?: string;
+  status?: string;
+};
+
+type RawAccountStore = {
   _id?: string;
-  fullName?: string;
+  userId?: string;
   email?: string;
-  favorites?: unknown[];
-  favoriteItems?: unknown[];
-  favoriteProducts?: unknown[];
-  savedProducts?: unknown[];
+  favorites?: RawAccountStoreFavorite[];
 };
 
 type RawProduct = {
@@ -87,41 +96,16 @@ function getId(value: unknown): string | null {
   return null;
 }
 
-function extractUserFavoriteProductIds(user: RawUser) {
-  const sources = [
-    user.favorites,
-    user.favoriteItems,
-    user.favoriteProducts,
-    user.savedProducts,
-  ];
-
-  const ids = new Set<string>();
-
-  for (const list of sources) {
-    if (!Array.isArray(list)) continue;
-
-    for (const item of list) {
-      const productId = getId(item);
-
-      if (productId) {
-        ids.add(productId);
-      }
-    }
-  }
-
-  return Array.from(ids);
-}
-
 export default async function AdminFavoritesPage() {
   await connectDB();
 
-  const [rawFavorites, rawUsers] = await Promise.all([
+  const [rawFavorites, rawStores] = await Promise.all([
     Favorite.find().lean(),
-    User.find().lean(),
+    AccountStore.find().lean(),
   ]);
 
   const favorites = JSON.parse(JSON.stringify(rawFavorites)) as RawFavorite[];
-  const users = JSON.parse(JSON.stringify(rawUsers)) as RawUser[];
+  const stores = JSON.parse(JSON.stringify(rawStores)) as RawAccountStore[];
 
   const favoritePairs = new Set<string>();
   const productIds = new Set<string>();
@@ -136,17 +120,24 @@ export default async function AdminFavoritesPage() {
     productIds.add(productId);
   }
 
-  for (const user of users) {
-    const userId = String(user._id || "unknown-user");
-    const userProductIds = extractUserFavoriteProductIds(user);
+  for (const store of stores) {
+    const userId = String(store.userId || store._id || store.email || "unknown");
 
-    for (const productId of userProductIds) {
+    if (!Array.isArray(store.favorites)) continue;
+
+    for (const favorite of store.favorites) {
+      const productId = getId(favorite.productId);
+
+      if (!productId) continue;
+
       favoritePairs.add(`${userId}:${productId}`);
       productIds.add(productId);
     }
   }
 
-  const productIdList = Array.from(productIds);
+  const productIdList = Array.from(productIds).filter((productId) =>
+    Types.ObjectId.isValid(productId)
+  );
 
   const rawProducts =
     productIdList.length > 0
@@ -163,12 +154,37 @@ export default async function AdminFavoritesPage() {
     productMap.set(String(product._id), product);
   }
 
+  const existingProductIds = new Set(products.map((product) => String(product._id)));
+
+  const deletedProductIds = productIdList.filter(
+    (productId) => !existingProductIds.has(productId)
+  );
+
+  if (deletedProductIds.length > 0) {
+    await Promise.all([
+      Favorite.deleteMany({
+        productId: { $in: deletedProductIds },
+      }),
+      AccountStore.updateMany(
+        {},
+        {
+          $pull: {
+            favorites: {
+              productId: { $in: deletedProductIds },
+            },
+          },
+        }
+      ),
+    ]);
+  }
+
   const countMap = new Map<string, number>();
 
   for (const pair of favoritePairs) {
     const productId = pair.split(":").pop();
 
     if (!productId) continue;
+    if (!existingProductIds.has(productId)) continue;
 
     countMap.set(productId, (countMap.get(productId) || 0) + 1);
   }
@@ -177,18 +193,22 @@ export default async function AdminFavoritesPage() {
     .map(([productId, count]) => {
       const product = productMap.get(productId);
 
+      if (!product) return null;
+
       return {
         productId,
-        title: product?.title || "Producto no encontrado",
-        category: product?.category || "Sin categoría",
-        price: product?.price,
-        status: product?.status,
-        mainImage: product?.mainImage,
-        slug: product?.slug,
+        title: product.title || "Sin título",
+        category: product.category || "Sin categoría",
+        price: product.price,
+        status: product.status,
+        mainImage: product.mainImage,
+        slug: product.slug,
         count,
       };
     })
-    .sort((a, b) => b.count - a.count || a.title.localeCompare(b.title));
+    .filter(Boolean) as ProductFavoriteStat[];
+
+  productStats.sort((a, b) => b.count - a.count || a.title.localeCompare(b.title));
 
   return <AdminFavoritesClient productStats={productStats} />;
 }

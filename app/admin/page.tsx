@@ -1,11 +1,15 @@
+import { Types } from "mongoose";
 import Link from "next/link";
 import { connectDB } from "../../lib/mongodb";
 import Order from "../../models/Order";
 import Product from "../../models/Product";
 import User from "../../models/User";
 import Favorite from "../../models/Favorite";
+import AccountStore from "../../models/AccountStore";
 import News from "../../models/News";
 import AdminToolbar from "../../components/admin/AdminToolbar";
+
+export const dynamic = "force-dynamic";
 
 type AdminOrderItem = {
   _id: string;
@@ -33,6 +37,23 @@ type AdminUserItem = {
   role?: string;
 };
 
+type RawFavorite = {
+  _id?: string;
+  userId?: string | { _id?: string } | null;
+  productId?: string | { _id?: string } | null;
+};
+
+type RawAccountStoreFavorite = {
+  productId?: unknown;
+};
+
+type RawAccountStore = {
+  _id?: string;
+  userId?: string;
+  email?: string;
+  favorites?: RawAccountStoreFavorite[];
+};
+
 type StatCardProps = {
   title: string;
   value: number;
@@ -40,6 +61,51 @@ type StatCardProps = {
   href?: string;
   disabled?: boolean;
 };
+
+function getId(value: unknown): string | null {
+  if (!value) return null;
+
+  if (typeof value === "string") {
+    return Types.ObjectId.isValid(value) ? value : null;
+  }
+
+  if (typeof value === "object") {
+    const objectValue = value as {
+      _id?: unknown;
+      productId?: unknown;
+      id?: unknown;
+    };
+
+    if (typeof objectValue._id === "string") {
+      return Types.ObjectId.isValid(objectValue._id) ? objectValue._id : null;
+    }
+
+    if (typeof objectValue.productId === "string") {
+      return Types.ObjectId.isValid(objectValue.productId)
+        ? objectValue.productId
+        : null;
+    }
+
+    if (
+      typeof objectValue.productId === "object" &&
+      objectValue.productId !== null
+    ) {
+      const nestedProduct = objectValue.productId as { _id?: unknown };
+
+      if (typeof nestedProduct._id === "string") {
+        return Types.ObjectId.isValid(nestedProduct._id)
+          ? nestedProduct._id
+          : null;
+      }
+    }
+
+    if (typeof objectValue.id === "string") {
+      return Types.ObjectId.isValid(objectValue.id) ? objectValue.id : null;
+    }
+  }
+
+  return null;
+}
 
 function formatBs(value?: number) {
   if (typeof value !== "number") return "Bs0";
@@ -155,20 +221,22 @@ export default async function AdminPage() {
     ordersCount,
     productsCount,
     usersCount,
-    favoritesCount,
     newsCount,
     rawRecentOrders,
     rawRecentProducts,
     rawRecentUsers,
+    rawFavorites,
+    rawStores,
   ] = await Promise.all([
     Order.countDocuments(),
     Product.countDocuments(),
     User.countDocuments(),
-    Favorite.countDocuments(),
     News.countDocuments(),
     Order.find().sort({ createdAt: -1 }).limit(5).lean(),
     Product.find().sort({ createdAt: -1 }).limit(5).lean(),
     User.find().sort({ createdAt: -1 }).limit(5).lean(),
+    Favorite.find().lean(),
+    AccountStore.find().lean(),
   ]);
 
   const recentOrders = JSON.parse(
@@ -183,28 +251,68 @@ export default async function AdminPage() {
     JSON.stringify(rawRecentUsers)
   ) as AdminUserItem[];
 
+  const favorites = JSON.parse(JSON.stringify(rawFavorites)) as RawFavorite[];
+  const stores = JSON.parse(JSON.stringify(rawStores)) as RawAccountStore[];
+
+  const favoriteProductIds = new Set<string>();
+
+  for (const favorite of favorites) {
+    const productId = getId(favorite.productId);
+
+    if (productId) {
+      favoriteProductIds.add(productId);
+    }
+  }
+
+  for (const store of stores) {
+    if (!Array.isArray(store.favorites)) continue;
+
+    for (const favorite of store.favorites) {
+      const productId = getId(favorite.productId);
+
+      if (productId) {
+        favoriteProductIds.add(productId);
+      }
+    }
+  }
+
+  const favoriteProductIdList = Array.from(favoriteProductIds).filter(
+    (productId) => Types.ObjectId.isValid(productId)
+  );
+
+  const existingFavoriteProducts =
+    favoriteProductIdList.length > 0
+      ? await Product.find({
+          _id: { $in: favoriteProductIdList },
+        })
+          .select("_id")
+          .lean()
+      : [];
+
+  const favoriteProductsCount = existingFavoriteProducts.length;
+
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#eef9ff] px-4 py-6 text-[#16324a] sm:px-6 sm:py-8 lg:px-8">
       <div className="mx-auto w-full max-w-[1700px]">
         <div className="mb-5">
-  <div className="flex items-center justify-between gap-3">
-    <span className="inline-flex rounded-full bg-white px-4 py-2 text-[0.7rem] font-extrabold uppercase tracking-[0.16em] text-[#19b7c9] shadow-[0_8px_20px_rgba(22,50,74,0.04)] sm:px-5 sm:text-xs">
-      Panel admin
-    </span>
+          <div className="flex items-center justify-between gap-3">
+            <span className="inline-flex rounded-full bg-white px-4 py-2 text-[0.7rem] font-extrabold uppercase tracking-[0.16em] text-[#19b7c9] shadow-[0_8px_20px_rgba(22,50,74,0.04)] sm:px-5 sm:text-xs">
+              Panel admin
+            </span>
 
-    <div className="shrink-0 [&_a]:!h-11 [&_a]:!px-4 [&_a]:!text-xs [&_a]:!font-extrabold [&_a]:!whitespace-nowrap [&_button]:!h-11 [&_button]:!px-4 [&_button]:!text-xs [&_button]:!font-extrabold [&_button]:!whitespace-nowrap sm:[&_a]:!h-12 sm:[&_a]:!px-5 sm:[&_a]:!text-sm sm:[&_button]:!h-12 sm:[&_button]:!px-5 sm:[&_button]:!text-sm">
-      <AdminToolbar />
-    </div>
-  </div>
+            <div className="shrink-0 [&_a]:!h-11 [&_a]:!px-4 [&_a]:!text-xs [&_a]:!font-extrabold [&_a]:!whitespace-nowrap [&_button]:!h-11 [&_button]:!px-4 [&_button]:!text-xs [&_button]:!font-extrabold [&_button]:!whitespace-nowrap sm:[&_a]:!h-12 sm:[&_a]:!px-5 sm:[&_a]:!text-sm sm:[&_button]:!h-12 sm:[&_button]:!px-5 sm:[&_button]:!text-sm">
+              <AdminToolbar />
+            </div>
+          </div>
 
-  <h1 className="mt-3 whitespace-nowrap text-[2rem] font-extrabold leading-none tracking-[-0.04em] text-[#16324a] sm:text-[3.2rem]">
-    Gestión CosLess
-  </h1>
+          <h1 className="mt-3 whitespace-nowrap text-[2rem] font-extrabold leading-none tracking-[-0.04em] text-[#16324a] sm:text-[3.2rem]">
+            Gestión CosLess
+          </h1>
 
-  <p className="mt-2 hidden max-w-3xl text-sm font-semibold leading-7 text-[#4b6b80] sm:block">
-    Resumen general de pedidos, productos, usuarios y novedades.
-  </p>
-</div>
+          <p className="mt-2 hidden max-w-3xl text-sm font-semibold leading-7 text-[#4b6b80] sm:block">
+            Resumen general de pedidos, productos, usuarios y novedades.
+          </p>
+        </div>
 
         <div className="grid grid-cols-3 gap-3 sm:gap-4 lg:grid-cols-6">
           <StatCard
@@ -230,8 +338,8 @@ export default async function AdminPage() {
 
           <StatCard
             title="Favoritos"
-            value={favoritesCount}
-            subtitle="Guardados"
+            value={favoriteProductsCount}
+            subtitle="Productos"
             href="/admin/favoritos"
           />
 

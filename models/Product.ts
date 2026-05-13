@@ -20,6 +20,10 @@ const ProductSchema = new Schema(
       trim: true,
       lowercase: true,
     },
+    categories: {
+      type: [String],
+      default: [],
+    },
     status: {
       type: String,
       required: true,

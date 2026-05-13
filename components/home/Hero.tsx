@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { MouseEvent, TouchEvent, useEffect, useRef, useState } from "react";
 import { FiArrowUpRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 const AUTO_SLIDE_DELAY = 8000;
 const MANUAL_PAUSE_DELAY = 15000;
+const SWIPE_THRESHOLD = 45;
 
 const slides = [
   {
@@ -40,7 +41,11 @@ const slides = [
 
 export default function Hero() {
   const [current, setCurrent] = useState(0);
+
   const nextAutoChangeAt = useRef(Date.now() + AUTO_SLIDE_DELAY);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+  const lastSwipeAt = useRef(0);
 
   useEffect(() => {
     const interval = window.setInterval(() => {
@@ -54,6 +59,10 @@ export default function Hero() {
 
     return () => window.clearInterval(interval);
   }, []);
+
+  function isMobileTouch() {
+    return window.innerWidth < 640;
+  }
 
   function pauseAutoAfterManualAction() {
     nextAutoChangeAt.current = Date.now() + MANUAL_PAUSE_DELAY;
@@ -74,11 +83,53 @@ export default function Hero() {
     setCurrent((prev) => (prev + 1) % slides.length);
   }
 
+  function handleTouchStart(event: TouchEvent<HTMLDivElement>) {
+    if (!isMobileTouch()) return;
+
+    touchStartX.current = event.touches[0].clientX;
+    touchStartY.current = event.touches[0].clientY;
+  }
+
+  function handleTouchEnd(event: TouchEvent<HTMLDivElement>) {
+    if (!isMobileTouch()) return;
+
+    const touchEndX = event.changedTouches[0].clientX;
+    const touchEndY = event.changedTouches[0].clientY;
+
+    const diffX = touchStartX.current - touchEndX;
+    const diffY = touchStartY.current - touchEndY;
+
+    const isHorizontalSwipe = Math.abs(diffX) > Math.abs(diffY);
+    const passedThreshold = Math.abs(diffX) > SWIPE_THRESHOLD;
+
+    if (!isHorizontalSwipe || !passedThreshold) return;
+
+    lastSwipeAt.current = Date.now();
+
+    if (diffX > 0) {
+      nextSlide();
+    } else {
+      prevSlide();
+    }
+  }
+
+  function preventClickAfterSwipe(event: MouseEvent<HTMLDivElement>) {
+    if (Date.now() - lastSwipeAt.current < 450) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+
   const activeSlide = slides[current];
 
   return (
     <section className="relative overflow-hidden rounded-[16px] bg-white shadow-[0_12px_32px_rgba(22,50,74,0.09)] sm:rounded-[20px] lg:rounded-[22px]">
-      <div className="relative h-[300px] sm:h-[390px] md:h-[450px] lg:h-[500px] xl:h-[535px]">
+      <div
+        className="relative h-[300px] touch-pan-y sm:h-[390px] md:h-[450px] lg:h-[500px] xl:h-[535px]"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onClickCapture={preventClickAfterSwipe}
+      >
         {slides.map((slide, index) => (
           <Link
             key={slide.id}

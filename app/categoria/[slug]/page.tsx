@@ -39,18 +39,25 @@ export default async function CategoryPage({ params }: PageProps) {
     ],
   };
 
-  const productFilter =
+  const categoryFilter =
     slug === "preventa"
       ? {
-          status: "preventa",
-          ...activeFilter,
+          $or: [
+            { status: "preventa" },
+            { category: { $in: category.queryValues } },
+            { categories: { $in: category.queryValues } },
+          ],
         }
       : {
-          category: { $in: category.queryValues },
-          ...activeFilter,
+          $or: [
+            { category: { $in: category.queryValues } },
+            { categories: { $in: category.queryValues } },
+          ],
         };
 
-  const rawProducts = await Product.find(productFilter)
+  const rawProducts = await Product.find({
+    $and: [activeFilter, categoryFilter],
+  })
     .sort({ createdAt: -1 })
     .lean();
 

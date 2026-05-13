@@ -2,12 +2,14 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { CATEGORY_LIST } from "../../lib/categories";
 
 type ProductType = {
   _id?: string;
   title?: string;
   slug?: string;
   category?: string;
+  categories?: string[];
   status?: string;
   price?: number;
   oldPrice?: number;
@@ -37,12 +39,36 @@ function makeSlug(text: string) {
     .replace(/-+/g, "-");
 }
 
+function normalizeCategory(value: string) {
+  return value.trim().toLowerCase();
+}
+
+function getInitialCategories(product?: ProductType) {
+  const primaryCategory = normalizeCategory(product?.category || "cosplays");
+
+  const savedCategories = Array.isArray(product?.categories)
+    ? product.categories.map(normalizeCategory).filter(Boolean)
+    : [];
+
+  const categories = Array.from(
+    new Set([primaryCategory, ...savedCategories].filter(Boolean))
+  );
+
+  return categories.length > 0 ? categories : ["cosplays"];
+}
+
+function getCategoryTitle(slug: string) {
+  return CATEGORY_LIST.find((category) => category.slug === slug)?.title || slug;
+}
+
 export default function ProductForm({ mode, product }: Props) {
   const router = useRouter();
 
   const [title, setTitle] = useState(product?.title || "");
   const [slug, setSlug] = useState(product?.slug || "");
-  const [category, setCategory] = useState(product?.category || "cosplays");
+  const [categories, setCategories] = useState<string[]>(
+    getInitialCategories(product)
+  );
   const [status, setStatus] = useState(product?.status || "stock");
   const [price, setPrice] = useState(String(product?.price ?? 0));
   const [oldPrice, setOldPrice] = useState(String(product?.oldPrice ?? 0));
@@ -59,15 +85,54 @@ export default function ProductForm({ mode, product }: Props) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
+  function updateCategory(index: number, value: string) {
+    setCategories((prev) => {
+      const next = [...prev];
+      next[index] = normalizeCategory(value);
+
+      const cleanNext = Array.from(new Set(next.filter(Boolean)));
+
+      return cleanNext.length > 0 ? cleanNext : ["cosplays"];
+    });
+  }
+
+  function addCategoryField() {
+    setCategories((prev) => {
+      const usedCategories = new Set(prev);
+      const nextCategory = CATEGORY_LIST.find(
+        (category) => !usedCategories.has(category.slug)
+      );
+
+      if (!nextCategory) return prev;
+
+      return [...prev, nextCategory.slug];
+    });
+  }
+
+  function removeCategoryField(index: number) {
+    setCategories((prev) => {
+      if (prev.length === 1) return prev;
+
+      return prev.filter((_, itemIndex) => itemIndex !== index);
+    });
+  }
+
   async function handleSubmit() {
     try {
       setLoading(true);
       setMessage("");
 
+      const cleanCategories = Array.from(
+        new Set(categories.map(normalizeCategory).filter(Boolean))
+      );
+
+      const primaryCategory = cleanCategories[0] || "cosplays";
+
       const payload = {
         title,
         slug: slug || makeSlug(title),
-        category,
+        category: primaryCategory,
+        categories: cleanCategories,
         status,
         price: Number(price),
         oldPrice: Number(oldPrice),
@@ -125,7 +190,7 @@ export default function ProductForm({ mode, product }: Props) {
   }
 
   return (
-    <section className="rounded-[32px] border border-[#cfeaf6] bg-[#f7fdff] p-6 shadow-[0_10px_30px_rgba(22,50,74,0.05)]">
+    <section className="rounded-[32px] border border-[#cfeaf6] bg-[#f7fdff] p-5 shadow-[0_10px_30px_rgba(22,50,74,0.05)] sm:p-6">
       <div className="grid gap-5 md:grid-cols-2">
         <div className="md:col-span-2">
           <label className="mb-2 block text-sm font-bold">Nombre</label>
@@ -133,6 +198,7 @@ export default function ProductForm({ mode, product }: Props) {
             value={title}
             onChange={(e) => {
               setTitle(e.target.value);
+
               if (!product?.slug) {
                 setSlug(makeSlug(e.target.value));
               }
@@ -151,22 +217,6 @@ export default function ProductForm({ mode, product }: Props) {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-bold">Categoría</label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none"
-          >
-            <option value="cosplays">Cosplays</option>
-            <option value="pelucas">Pelucas</option>
-            <option value="lentes">Lentes</option>
-            <option value="mallas">Mallas</option>
-            <option value="accesorios">Accesorios</option>
-            <option value="preventa">Preventa</option>
-          </select>
-        </div>
-
-        <div>
           <label className="mb-2 block text-sm font-bold">Estado</label>
           <select
             value={status}
@@ -176,6 +226,75 @@ export default function ProductForm({ mode, product }: Props) {
             <option value="stock">Stock</option>
             <option value="preventa">Preventa</option>
           </select>
+        </div>
+
+        <div className="md:col-span-2">
+          <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <label className="block text-sm font-bold">Categoría</label>
+              <p className="mt-1 text-xs font-semibold text-[#4b6b80]">
+                El producto puede tener una categoría principal y categorías adicionales.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={addCategoryField}
+              disabled={categories.length >= CATEGORY_LIST.length}
+              className="inline-flex w-fit items-center justify-center rounded-full border border-[#19b7c9] bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[#19b7c9] transition hover:bg-[#e9fbff] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              + Agregar
+            </button>
+          </div>
+
+          <div className="grid gap-3">
+            {categories.map((category, index) => (
+              <div
+                key={`${category}-${index}`}
+                className="rounded-2xl border border-[#cfeaf6] bg-white p-3 sm:p-4"
+              >
+                <div className="mb-2 flex items-center justify-between gap-3">
+                  <span className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#19b7c9]">
+                    {index === 0 ? "Principal" : `Extra ${index}`}
+                  </span>
+
+                  {index > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => removeCategoryField(index)}
+                      className="text-xs font-bold text-[#e14b4b] transition hover:opacity-75"
+                    >
+                      Quitar
+                    </button>
+                  )}
+                </div>
+
+                <select
+                  value={category}
+                  onChange={(e) => updateCategory(index, e.target.value)}
+                  className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 text-[#16324a] outline-none"
+                >
+                  {CATEGORY_LIST.map((categoryOption) => (
+                    <option
+                      key={categoryOption.slug}
+                      value={categoryOption.slug}
+                    >
+                      {categoryOption.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ))}
+          </div>
+
+          {categories.length > 1 && (
+            <div className="mt-3 rounded-2xl bg-[#e9fbff] px-4 py-3 text-xs font-semibold text-[#4b6b80]">
+              Este producto aparecerá en:{" "}
+              <span className="font-extrabold text-[#16324a]">
+                {categories.map(getCategoryTitle).join(", ")}
+              </span>
+            </div>
+          )}
         </div>
 
         <div>
