@@ -13,6 +13,7 @@ function formatDate(dateValue?: string | Date) {
   if (!dateValue) return "Sin fecha";
 
   const date = new Date(dateValue);
+
   return date.toLocaleString("es-BO", {
     year: "numeric",
     month: "2-digit",
@@ -20,6 +21,26 @@ function formatDate(dateValue?: string | Date) {
     hour: "2-digit",
     minute: "2-digit",
   });
+}
+
+function InfoRow({
+  label,
+  value,
+}: {
+  label: string;
+  value?: string | number | null;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-4 border-b border-[#edf7fb] py-3 last:border-b-0">
+      <p className="shrink-0 text-xs font-extrabold uppercase tracking-[0.14em] text-[#6f8798]">
+        {label}
+      </p>
+
+      <p className="min-w-0 break-words text-right text-sm font-extrabold text-[#16324a] sm:text-base">
+        {value || "Sin dato"}
+      </p>
+    </div>
+  );
 }
 
 type PageProps = {
@@ -40,136 +61,190 @@ export default async function Page({ params }: PageProps) {
   }
 
   const order = JSON.parse(JSON.stringify(rawOrder));
+  const items = Array.isArray(order.items) ? order.items : [];
 
   return (
-    <main className="min-h-screen bg-[#eef9ff] px-5 py-8 text-[#16324a] sm:px-8 lg:px-12">
+    <main className="min-h-screen bg-[#eef9ff] px-4 py-6 text-[#16324a] sm:px-8 sm:py-8 lg:px-12">
       <div className="mx-auto max-w-[1600px]">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h1 className="text-4xl font-extrabold">
-              Pedido {order.orderCode}
-            </h1>
-            <p className="mt-2 text-[#4b6b80]">
-              Revisa y actualiza la información del pedido.
-            </p>
-          </div>
-
+        <div className="mb-5">
           <AdminBackButton href="/admin/pedidos" label="Volver a pedidos" />
+
+          <div className="mt-4 flex items-end justify-between gap-4">
+            <div className="min-w-0">
+              <span className="inline-flex rounded-full bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[#19b7c9] shadow-[0_8px_20px_rgba(22,50,74,0.04)]">
+                Pedido
+              </span>
+
+              <h1 className="mt-3 text-[2rem] font-extrabold leading-[1.05] tracking-[-0.045em] text-[#16324a] sm:text-4xl">
+                {order.orderCode || "Sin código"}
+              </h1>
+            </div>
+
+            <div className="shrink-0 rounded-2xl bg-white px-4 py-3 text-right shadow-[0_8px_20px_rgba(22,50,74,0.04)]">
+              <p className="text-[0.65rem] font-extrabold uppercase tracking-[0.14em] text-[#7a96a7]">
+                Total
+              </p>
+
+              <p className="mt-1 text-lg font-black text-[#19b7c9] sm:text-xl">
+                {formatBs(order.total)}
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-          <section className="rounded-[32px] border border-[#cfeaf6] bg-[#f7fdff] p-6 shadow-[0_10px_30px_rgba(22,50,74,0.05)]">
-            <h2 className="text-2xl font-extrabold">Resumen del pedido</h2>
+        <div className="grid gap-5 xl:grid-cols-[1.05fr_0.95fr]">
+          <section className="space-y-5">
+            <div className="rounded-[30px] border border-[#cfeaf6] bg-white p-4 shadow-[0_10px_30px_rgba(22,50,74,0.05)] sm:rounded-[32px] sm:p-6">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <div>
+                  <span className="inline-flex rounded-full bg-[#dff4ff] px-4 py-2 text-xs font-extrabold text-[#19b7c9]">
+                    Cliente
+                  </span>
 
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-2xl bg-white p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#6f8798]">
-                  Cliente
-                </p>
-                <p className="mt-2 text-lg font-bold">{order.customerName}</p>
+                  <h2 className="mt-3 text-xl font-extrabold text-[#16324a] sm:text-2xl">
+                    Datos principales
+                  </h2>
+                </div>
               </div>
 
-              <div className="rounded-2xl bg-white p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#6f8798]">
-                  Teléfono
-                </p>
-                <p className="mt-2 text-lg font-bold">{order.customerPhone}</p>
-              </div>
-
-              <div className="rounded-2xl bg-white p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#6f8798]">
-                  Correo
-                </p>
-                <p className="mt-2 text-lg font-bold">
-                  {order.customerEmail || "Sin correo"}
-                </p>
-              </div>
-
-              <div className="rounded-2xl bg-white p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#6f8798]">
-                  Fecha
-                </p>
-                <p className="mt-2 text-lg font-bold">
-                  {formatDate(order.createdAt)}
-                </p>
-              </div>
-
-              <div className="rounded-2xl bg-white p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#6f8798]">
-                  Envío
-                </p>
-                <p className="mt-2 text-lg font-bold">
-                  {order.shippingDepartment} / {order.shippingCity}
-                </p>
-                <p className="mt-1 text-sm text-[#4b6b80]">
-                  Zona: {order.shippingZone}
-                </p>
-                <p className="mt-1 text-sm text-[#4b6b80]">
-                  Tipo: {order.shippingType}
-                </p>
-              </div>
-
-              <div className="rounded-2xl bg-white p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#6f8798]">
-                  Totales
-                </p>
-                <p className="mt-2 text-sm text-[#4b6b80]">
-                  Subtotal: <span className="font-bold">{formatBs(order.subtotal)}</span>
-                </p>
-                <p className="mt-1 text-sm text-[#4b6b80]">
-                  Envío: <span className="font-bold">{formatBs(order.shippingCost)}</span>
-                </p>
-                <p className="mt-2 text-lg font-extrabold text-[#19b7c9]">
-                  Total: {formatBs(order.total)}
-                </p>
+              <div className="rounded-[24px] bg-[#f7fdff] px-4">
+                <InfoRow label="Nombre" value={order.customerName} />
+                <InfoRow label="Teléfono" value={order.customerPhone} />
+                <InfoRow
+                  label="Correo"
+                  value={order.customerEmail || "Sin correo"}
+                />
+                <InfoRow label="Fecha" value={formatDate(order.createdAt)} />
               </div>
             </div>
 
-            <div className="mt-6 rounded-[24px] bg-white p-5">
-              <h3 className="text-xl font-extrabold">Productos</h3>
+            <div className="rounded-[30px] border border-[#cfeaf6] bg-white p-4 shadow-[0_10px_30px_rgba(22,50,74,0.05)] sm:rounded-[32px] sm:p-6">
+              <div className="mb-4">
+                <span className="inline-flex rounded-full bg-[#dff4ff] px-4 py-2 text-xs font-extrabold text-[#19b7c9]">
+                  Entrega
+                </span>
 
-              <div className="mt-4 space-y-3">
-                {order.items.map(
-                  (
-                    item: {
-                      productId: string;
-                      title: string;
-                      quantity: number;
-                      price: number;
-                    },
-                    index: number
-                  ) => (
-                    <div
-                      key={`${item.productId}-${index}`}
-                      className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#edf7fb] bg-[#fbfeff] px-4 py-4"
-                    >
-                      <div>
-                        <p className="font-bold">{item.title}</p>
-                        <p className="mt-1 text-sm text-[#4b6b80]">
-                          Cantidad: {item.quantity}
-                        </p>
-                      </div>
+                <h2 className="mt-3 text-xl font-extrabold text-[#16324a] sm:text-2xl">
+                  Envío y totales
+                </h2>
+              </div>
 
-                      <div className="text-right">
-                        <p className="font-bold text-[#19b7c9]">
-                          {formatBs(item.price)}
-                        </p>
+              <div className="grid gap-4 lg:grid-cols-2">
+                <div className="rounded-[24px] bg-[#f7fdff] px-4">
+                  <InfoRow
+                    label="Depto."
+                    value={order.shippingDepartment || "Sin departamento"}
+                  />
+                  <InfoRow
+                    label="Ciudad"
+                    value={order.shippingCity || "Sin ciudad"}
+                  />
+                  <InfoRow
+                    label="Zona"
+                    value={order.shippingZone || "Sin zona"}
+                  />
+                  <InfoRow
+                    label="Tipo"
+                    value={order.shippingType || "Sin tipo"}
+                  />
+                </div>
+
+                <div className="rounded-[24px] bg-[#f7fdff] px-4">
+                  <InfoRow label="Subtotal" value={formatBs(order.subtotal)} />
+                  <InfoRow label="Envío" value={formatBs(order.shippingCost)} />
+
+                  <div className="flex items-center justify-between gap-4 py-4">
+                    <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#6f8798]">
+                      Total
+                    </p>
+
+                    <p className="text-xl font-black text-[#19b7c9]">
+                      {formatBs(order.total)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-[30px] border border-[#cfeaf6] bg-white p-4 shadow-[0_10px_30px_rgba(22,50,74,0.05)] sm:rounded-[32px] sm:p-6">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <div>
+                  <span className="inline-flex rounded-full bg-[#dff4ff] px-4 py-2 text-xs font-extrabold text-[#19b7c9]">
+                    Productos
+                  </span>
+
+                  <h2 className="mt-3 text-xl font-extrabold text-[#16324a] sm:text-2xl">
+                    Lista del pedido
+                  </h2>
+                </div>
+
+                <span className="rounded-full bg-[#eaf8ff] px-3 py-1 text-xs font-extrabold text-[#19b7c9]">
+                  {items.length}
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                {items.length === 0 ? (
+                  <div className="rounded-[22px] bg-[#f7fdff] px-4 py-5 text-sm font-semibold text-[#4b6b80]">
+                    No hay productos en este pedido.
+                  </div>
+                ) : (
+                  items.map(
+                    (
+                      item: {
+                        productId: string;
+                        title: string;
+                        quantity: number;
+                        price: number;
+                      },
+                      index: number
+                    ) => (
+                      <div
+                        key={`${item.productId}-${index}`}
+                        className="rounded-[22px] border border-[#edf7fb] bg-[#f7fdff] px-4 py-4 transition hover:border-[#19b7c9] hover:bg-white"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="line-clamp-2 font-extrabold text-[#16324a]">
+                              {item.title}
+                            </p>
+
+                            <p className="mt-1 text-sm font-semibold text-[#4b6b80]">
+                              Cantidad: {item.quantity}
+                            </p>
+                          </div>
+
+                          <p className="shrink-0 text-right font-black text-[#19b7c9]">
+                            {formatBs(item.price)}
+                          </p>
+                        </div>
                       </div>
-                    </div>
+                    )
                   )
                 )}
               </div>
             </div>
 
-            <div className="mt-6 rounded-[24px] bg-white p-5">
-              <h3 className="text-xl font-extrabold">Mensaje de WhatsApp</h3>
-              <pre className="mt-4 whitespace-pre-wrap rounded-2xl bg-[#f7fdff] p-4 text-sm leading-7 text-[#4b6b80]">
-                {order.whatsappMessage}
+            <div className="rounded-[30px] border border-[#cfeaf6] bg-white p-4 shadow-[0_10px_30px_rgba(22,50,74,0.05)] sm:rounded-[32px] sm:p-6">
+              <div className="mb-4">
+                <span className="inline-flex rounded-full bg-[#dff4ff] px-4 py-2 text-xs font-extrabold text-[#19b7c9]">
+                  WhatsApp
+                </span>
+
+                <h2 className="mt-3 text-xl font-extrabold text-[#16324a] sm:text-2xl">
+                  Mensaje generado
+                </h2>
+              </div>
+
+              <pre className="max-h-[240px] overflow-y-auto whitespace-pre-wrap break-words rounded-[24px] bg-[#f7fdff] p-4 text-sm leading-7 text-[#4b6b80] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:max-h-[360px]">
+                {order.whatsappMessage || "Sin mensaje generado."}
               </pre>
             </div>
           </section>
 
-          <OrderEditForm order={order} />
+          <div className="xl:sticky xl:top-6 xl:h-fit">
+            <OrderEditForm order={order} />
+          </div>
         </div>
       </div>
     </main>

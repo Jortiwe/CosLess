@@ -37,7 +37,8 @@ type StatCardProps = {
   title: string;
   value: number;
   subtitle: string;
-  href: string;
+  href?: string;
+  disabled?: boolean;
 };
 
 function formatBs(value?: number) {
@@ -101,29 +102,48 @@ function statusClass(status?: string) {
   }
 }
 
-function StatCard({ title, value, subtitle, href }: StatCardProps) {
-  return (
-    <Link
-      href={href}
-      className="group block w-full min-w-0 overflow-hidden rounded-[28px] border border-[#cfeaf6] bg-white p-5 shadow-[0_10px_28px_rgba(22,50,74,0.05)] transition hover:-translate-y-1 hover:border-[#19b7c9] hover:shadow-[0_16px_34px_rgba(22,50,74,0.09)] sm:p-6"
-    >
-      <div className="flex items-start justify-between gap-3">
-        <p className="min-w-0 break-words text-[0.7rem] font-extrabold uppercase tracking-[0.16em] text-[#6f8798] group-hover:text-[#19b7c9] sm:text-xs sm:tracking-[0.2em]">
+function StatCard({ title, value, subtitle, href, disabled }: StatCardProps) {
+  const content = (
+    <>
+      <div className="flex items-start justify-between gap-2">
+        <p className="min-w-0 break-words text-[0.58rem] font-extrabold uppercase tracking-[0.14em] text-[#6f8798] transition group-hover:text-[#19b7c9] sm:text-[0.7rem] sm:tracking-[0.18em] lg:text-xs">
           {title}
         </p>
 
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#eaf8ff] text-sm font-extrabold text-[#19b7c9] transition group-hover:bg-[#19b7c9] group-hover:text-white">
+        <span
+          className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-extrabold transition sm:h-8 sm:w-8 sm:text-sm ${
+            disabled
+              ? "bg-[#f2f8fb] text-[#9ab1bf]"
+              : "bg-[#eaf8ff] text-[#19b7c9] group-hover:bg-[#19b7c9] group-hover:text-white"
+          }`}
+        >
           →
         </span>
       </div>
 
-      <p className="mt-6 text-[2.6rem] font-black leading-none text-[#16324a] sm:text-[3rem]">
+      <p className="mt-4 text-[1.8rem] font-black leading-none text-[#16324a] sm:mt-5 sm:text-[2.5rem] lg:text-[2.8rem]">
         {value}
       </p>
 
-      <p className="mt-4 text-sm font-semibold leading-6 text-[#4b6b80]">
+      <p className="mt-2 text-[0.72rem] font-semibold leading-4 text-[#4b6b80] sm:mt-3 sm:text-sm sm:leading-6">
         {subtitle}
       </p>
+    </>
+  );
+
+  const className = `group block w-full min-w-0 overflow-hidden rounded-[22px] border border-[#cfeaf6] bg-white p-3 shadow-[0_8px_22px_rgba(22,50,74,0.04)] transition sm:rounded-[26px] sm:p-5 lg:rounded-[28px] ${
+    disabled
+      ? "cursor-default opacity-90"
+      : "hover:-translate-y-1 hover:border-[#19b7c9] hover:shadow-[0_16px_34px_rgba(22,50,74,0.09)]"
+  }`;
+
+  if (!href || disabled) {
+    return <div className={className}>{content}</div>;
+  }
+
+  return (
+    <Link href={href} className={className}>
+      {content}
     </Link>
   );
 }
@@ -166,25 +186,27 @@ export default async function AdminPage() {
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#eef9ff] px-4 py-6 text-[#16324a] sm:px-6 sm:py-8 lg:px-8">
       <div className="mx-auto w-full max-w-[1700px]">
-        <div className="mb-6 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <span className="inline-flex rounded-full bg-white px-5 py-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[#19b7c9] shadow-[0_8px_20px_rgba(22,50,74,0.04)]">
-              Panel admin
-            </span>
+        <div className="mb-5">
+  <div className="flex items-center justify-between gap-3">
+    <span className="inline-flex rounded-full bg-white px-4 py-2 text-[0.7rem] font-extrabold uppercase tracking-[0.16em] text-[#19b7c9] shadow-[0_8px_20px_rgba(22,50,74,0.04)] sm:px-5 sm:text-xs">
+      Panel admin
+    </span>
 
-            <h1 className="mt-3 text-[2.2rem] font-extrabold leading-tight text-[#16324a] sm:text-[3.2rem]">
-              Gestión CosLess
-            </h1>
+    <div className="shrink-0 [&_a]:!h-11 [&_a]:!px-4 [&_a]:!text-xs [&_a]:!font-extrabold [&_a]:!whitespace-nowrap [&_button]:!h-11 [&_button]:!px-4 [&_button]:!text-xs [&_button]:!font-extrabold [&_button]:!whitespace-nowrap sm:[&_a]:!h-12 sm:[&_a]:!px-5 sm:[&_a]:!text-sm sm:[&_button]:!h-12 sm:[&_button]:!px-5 sm:[&_button]:!text-sm">
+      <AdminToolbar />
+    </div>
+  </div>
 
-            <p className="mt-2 hidden max-w-3xl text-sm font-semibold leading-7 text-[#4b6b80] sm:block">
-              Resumen general de pedidos, productos, usuarios y novedades.
-            </p>
-          </div>
+  <h1 className="mt-3 whitespace-nowrap text-[2rem] font-extrabold leading-none tracking-[-0.04em] text-[#16324a] sm:text-[3.2rem]">
+    Gestión CosLess
+  </h1>
 
-          <AdminToolbar />
-        </div>
+  <p className="mt-2 hidden max-w-3xl text-sm font-semibold leading-7 text-[#4b6b80] sm:block">
+    Resumen general de pedidos, productos, usuarios y novedades.
+  </p>
+</div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-3 gap-3 sm:gap-4 lg:grid-cols-6">
           <StatCard
             title="Pedidos"
             value={ordersCount}
@@ -219,6 +241,8 @@ export default async function AdminPage() {
             subtitle="Publicadas"
             href="/admin/novedades"
           />
+
+          <StatCard title="Pagos" value={0} subtitle="Pendientes" disabled />
         </div>
 
         <div className="mt-6 grid gap-6 xl:grid-cols-[1.25fr_0.75fr]">
@@ -255,7 +279,7 @@ export default async function AdminPage() {
                 </thead>
 
                 <tbody>
-                  {recentOrders.length === 0 ? (
+                  {recentOrders.slice(0, 5).length === 0 ? (
                     <tr>
                       <td
                         colSpan={5}
@@ -265,7 +289,7 @@ export default async function AdminPage() {
                       </td>
                     </tr>
                   ) : (
-                    recentOrders.map((order) => (
+                    recentOrders.slice(0, 5).map((order) => (
                       <tr key={order._id} className="bg-[#f7fdff]">
                         <td className="rounded-l-2xl px-3 py-4 font-bold">
                           <Link
@@ -305,12 +329,12 @@ export default async function AdminPage() {
             </div>
 
             <div className="space-y-3 md:hidden">
-              {recentOrders.length === 0 ? (
+              {recentOrders.slice(0, 5).length === 0 ? (
                 <div className="rounded-2xl bg-[#f7fdff] px-4 py-6 text-sm text-[#4b6b80]">
                   No hay pedidos todavía.
                 </div>
               ) : (
-                recentOrders.map((order) => (
+                recentOrders.slice(0, 5).map((order) => (
                   <Link
                     key={order._id}
                     href="/admin/pedidos"
@@ -373,20 +397,20 @@ export default async function AdminPage() {
               </div>
 
               <div className="space-y-3">
-                {recentProducts.length === 0 ? (
+                {recentProducts.slice(0, 5).length === 0 ? (
                   <div className="rounded-2xl bg-[#f7fdff] px-4 py-4 text-sm text-[#4b6b80]">
                     No hay productos todavía.
                   </div>
                 ) : (
-                  recentProducts.map((product) => (
+                  recentProducts.slice(0, 5).map((product) => (
                     <Link
                       key={product._id}
                       href="/admin/productos"
-                      className="block rounded-[22px] bg-[#f7fdff] px-4 py-4 transition hover:text-[#19b7c9]"
+                      className="group block rounded-[22px] border border-transparent bg-[#f7fdff] px-4 py-4 transition duration-200 hover:-translate-y-0.5 hover:border-[#19b7c9] hover:bg-white hover:shadow-[0_12px_26px_rgba(22,50,74,0.08)]"
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="min-w-0">
-                          <h3 className="line-clamp-1 font-extrabold text-[#16324a]">
+                          <h3 className="line-clamp-1 font-extrabold text-[#16324a] transition group-hover:text-[#19b7c9]">
                             {product.title || "Sin título"}
                           </h3>
 
@@ -436,18 +460,18 @@ export default async function AdminPage() {
               </div>
 
               <div className="space-y-3">
-                {recentUsers.length === 0 ? (
+                {recentUsers.slice(0, 5).length === 0 ? (
                   <div className="rounded-2xl bg-[#f7fdff] px-4 py-4 text-sm text-[#4b6b80]">
                     No hay usuarios todavía.
                   </div>
                 ) : (
-                  recentUsers.map((user) => (
+                  recentUsers.slice(0, 5).map((user) => (
                     <Link
                       key={user._id}
                       href="/admin/usuarios"
-                      className="block rounded-[22px] bg-[#f7fdff] px-4 py-4 transition hover:text-[#19b7c9]"
+                      className="group block rounded-[22px] border border-transparent bg-[#f7fdff] px-4 py-4 transition duration-200 hover:-translate-y-0.5 hover:border-[#19b7c9] hover:bg-white hover:shadow-[0_12px_26px_rgba(22,50,74,0.08)]"
                     >
-                      <h3 className="font-extrabold text-[#16324a]">
+                      <h3 className="font-extrabold text-[#16324a] transition group-hover:text-[#19b7c9]">
                         {user.fullName || "Sin nombre"}
                       </h3>
 
