@@ -20,6 +20,7 @@ type SearchProduct = {
   mainImage?: string;
   price?: number;
   status?: string;
+  stock?: number;
 };
 
 function formatBs(value?: number) {
@@ -46,6 +47,8 @@ function ProductCard({ product }: { product: SearchProduct }) {
   const href = product.slug ? `/producto/${product.slug}` : "#";
   const image = product.mainImage || "/placeholder-product.png";
   const status = product.status || "stock";
+  const stock = typeof product.stock === "number" ? product.stock : 0;
+  const isOutOfStock = status !== "preventa" && stock <= 0;
 
   return (
     <Link
@@ -68,12 +71,18 @@ function ProductCard({ product }: { product: SearchProduct }) {
 
           <span
             className={`rounded-full px-2.5 py-1 text-[8px] font-extrabold uppercase tracking-[0.12em] shadow-sm sm:px-3 sm:text-[10px] sm:tracking-[0.14em] ${
-              status === "preventa"
+              isOutOfStock
+                ? "bg-[#ffe6ed] text-[#d63865]"
+                : status === "preventa"
                 ? "bg-[#fff3dc] text-[#b87d00]"
                 : "bg-[#e6f6ed] text-[#16824c]"
             }`}
           >
-            {status === "preventa" ? "Preventa" : "Stock"}
+            {isOutOfStock
+              ? "Sin stock"
+              : status === "preventa"
+              ? "Preventa"
+              : "Stock"}
           </span>
         </div>
       </div>

@@ -36,6 +36,31 @@ function normalize(value?: string) {
   return String(value || "").toLowerCase().trim();
 }
 
+function getStatusInfo(product: CatalogProduct) {
+  const status = product.status || "stock";
+  const stock = typeof product.stock === "number" ? product.stock : 0;
+  const isOutOfStock = status !== "preventa" && stock <= 0;
+
+  if (isOutOfStock) {
+    return {
+      label: "Sin stock",
+      className: "bg-[#ffe6ed] text-[#d63865]",
+    };
+  }
+
+  if (status === "preventa") {
+    return {
+      label: "Preventa",
+      className: "bg-[#fff3dc] text-[#b87d00]",
+    };
+  }
+
+  return {
+    label: "Stock",
+    className: "bg-[#e6f6ed] text-[#16824c]",
+  };
+}
+
 export default function ProductCatalog({
   products,
   showCategoryFilter = true,
@@ -189,7 +214,7 @@ export default function ProductCatalog({
           {filteredProducts.map((product) => {
             const href = product.slug ? `/producto/${product.slug}` : "#";
             const image = getImage(product);
-            const status = product.status || "stock";
+            const statusInfo = getStatusInfo(product);
             const hasOldPrice =
               typeof product.oldPrice === "number" &&
               typeof product.price === "number" &&
@@ -214,13 +239,9 @@ export default function ProductCatalog({
                     </span>
 
                     <span
-                      className={`rounded-full px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] shadow-sm ${
-                        status === "preventa"
-                          ? "bg-[#fff3dc] text-[#b87d00]"
-                          : "bg-[#e6f6ed] text-[#16824c]"
-                      }`}
+                      className={`rounded-full px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] shadow-sm ${statusInfo.className}`}
                     >
-                      {status === "preventa" ? "Preventa" : "Stock"}
+                      {statusInfo.label}
                     </span>
                   </div>
                 </div>
