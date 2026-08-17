@@ -5,17 +5,19 @@ import { useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
 
 type Props = {
-  userId: string;
-  userName: string;
+  newsId: string;
+  title?: string;
 };
 
-export default function UserAdminActions({ userId, userName }: Props) {
+export default function DeleteNewsButton({ newsId, title }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   async function handleDelete() {
     const confirmed = window.confirm(
-      `¿Seguro que quieres eliminar al usuario "${userName}"?\n\nEsta acción no se puede deshacer.`
+      `¿Seguro que quieres eliminar la novedad "${
+        title || "Sin título"
+      }"?\n\nEsta acción no se puede deshacer.`
     );
 
     if (!confirmed) return;
@@ -23,20 +25,20 @@ export default function UserAdminActions({ userId, userName }: Props) {
     try {
       setLoading(true);
 
-      const response = await fetch(`/api/users/${userId}`, {
+      const response = await fetch(`/api/admin/news/${newsId}`, {
         method: "DELETE",
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => null);
 
       if (!response.ok) {
-        alert(data.error || "No se pudo eliminar el usuario.");
+        alert(data?.error || "No se pudo eliminar la novedad.");
         return;
       }
 
       router.refresh();
     } catch {
-      alert("Ocurrió un error eliminando el usuario.");
+      alert("Ocurrió un error eliminando la novedad.");
     } finally {
       setLoading(false);
     }
@@ -47,7 +49,7 @@ export default function UserAdminActions({ userId, userName }: Props) {
       type="button"
       onClick={handleDelete}
       disabled={loading}
-      className="inline-flex items-center gap-2 rounded-xl border border-[#f2c7c7] bg-white px-4 py-2 text-sm font-bold text-[#c94b4b] transition hover:bg-[#fff5f5] disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[var(--danger-bg-hover)] bg-[var(--danger-bg)] px-4 py-2 text-sm font-extrabold text-[var(--danger)] transition hover:bg-[var(--danger-bg-hover)] disabled:cursor-not-allowed disabled:opacity-60"
     >
       <FiTrash2 />
       {loading ? "Eliminando..." : "Eliminar"}
