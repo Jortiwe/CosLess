@@ -123,7 +123,7 @@ export default function Hero() {
   const activeSlide = slides[current];
 
   return (
-    <section className="relative overflow-hidden rounded-[16px] bg-white shadow-[0_12px_32px_rgba(22,50,74,0.09)] sm:rounded-[20px] lg:rounded-[22px]">
+    <section className="relative overflow-hidden rounded-[16px] bg-[var(--surface)] shadow-[0_12px_32px_var(--shadow)] sm:rounded-[20px] lg:rounded-[22px]">
       <div
         className="relative h-[300px] touch-pan-y sm:h-[390px] md:h-[450px] lg:h-[500px] xl:h-[535px]"
         onTouchStart={handleTouchStart}
@@ -146,7 +146,7 @@ export default function Hero() {
               style={{ backgroundImage: `url(${slide.image})` }}
             />
 
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(10,28,42,0.52)_0%,rgba(10,28,42,0.18)_42%,rgba(10,28,42,0.04)_100%)] transition duration-500 group-hover:bg-[linear-gradient(90deg,rgba(10,28,42,0.62)_0%,rgba(10,28,42,0.24)_42%,rgba(10,28,42,0.06)_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(16,38,90,0.58)_0%,rgba(16,38,90,0.22)_42%,rgba(16,38,90,0.05)_100%)] transition duration-500 group-hover:bg-[linear-gradient(90deg,rgba(16,38,90,0.68)_0%,rgba(16,38,90,0.28)_42%,rgba(16,38,90,0.07)_100%)]" />
 
             <div className="pointer-events-none absolute inset-0 opacity-0 transition duration-700 group-hover:opacity-100">
               <div className="absolute -left-32 top-0 h-full w-[36%] rotate-12 bg-white/16 blur-2xl transition duration-1000 group-hover:translate-x-[520px]" />
@@ -154,7 +154,7 @@ export default function Hero() {
 
             <div className="relative z-10 flex h-full items-center px-6 sm:px-10 lg:px-14">
               <div className="max-w-[350px] sm:max-w-[500px]">
-                <p className="text-[0.62rem] font-extrabold uppercase tracking-[0.28em] text-[#7befff] drop-shadow-sm sm:text-[0.75rem] md:text-xs">
+                <p className="text-[0.62rem] font-extrabold uppercase tracking-[0.28em] text-[var(--cos-soft)] drop-shadow-sm sm:text-[0.75rem] md:text-xs">
                   {slide.tag}
                 </p>
 
@@ -163,11 +163,11 @@ export default function Hero() {
                 </h1>
 
                 <div className="mt-4 hidden items-center gap-3 sm:flex">
-                  <span className="inline-flex h-11 items-center rounded-full bg-white/92 px-6 text-sm font-extrabold text-[#16324a] shadow-[0_10px_28px_rgba(0,0,0,0.14)] backdrop-blur transition duration-300 group-hover:translate-x-1 group-hover:bg-[#19b7c9] group-hover:text-white">
+                  <span className="inline-flex h-11 items-center rounded-full bg-white/92 px-6 text-sm font-extrabold text-[var(--text)] shadow-[0_10px_28px_rgba(0,0,0,0.14)] backdrop-blur transition duration-300 group-hover:translate-x-1 group-hover:bg-[var(--primary)] group-hover:text-white">
                     Ver
                   </span>
 
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur transition duration-300 group-hover:rotate-45 group-hover:bg-white group-hover:text-[#19b7c9]">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur transition duration-300 group-hover:rotate-45 group-hover:bg-white group-hover:text-[var(--primary)]">
                     <FiArrowUpRight className="text-[1.25rem]" />
                   </span>
                 </div>
@@ -196,7 +196,7 @@ export default function Hero() {
           type="button"
           onClick={prevSlide}
           aria-label="Anterior"
-          className="absolute bottom-4 left-4 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-white/88 text-[#16324a] shadow-[0_8px_22px_rgba(22,50,74,0.16)] backdrop-blur transition hover:scale-110 hover:bg-white sm:bottom-5 sm:left-5 sm:h-11 sm:w-11 lg:bottom-6 lg:left-6"
+          className="absolute bottom-4 left-4 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-white/88 text-[var(--text)] shadow-[0_8px_22px_var(--shadow-strong)] backdrop-blur transition hover:scale-110 hover:bg-white sm:bottom-5 sm:left-5 sm:h-11 sm:w-11 lg:bottom-6 lg:left-6"
         >
           <FiChevronLeft className="text-[1.55rem]" />
         </button>
@@ -205,18 +205,18 @@ export default function Hero() {
           type="button"
           onClick={nextSlide}
           aria-label="Siguiente"
-          className="absolute bottom-4 left-[64px] z-30 flex h-10 w-10 items-center justify-center rounded-full bg-white/88 text-[#16324a] shadow-[0_8px_22px_rgba(22,50,74,0.16)] backdrop-blur transition hover:scale-110 hover:bg-white sm:bottom-5 sm:left-auto sm:right-5 sm:h-11 sm:w-11 lg:bottom-6 lg:right-6"
+          className="absolute bottom-4 left-[64px] z-30 flex h-10 w-10 items-center justify-center rounded-full bg-white/88 text-[var(--text)] shadow-[0_8px_22px_var(--shadow-strong)] backdrop-blur transition hover:scale-110 hover:bg-white sm:bottom-5 sm:left-auto sm:right-5 sm:h-11 sm:w-11 lg:bottom-6 lg:right-6"
         >
           <FiChevronRight className="text-[1.55rem]" />
         </button>
 
         <Link
           href={activeSlide.href}
-          className="absolute bottom-4 right-4 z-30 flex items-center gap-2 rounded-full bg-white/92 px-4 py-2.5 text-xs font-extrabold text-[#16324a] shadow-[0_12px_30px_rgba(22,50,74,0.18)] backdrop-blur transition active:scale-95 sm:hidden"
+          className="absolute bottom-4 right-4 z-30 flex items-center gap-2 rounded-full bg-white/92 px-4 py-2.5 text-xs font-extrabold text-[var(--text)] shadow-[0_12px_30px_var(--shadow-strong)] backdrop-blur transition active:scale-95 sm:hidden"
         >
           <span>{activeSlide.tag}</span>
-          <span className="h-4 w-px bg-[#cfeaf6]" />
-          <span className="text-[#19b7c9]">Ver</span>
+          <span className="h-4 w-px bg-[var(--border)]" />
+          <span className="text-[var(--primary)]">Ver</span>
         </Link>
       </div>
     </section>

@@ -143,21 +143,21 @@ export default function RouteLoadingScreen() {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-[95] flex items-center justify-center bg-[#eef9ff]/68 px-5 backdrop-blur-[3px]">
-      <div className="pointer-events-none flex flex-col items-center justify-center rounded-[30px] bg-white/76 px-9 py-8 shadow-[0_18px_55px_rgba(22,50,74,0.10)] backdrop-blur-md">
+    <div className="fixed inset-0 z-[95] flex items-center justify-center bg-[color-mix(in_srgb,var(--bg)_68%,transparent)] px-5 backdrop-blur-[3px]">
+      <div className="pointer-events-none flex flex-col items-center justify-center rounded-[30px] bg-[color-mix(in_srgb,var(--surface)_76%,transparent)] px-9 py-8 shadow-[0_18px_55px_var(--shadow-strong)] backdrop-blur-md">
         <div className="relative flex h-20 w-20 items-center justify-center">
-          <div className="absolute inset-0 rounded-full border-[7px] border-[#d8eef8]" />
-          <div className="absolute inset-0 animate-spin rounded-full border-[7px] border-transparent border-b-[#19b7c9] border-r-[#19b7c9]" />
+          <div className="absolute inset-0 rounded-full border-[7px] border-[var(--border-soft)]" />
+          <div className="absolute inset-0 animate-spin rounded-full border-[7px] border-transparent border-b-[var(--primary)] border-r-[var(--primary)]" />
 
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#eaf8ff] text-[1.7rem] font-extrabold text-[#19b7c9] shadow-sm">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--surface-soft)] text-[1.7rem] font-extrabold text-[var(--primary)] shadow-sm">
             C
           </div>
         </div>
 
         <div className="mt-5 flex items-center gap-2">
-          <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#19b7c9] [animation-delay:0ms]" />
-          <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#19b7c9] [animation-delay:150ms]" />
-          <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#19b7c9] [animation-delay:300ms]" />
+          <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[var(--primary)] [animation-delay:0ms]" />
+          <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[var(--primary)] [animation-delay:150ms]" />
+          <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[var(--primary)] [animation-delay:300ms]" />
         </div>
       </div>
     </div>

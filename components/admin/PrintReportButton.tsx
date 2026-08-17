@@ -7,7 +7,7 @@ export default function PrintReportButton() {
     <button
       type="button"
       onClick={() => window.print()}
-      className="print:hidden inline-flex items-center gap-2 rounded-2xl bg-[#19b7c9] px-5 py-3 text-sm font-bold text-white shadow-[0_10px_24px_rgba(25,183,201,0.18)] transition hover:bg-[#0ea5b7]"
+      className="print:hidden inline-flex items-center gap-2 rounded-2xl bg-[var(--primary)] px-5 py-3 text-sm font-bold text-[var(--cos-white)] shadow-[0_10px_24px_var(--shadow-strong)] transition hover:bg-[var(--primary-dark)]"
     >
       <FiPrinter />
       Imprimir / Guardar PDF

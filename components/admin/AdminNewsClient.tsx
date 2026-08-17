@@ -73,48 +73,48 @@ export default function AdminNewsClient({
   }, [news, search]);
 
   return (
-    <main className="min-h-screen bg-[#eef9ff] px-4 py-6 text-[#16324a] sm:px-8 sm:py-8 lg:px-12">
+    <main className="min-h-screen bg-[var(--bg)] px-4 py-6 text-[var(--text)] sm:px-8 sm:py-8 lg:px-12">
       <div className="mx-auto max-w-[1500px]">
         <div className="mb-5">
-          <h1 className="text-[2.05rem] font-extrabold leading-[1.05] tracking-[-0.045em] text-[#16324a] sm:text-4xl">
+          <h1 className="text-[2.05rem] font-extrabold leading-[1.05] tracking-[-0.045em] text-[var(--text)] sm:text-4xl">
             Gestión de novedades
           </h1>
 
-          <p className="mt-2 hidden text-[#4b6b80] sm:block">
+          <p className="mt-2 hidden text-[var(--text-soft)] sm:block">
             Crea mensajes tipo noticia para mostrar en la tienda.
           </p>
 
           <div className="mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
             <Link
               href="/admin"
-              className="inline-flex h-11 items-center justify-center rounded-2xl border border-[#cfeaf6] bg-white px-3 text-xs font-extrabold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9] sm:h-12 sm:px-5 sm:text-sm"
+              className="inline-flex h-11 items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-3 text-xs font-extrabold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)] sm:h-12 sm:px-5 sm:text-sm"
             >
               ← Panel admin
             </Link>
 
             <Link
               href="/admin/novedades/nuevo"
-              className="inline-flex h-11 items-center justify-center rounded-2xl bg-[#19b7c9] px-3 text-xs font-extrabold text-white transition hover:bg-[#0ea5b7] sm:h-12 sm:px-5 sm:text-sm"
+              className="inline-flex h-11 items-center justify-center rounded-2xl bg-[var(--primary)] px-3 text-xs font-extrabold text-[var(--cos-white)] transition hover:bg-[var(--primary-dark)] sm:h-12 sm:px-5 sm:text-sm"
             >
               Crear novedad
             </Link>
           </div>
         </div>
 
-        <div className="mb-5 rounded-[26px] border border-[#cfeaf6] bg-white p-3 shadow-[0_10px_26px_rgba(22,50,74,0.05)] sm:rounded-[30px] sm:p-4">
+        <div className="mb-5 rounded-[26px] border border-[var(--border)] bg-[var(--surface)] p-3 shadow-[0_10px_26px_var(--shadow)] sm:rounded-[30px] sm:p-4">
           <div className="relative">
-            <FiSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#7a98aa]" />
+            <FiSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
 
             <input
               type="search"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Buscar novedad..."
-              className="h-12 w-full rounded-[20px] border border-[#cfeaf6] bg-[#f7fdff] pl-11 pr-4 text-sm font-semibold text-[#16324a] outline-none transition placeholder:text-[#8ba4b3] focus:border-[#19b7c9] focus:bg-white focus:shadow-[0_0_0_4px_rgba(25,183,201,0.12)] sm:h-14"
+              className="h-12 w-full rounded-[20px] border border-[var(--border)] bg-[var(--surface-soft)] pl-11 pr-4 text-sm font-semibold text-[var(--text)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--primary)] focus:bg-[var(--surface)] focus:shadow-[0_0_0_4px_var(--shadow)] sm:h-14"
             />
           </div>
 
-          <div className="mt-3 flex items-center justify-between px-1 text-xs font-extrabold text-[#7a96a7]">
+          <div className="mt-3 flex items-center justify-between px-1 text-xs font-extrabold text-[var(--text-muted)]">
             <span>
               {filteredNews.length} de {news.length} en esta página
             </span>
@@ -123,7 +123,7 @@ export default function AdminNewsClient({
               <button
                 type="button"
                 onClick={() => setSearch("")}
-                className="text-[#19b7c9] transition hover:text-[#0ea5b7]"
+                className="text-[var(--primary)] transition hover:text-[var(--primary-dark)]"
               >
                 Limpiar
               </button>
@@ -131,20 +131,20 @@ export default function AdminNewsClient({
           </div>
         </div>
 
-        <section className="rounded-[30px] border border-[#cfeaf6] bg-[#f7fdff] p-4 shadow-[0_10px_30px_rgba(22,50,74,0.05)] sm:rounded-[32px] sm:p-6">
+        <section className="rounded-[30px] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[0_10px_30px_var(--shadow)] sm:rounded-[32px] sm:p-6">
           <div className="space-y-3 sm:space-y-4">
             {filteredNews.length === 0 ? (
-              <div className="rounded-[24px] bg-white px-4 py-6 text-sm font-semibold text-[#4b6b80]">
+              <div className="rounded-[24px] bg-[var(--surface)] px-4 py-6 text-sm font-semibold text-[var(--text-soft)]">
                 No hay novedades que coincidan con la búsqueda.
               </div>
             ) : (
               filteredNews.map((item) => (
                 <article
                   key={item._id}
-                  className="rounded-[24px] border border-transparent bg-white p-4 shadow-[0_8px_22px_rgba(22,50,74,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-[#19b7c9] hover:shadow-[0_12px_26px_rgba(22,50,74,0.08)] sm:p-5"
+                  className="rounded-[24px] border border-transparent bg-[var(--surface)] p-4 shadow-[0_8px_22px_var(--shadow)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--primary)] hover:shadow-[0_12px_26px_var(--shadow-strong)] sm:p-5"
                 >
                   <div className="flex gap-3 sm:gap-4">
-                    <div className="h-20 w-20 shrink-0 overflow-hidden rounded-[20px] bg-[#eaf8ff] sm:h-24 sm:w-24 sm:rounded-2xl">
+                    <div className="h-20 w-20 shrink-0 overflow-hidden rounded-[20px] bg-[var(--surface-soft)] sm:h-24 sm:w-24 sm:rounded-2xl">
                       <img
                         src={getSafeImage(item.image)}
                         alt={item.title || "Novedad"}
@@ -157,26 +157,26 @@ export default function AdminNewsClient({
 
                     <div className="min-w-0 flex-1">
                       <div className="flex items-start justify-between gap-3">
-                        <h2 className="line-clamp-2 text-[1rem] font-extrabold leading-5 text-[#16324a] sm:text-xl sm:leading-7">
+                        <h2 className="line-clamp-2 text-[1rem] font-extrabold leading-5 text-[var(--text)] sm:text-xl sm:leading-7">
                           {item.title || "Sin título"}
                         </h2>
 
                         <span
                           className={`shrink-0 rounded-full px-3 py-1 text-[0.66rem] font-extrabold uppercase tracking-[0.12em] sm:text-xs ${
                             item.isPublished
-                              ? "bg-emerald-50 text-emerald-700"
-                              : "bg-gray-100 text-gray-600"
+                              ? "bg-[var(--success-bg)] text-[var(--success)]"
+                              : "bg-[var(--surface-soft)] text-[var(--text-muted)]"
                           }`}
                         >
                           {item.isPublished ? "Publicado" : "Oculto"}
                         </span>
                       </div>
 
-                      <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#4b6b80]">
+                      <p className="mt-2 line-clamp-2 text-sm leading-6 text-[var(--text-soft)]">
                         {item.summary || "Sin resumen."}
                       </p>
 
-                      <p className="mt-2 text-[0.68rem] font-extrabold uppercase tracking-[0.14em] text-[#6f8798] sm:text-xs">
+                      <p className="mt-2 text-[0.68rem] font-extrabold uppercase tracking-[0.14em] text-[var(--text-muted)] sm:text-xs">
                         {formatDate(item.createdAt)}
                       </p>
                     </div>
@@ -185,7 +185,7 @@ export default function AdminNewsClient({
                   <div className="mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
                     <Link
                       href={`/admin/novedades/${item._id}`}
-                      className="inline-flex h-11 items-center justify-center rounded-2xl bg-[#19b7c9] px-4 text-xs font-extrabold text-white transition hover:bg-[#0ea5b7] sm:w-auto sm:text-sm"
+                      className="inline-flex h-11 items-center justify-center rounded-2xl bg-[var(--primary)] px-4 text-xs font-extrabold text-[var(--cos-white)] transition hover:bg-[var(--primary-dark)] sm:w-auto sm:text-sm"
                     >
                       Editar
                     </Link>
@@ -202,20 +202,20 @@ export default function AdminNewsClient({
           <div className="mt-6 grid grid-cols-3 items-center gap-2">
             <Link
               href={`/admin/novedades?page=${Math.max(1, page - 1)}`}
-              className={`inline-flex h-11 items-center justify-center rounded-2xl border border-[#cfeaf6] bg-white px-3 text-xs font-extrabold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9] sm:h-12 sm:px-5 sm:text-sm ${
+              className={`inline-flex h-11 items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-3 text-xs font-extrabold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)] sm:h-12 sm:px-5 sm:text-sm ${
                 page <= 1 ? "pointer-events-none opacity-40" : ""
               }`}
             >
               Anterior
             </Link>
 
-            <span className="text-center text-xs font-extrabold text-[#4b6b80] sm:text-sm">
+            <span className="text-center text-xs font-extrabold text-[var(--text-soft)] sm:text-sm">
               {page} / {totalPages}
             </span>
 
             <Link
               href={`/admin/novedades?page=${Math.min(totalPages, page + 1)}`}
-              className={`inline-flex h-11 items-center justify-center rounded-2xl border border-[#cfeaf6] bg-white px-3 text-xs font-extrabold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9] sm:h-12 sm:px-5 sm:text-sm ${
+              className={`inline-flex h-11 items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-3 text-xs font-extrabold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)] sm:h-12 sm:px-5 sm:text-sm ${
                 page >= totalPages ? "pointer-events-none opacity-40" : ""
               }`}
             >
@@ -223,7 +223,7 @@ export default function AdminNewsClient({
             </Link>
           </div>
 
-          <p className="mt-3 text-center text-xs font-bold text-[#7a96a7]">
+          <p className="mt-3 text-center text-xs font-bold text-[var(--text-muted)]">
             Total: {total} novedades
           </p>
         </section>

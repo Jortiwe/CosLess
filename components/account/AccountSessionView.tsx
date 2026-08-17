@@ -25,22 +25,22 @@ export default function AccountSessionView({
   user,
 }: AccountSessionViewProps) {
   return (
-    <main className="min-h-screen bg-[#eef9ff] text-[#16324a]">
+    <main className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
       <Header />
 
       <section className="mx-auto w-full max-w-[1450px] px-4 py-8 sm:px-6 lg:px-10">
-        <div className="rounded-[36px] border border-[#cfeaf6] bg-[#f7fdff] p-6 shadow-[0_10px_30px_rgba(22,50,74,0.06)] sm:p-8">
+        <div className="rounded-[36px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_10px_30px_var(--shadow)] sm:p-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div>
-              <span className="inline-flex rounded-full bg-[#dff4ff] px-4 py-2 text-sm font-bold text-[#19b7c9]">
+              <span className="inline-flex rounded-full bg-[var(--surface-soft)] px-4 py-2 text-sm font-bold text-[var(--primary)]">
                 Mi perfil
               </span>
 
-              <h1 className="mt-4 text-4xl font-extrabold text-[#16324a] sm:text-5xl">
+              <h1 className="mt-4 text-4xl font-extrabold text-[var(--text)] sm:text-5xl">
                 Hola, {user.nickname || user.fullName || "usuario"}
               </h1>
 
-              <p className="mt-3 max-w-2xl text-base leading-8 text-[#4b6b80]">
+              <p className="mt-3 max-w-2xl text-base leading-8 text-[var(--text-soft)]">
                 Aquí podrás revisar tus datos, pedidos, favoritos y opciones de
                 tu cuenta.
               </p>
@@ -48,7 +48,7 @@ export default function AccountSessionView({
 
             <a
               href="/api/auth/logout"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#e63946] px-6 py-4 text-sm font-bold text-white transition hover:bg-[#d62839]"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[var(--danger)] px-6 py-4 text-sm font-bold text-white transition hover:opacity-90"
             >
               <FiLogOut />
               Cerrar sesión
@@ -56,55 +56,55 @@ export default function AccountSessionView({
           </div>
 
           <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <div className="rounded-[28px] bg-white p-5">
-              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
+            <div className="rounded-[28px] bg-[var(--surface)] p-5 shadow-[0_8px_22px_var(--shadow)]">
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--surface-soft)] text-[var(--primary)]">
                 <FiUser className="text-[1.35rem]" />
               </div>
-              <p className="text-sm font-bold uppercase tracking-[0.14em] text-[#7a909c]">
+              <p className="text-sm font-bold uppercase tracking-[0.14em] text-[var(--text-muted)]">
                 Nickname
               </p>
-              <p className="mt-2 text-xl font-extrabold text-[#16324a]">
+              <p className="mt-2 text-xl font-extrabold text-[var(--text)]">
                 {user.nickname || "Sin nickname"}
               </p>
             </div>
 
-            <div className="rounded-[28px] bg-white p-5">
-              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
+            <div className="rounded-[28px] bg-[var(--surface)] p-5 shadow-[0_8px_22px_var(--shadow)]">
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--surface-soft)] text-[var(--primary)]">
                 <FiMail className="text-[1.35rem]" />
               </div>
-              <p className="text-sm font-bold uppercase tracking-[0.14em] text-[#7a909c]">
+              <p className="text-sm font-bold uppercase tracking-[0.14em] text-[var(--text-muted)]">
                 Correo
               </p>
-              <p className="mt-2 break-all text-base font-bold text-[#16324a]">
+              <p className="mt-2 break-all text-base font-bold text-[var(--text)]">
                 {user.email}
               </p>
             </div>
 
-            <div className="rounded-[28px] bg-white p-5">
-              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
+            <div className="rounded-[28px] bg-[var(--surface)] p-5 shadow-[0_8px_22px_var(--shadow)]">
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--surface-soft)] text-[var(--primary)]">
                 <FiShoppingBag className="text-[1.35rem]" />
               </div>
-              <p className="text-sm font-bold uppercase tracking-[0.14em] text-[#7a909c]">
+              <p className="text-sm font-bold uppercase tracking-[0.14em] text-[var(--text-muted)]">
                 Pedidos
               </p>
               <Link
                 href="/account/orders"
-                className="mt-2 inline-flex text-base font-extrabold text-[#16324a] transition hover:text-[#19b7c9]"
+                className="mt-2 inline-flex text-base font-extrabold text-[var(--text)] transition hover:text-[var(--primary)]"
               >
                 Ver historial
               </Link>
             </div>
 
-            <div className="rounded-[28px] bg-white p-5">
-              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
+            <div className="rounded-[28px] bg-[var(--surface)] p-5 shadow-[0_8px_22px_var(--shadow)]">
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--surface-soft)] text-[var(--primary)]">
                 <FiHeart className="text-[1.35rem]" />
               </div>
-              <p className="text-sm font-bold uppercase tracking-[0.14em] text-[#7a909c]">
+              <p className="text-sm font-bold uppercase tracking-[0.14em] text-[var(--text-muted)]">
                 Favoritos
               </p>
               <Link
                 href="/favoritos"
-                className="mt-2 inline-flex text-base font-extrabold text-[#16324a] transition hover:text-[#19b7c9]"
+                className="mt-2 inline-flex text-base font-extrabold text-[var(--text)] transition hover:text-[var(--primary)]"
               >
                 Ver favoritos
               </Link>
@@ -114,17 +114,17 @@ export default function AccountSessionView({
           <div className="mt-8 grid gap-4 md:grid-cols-2">
             <Link
               href="/account/password"
-              className="rounded-[28px] border border-[#cfeaf6] bg-white p-6 transition hover:border-[#19b7c9] hover:bg-[#faffff]"
+              className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-6 transition hover:border-[var(--primary)] hover:bg-[var(--surface-soft)]"
             >
               <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--surface-soft)] text-[var(--primary)]">
                   <FiLock className="text-[1.3rem]" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-extrabold text-[#16324a]">
+                  <h2 className="text-xl font-extrabold text-[var(--text)]">
                     Cambiar contraseña
                   </h2>
-                  <p className="mt-1 text-sm text-[#4b6b80]">
+                  <p className="mt-1 text-sm text-[var(--text-soft)]">
                     Actualiza tu contraseña de forma segura.
                   </p>
                 </div>
@@ -134,17 +134,17 @@ export default function AccountSessionView({
             {user.isAdmin && (
               <Link
                 href="/admin"
-                className="rounded-[28px] border border-[#bfefff] bg-[#eaf8ff] p-6 transition hover:border-[#19b7c9] hover:bg-white"
+                className="rounded-[28px] border border-[var(--border)] bg-[var(--surface-soft)] p-6 transition hover:border-[var(--primary)] hover:bg-[var(--surface)]"
               >
                 <div className="flex items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[#19b7c9]">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--surface)] text-[var(--primary)]">
                     <FiUser className="text-[1.3rem]" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-extrabold text-[#16324a]">
+                    <h2 className="text-xl font-extrabold text-[var(--text)]">
                       Panel admin
                     </h2>
-                    <p className="mt-1 text-sm text-[#4b6b80]">
+                    <p className="mt-1 text-sm text-[var(--text-soft)]">
                       Ir al panel de control administrativo.
                     </p>
                   </div>

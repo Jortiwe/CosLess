@@ -44,20 +44,20 @@ function getStatusInfo(product: CatalogProduct) {
   if (isOutOfStock) {
     return {
       label: "Sin stock",
-      className: "bg-[#ffe6ed] text-[#d63865]",
+      className: "bg-[var(--danger-bg)] text-[var(--danger)]",
     };
   }
 
   if (status === "preventa") {
     return {
       label: "Preventa",
-      className: "bg-[#fff3dc] text-[#b87d00]",
+      className: "bg-[var(--warning-bg)] text-[var(--warning)]",
     };
   }
 
   return {
     label: "Stock",
-    className: "bg-[#e6f6ed] text-[#16824c]",
+    className: "bg-[var(--success-bg)] text-[var(--success)]",
   };
 }
 
@@ -138,7 +138,7 @@ export default function ProductCatalog({
   return (
     <div>
       <div
-        className={`mb-5 grid gap-2 rounded-[24px] border border-[#cfeaf6] bg-white p-3 shadow-[0_10px_25px_rgba(22,50,74,0.04)] sm:mb-6 sm:gap-3 sm:rounded-[28px] sm:p-4 ${
+        className={`mb-5 grid gap-2 rounded-[24px] border border-[var(--border)] bg-[var(--surface)] p-3 shadow-[0_10px_25px_var(--shadow)] sm:mb-6 sm:gap-3 sm:rounded-[28px] sm:p-4 ${
           showCategoryFilter
             ? "grid-cols-2 md:grid-cols-[1fr_auto_auto]"
             : "grid-cols-[1fr_135px] md:grid-cols-[1fr_auto]"
@@ -149,24 +149,24 @@ export default function ProductCatalog({
             showCategoryFilter ? "col-span-2 md:col-span-1" : ""
           }`}
         >
-          <FiSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#6f8798]" />
+          <FiSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
 
           <input
             value={localSearch}
             onChange={(e) => setLocalSearch(e.target.value)}
             placeholder="Buscar..."
-            className="h-11 w-full rounded-[18px] border border-[#d7edf7] bg-[#f7fdff] pl-11 pr-4 text-sm font-semibold text-[#16324a] outline-none transition placeholder:text-[#7d94a5] focus:border-[#19b7c9] focus:bg-white sm:h-12 sm:rounded-2xl"
+            className="h-11 w-full rounded-[18px] border border-[var(--border-soft)] bg-[var(--surface-soft)] pl-11 pr-4 text-sm font-semibold text-[var(--text)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--primary)] focus:bg-[var(--surface)] sm:h-12 sm:rounded-2xl"
           />
         </label>
 
         {showCategoryFilter && (
           <label className="relative block">
-            <FiFilter className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#6f8798] sm:left-4" />
+            <FiFilter className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] sm:left-4" />
 
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="h-11 w-full appearance-none rounded-[18px] border border-[#d7edf7] bg-[#f7fdff] pl-9 pr-9 text-xs font-bold text-[#16324a] outline-none transition focus:border-[#19b7c9] focus:bg-white sm:h-12 sm:min-w-[190px] sm:rounded-2xl sm:pl-11 sm:pr-10 sm:text-sm"
+              className="h-11 w-full appearance-none rounded-[18px] border border-[var(--border-soft)] bg-[var(--surface-soft)] pl-9 pr-9 text-xs font-bold text-[var(--text)] outline-none transition focus:border-[var(--primary)] focus:bg-[var(--surface)] sm:h-12 sm:min-w-[190px] sm:rounded-2xl sm:pl-11 sm:pr-10 sm:text-sm"
             >
               <option value="all">Categorías</option>
 
@@ -177,7 +177,7 @@ export default function ProductCatalog({
               ))}
             </select>
 
-            <FiChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[17px] text-[#16324a] sm:right-4" />
+            <FiChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[17px] text-[var(--text)] sm:right-4" />
           </label>
         )}
 
@@ -185,7 +185,7 @@ export default function ProductCatalog({
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value)}
-            className="h-11 w-full appearance-none rounded-[18px] border border-[#d7edf7] bg-[#f7fdff] px-3 pr-9 text-xs font-bold text-[#16324a] outline-none transition focus:border-[#19b7c9] focus:bg-white sm:h-12 sm:min-w-[190px] sm:rounded-2xl sm:px-4 sm:pr-10 sm:text-sm"
+            className="h-11 w-full appearance-none rounded-[18px] border border-[var(--border-soft)] bg-[var(--surface-soft)] px-3 pr-9 text-xs font-bold text-[var(--text)] outline-none transition focus:border-[var(--primary)] focus:bg-[var(--surface)] sm:h-12 sm:min-w-[190px] sm:rounded-2xl sm:px-4 sm:pr-10 sm:text-sm"
           >
             <option value="newest">Recientes</option>
             <option value="oldest">Antiguos</option>
@@ -195,17 +195,17 @@ export default function ProductCatalog({
             <option value="price-high">Precio mayor</option>
           </select>
 
-          <FiChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[17px] text-[#16324a] sm:right-4" />
+          <FiChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[17px] text-[var(--text)] sm:right-4" />
         </label>
       </div>
 
       {filteredProducts.length === 0 ? (
-        <div className="rounded-[28px] border border-[#cfeaf6] bg-white p-6 text-center shadow-[0_10px_25px_rgba(22,50,74,0.04)] sm:rounded-[32px] sm:p-8">
-          <h2 className="text-xl font-extrabold text-[#16324a] sm:text-2xl">
+        <div className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-6 text-center shadow-[0_10px_25px_var(--shadow)] sm:rounded-[32px] sm:p-8">
+          <h2 className="text-xl font-extrabold text-[var(--text)] sm:text-2xl">
             No hay productos disponibles
           </h2>
 
-          <p className="mt-3 text-sm leading-6 text-[#4b6b80]">
+          <p className="mt-3 text-sm leading-6 text-[var(--text-soft)]">
             Prueba con otra categoría, cambia el orden o revisa más tarde.
           </p>
         </div>
@@ -224,9 +224,9 @@ export default function ProductCatalog({
               <Link
                 key={product._id}
                 href={href}
-                className="group flex h-full flex-col overflow-hidden rounded-[26px] border border-[#cfeaf6] bg-white shadow-[0_8px_24px_rgba(22,50,74,0.04)] transition hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(22,50,74,0.10)]"
+                className="group flex h-full flex-col overflow-hidden rounded-[26px] border border-[var(--border)] bg-[var(--surface)] shadow-[0_8px_24px_var(--shadow)] transition hover:-translate-y-1 hover:shadow-[0_16px_34px_var(--shadow-strong)]"
               >
-                <div className="relative aspect-square overflow-hidden bg-[#eaf8ff]">
+                <div className="relative aspect-square overflow-hidden bg-[var(--surface-soft)]">
                   <img
                     src={image}
                     alt={product.title || "Producto"}
@@ -234,7 +234,7 @@ export default function ProductCatalog({
                   />
 
                   <div className="absolute left-3 top-3 flex flex-wrap gap-2">
-                    <span className="rounded-full bg-white/90 px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#16324a] shadow-sm">
+                    <span className="rounded-full bg-white/90 px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-[var(--text)] shadow-sm">
                       {product.category || "Producto"}
                     </span>
 
@@ -247,24 +247,24 @@ export default function ProductCatalog({
                 </div>
 
                 <div className="flex flex-1 flex-col p-4">
-                  <h3 className="line-clamp-2 text-[0.98rem] font-extrabold leading-6 text-[#16324a] sm:text-[1.08rem]">
+                  <h3 className="line-clamp-2 text-[0.98rem] font-extrabold leading-6 text-[var(--text)] sm:text-[1.08rem]">
                     {product.title || "Producto sin título"}
                   </h3>
 
                   <div className="mt-auto flex items-end justify-between gap-3 pt-4">
                     <div>
                       {hasOldPrice && (
-                        <p className="text-xs font-bold text-[#8ba4b3] line-through">
+                        <p className="text-xs font-bold text-[var(--text-muted)] line-through">
                           {formatBs(product.oldPrice)}
                         </p>
                       )}
 
-                      <p className="text-[1.08rem] font-extrabold text-[#19b7c9]">
+                      <p className="text-[1.08rem] font-extrabold text-[var(--primary)]">
                         {formatBs(product.price)}
                       </p>
                     </div>
 
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#eaf8ff] text-sm font-extrabold text-[#19b7c9] transition group-hover:bg-[#19b7c9] group-hover:text-white">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--surface-soft)] text-sm font-extrabold text-[var(--primary)] transition group-hover:bg-[var(--primary)] group-hover:text-white">
                       →
                     </span>
                   </div>

@@ -36,7 +36,7 @@ export default function FloatingActions() {
         type="button"
         aria-label="Subir arriba"
         onClick={scrollToTop}
-        className={`pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full bg-[#19b7c9] text-white shadow-lg transition-all duration-300 hover:scale-110 hover:bg-[#0ea5b7] ${
+        className={`pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full bg-[var(--primary)] text-white shadow-lg transition-all duration-300 hover:scale-110 hover:bg-[var(--primary-dark)] ${
           showScrollTop
             ? "translate-y-0 opacity-100"
             : "pointer-events-none translate-y-3 opacity-0"
@@ -50,7 +50,7 @@ export default function FloatingActions() {
         target="_blank"
         rel="noreferrer"
         aria-label="Abrir WhatsApp"
-        className="pointer-events-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#19b7c9] text-white shadow-xl transition duration-200 hover:scale-110 hover:bg-[#0ea5b7] sm:h-[68px] sm:w-[68px]"
+        className="pointer-events-auto flex h-16 w-16 items-center justify-center rounded-full bg-[var(--primary)] text-white shadow-xl transition duration-200 hover:scale-110 hover:bg-[var(--primary-dark)] sm:h-[68px] sm:w-[68px]"
       >
         <FaCommentDots className="text-[1.3rem]" />
       </a>

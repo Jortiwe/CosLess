@@ -70,59 +70,65 @@ export default function UserEditForm({ user }: { user: UserType }) {
   }
 
   return (
-    <section className="rounded-[32px] border border-[#cfeaf6] bg-[#f7fdff] p-6 shadow-[0_10px_30px_rgba(22,50,74,0.05)]">
+    <section className="rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_10px_30px_var(--shadow)]">
       <div className="grid gap-5 md:grid-cols-2">
         <div className="md:col-span-2">
-          <label className="mb-2 block text-sm font-bold">
+          <label className="mb-2 block text-sm font-bold text-[var(--text)]">
             Nombre completo
           </label>
 
           <input
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none transition focus:border-[#19b7c9]"
+            className="w-full rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-4 text-[var(--text)] outline-none transition focus:border-[var(--primary)]"
           />
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-bold">Correo</label>
+          <label className="mb-2 block text-sm font-bold text-[var(--text)]">
+            Correo
+          </label>
 
           <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none transition focus:border-[#19b7c9]"
+            className="w-full rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-4 text-[var(--text)] outline-none transition focus:border-[var(--primary)]"
           />
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-bold">Nickname</label>
+          <label className="mb-2 block text-sm font-bold text-[var(--text)]">
+            Nickname
+          </label>
 
           <input
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
-            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none transition focus:border-[#19b7c9]"
+            className="w-full rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-4 text-[var(--text)] outline-none transition focus:border-[var(--primary)]"
           />
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-bold">Rol</label>
+          <label className="mb-2 block text-sm font-bold text-[var(--text)]">
+            Rol
+          </label>
 
           <select
             value={role}
             onChange={(e) => setRole(e.target.value as UserRole)}
-            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none transition focus:border-[#19b7c9]"
+            className="w-full rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-4 text-[var(--text)] outline-none transition focus:border-[var(--primary)]"
           >
             <option value="customer">Cliente</option>
             <option value="admin">Admin</option>
           </select>
         </div>
 
-        <label className="flex items-center gap-3 rounded-2xl bg-white px-4 py-4">
+        <label className="flex items-center gap-3 rounded-2xl bg-[var(--surface-soft)] px-4 py-4 text-[var(--text)]">
           <input
             type="checkbox"
             checked={isActive}
             onChange={(e) => setIsActive(e.target.checked)}
-            className="h-4 w-4 accent-[#19b7c9]"
+            className="h-4 w-4 accent-[var(--primary)]"
           />
 
           <span className="font-semibold">Usuario activo</span>
@@ -133,8 +139,8 @@ export default function UserEditForm({ user }: { user: UserType }) {
         <div
           className={`mt-5 rounded-2xl border px-4 py-4 text-sm font-semibold ${
             messageType === "success"
-              ? "border-[#cfeaf6] bg-white text-[#16324a]"
-              : "border-red-200 bg-red-50 text-red-600"
+              ? "border-[var(--border)] bg-[var(--surface-soft)] text-[var(--text)]"
+              : "border-[var(--danger-bg-hover)] bg-[var(--danger-bg)] text-[var(--danger)]"
           }`}
         >
           {message}
@@ -146,7 +152,7 @@ export default function UserEditForm({ user }: { user: UserType }) {
           type="button"
           onClick={handleSave}
           disabled={loading}
-          className="rounded-2xl bg-[#19b7c9] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0ea5b7] disabled:opacity-70"
+          className="rounded-2xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-[var(--cos-white)] transition hover:bg-[var(--primary-dark)] disabled:opacity-70"
         >
           {loading ? "Guardando..." : "Guardar cambios"}
         </button>

@@ -5,31 +5,155 @@ html {
 }
 
 :root {
-  --bg: #eef9ff;
-  --bg-soft: #dff4ff;
-  --primary: #19b7c9;
-  --primary-dark: #0ea5b7;
-  --text: #16324a;
-  --text-soft: #4b6b80;
-  --border: #cfeaf6;
+  /* =========================
+     PALETA PRINCIPAL COSLESS
+     Cambia colores aquí nomás
+     ========================= */
+
+  --cos-white: #ffffff;
+  --cos-bg: #f3f4fa;
+  --cos-soft: #afc9ee;
+  --cos-light-blue: #7099dd;
+  --cos-blue: #557fc1;
+  --cos-dark-blue: #315a9e;
+  --cos-navy: #10265a;
+
+  /* =========================
+     COLORES POR USO
+     Estos son los que usaremos
+     en la web
+     ========================= */
+
+  --bg: var(--cos-bg);
+  --bg-soft: var(--cos-soft);
+
+  --surface: var(--cos-white);
+  --surface-soft: #eef3ff;
+
+  --primary: var(--cos-blue);
+  --primary-light: var(--cos-light-blue);
+  --primary-dark: var(--cos-dark-blue);
+
+  --text: var(--cos-navy);
+  --text-soft: var(--cos-dark-blue);
+  --text-muted: #557fc1;
+
+  --border: var(--cos-soft);
+  --border-soft: #dbe7f8;
+
+  --shadow: rgba(16, 38, 90, 0.08);
+  --shadow-strong: rgba(16, 38, 90, 0.16);
+
+  --danger: #dc2626;
+  --success: #16a34a;
+  --warning: #f59e0b;
+
+  --danger-bg: #ffe9eb;
+  --danger-bg-hover: #ffd9dd;
+
+  --danger-bg: #ffe9eb;
+  --danger-bg-hover: #ffd9dd;
+  --warning-bg: #fff3dc;
+  
+  --success-bg: #e6f6ed;
+  --featured-bg: #eef3ff;
+  --featured: #315a9e;
 }
+
 body {
   margin: 0;
   padding: 0;
+  background: var(--bg);
+  color: var(--text);
 }
+
+/* =========================
+   CURSORES
+   ========================= */
+
 button,
 a,
 [role="button"],
 .cursor-pointer-target {
   cursor: pointer;
 }
-/* Scrollbar global CosLess */
+
+/* =========================
+   CLASES BASE REUTILIZABLES
+   Puedes usarlas luego en componentes
+   ========================= */
+
+.cosless-page {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.cosless-surface {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.cosless-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 32px var(--shadow);
+}
+
+.cosless-title {
+  color: var(--text);
+}
+
+.cosless-muted {
+  color: var(--text-soft);
+}
+
+.cosless-primary {
+  color: var(--primary);
+}
+
+.cosless-button {
+  background: var(--primary);
+  color: var(--cos-white);
+  transition: 0.2s ease;
+}
+
+.cosless-button:hover {
+  background: var(--primary-dark);
+}
+
+.cosless-soft-button {
+  background: var(--surface-soft);
+  color: var(--text);
+  border: 1px solid var(--border);
+  transition: 0.2s ease;
+}
+
+.cosless-soft-button:hover {
+  border-color: var(--primary);
+  color: var(--primary-dark);
+}
+
+/* =========================
+   SELECCIÓN DE TEXTO
+   ========================= */
+
+::selection {
+  background: var(--primary-light);
+  color: var(--cos-white);
+}
+
+/* =========================
+   SCROLLBAR GLOBAL COSLESS
+   ========================= */
+
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(25, 183, 201, 0.65) transparent;
+  scrollbar-color: color-mix(in srgb, var(--primary) 70%, transparent)
+    transparent;
 }
 
 /* Chrome, Edge, Brave */
+
 *::-webkit-scrollbar {
   width: 7px;
   height: 7px;
@@ -40,14 +164,14 @@ a,
 }
 
 *::-webkit-scrollbar-thumb {
-  background: rgba(25, 183, 201, 0.55);
+  background: color-mix(in srgb, var(--primary) 55%, transparent);
   border-radius: 999px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: rgba(25, 183, 201, 0.85);
+  background: color-mix(in srgb, var(--primary) 85%, transparent);
   border: 2px solid transparent;
   background-clip: content-box;
 }

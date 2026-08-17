@@ -77,39 +77,39 @@ export default function Footer() {
   }, []);
 
   const linkClass =
-    "inline-block text-[14px] text-[#4b6b80] transition duration-200 hover:text-[#19b7c9] hover:underline hover:underline-offset-4 sm:text-[15px]";
+    "inline-block text-[14px] text-[var(--text-soft)] transition duration-200 hover:text-[var(--primary)] hover:underline hover:underline-offset-4 sm:text-[15px]";
 
   const socialClass =
-    "flex h-9 w-9 items-center justify-center rounded-full border border-[#cfeaf6] bg-white text-[#16324a] transition duration-200 hover:-translate-y-1 hover:scale-110 hover:border-[#19b7c9] hover:text-[#19b7c9] sm:h-11 sm:w-11";
+    "flex h-9 w-9 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] text-[var(--text)] transition duration-200 hover:-translate-y-1 hover:scale-110 hover:border-[var(--primary)] hover:text-[var(--primary)] sm:h-11 sm:w-11";
 
   return (
     <footer
       ref={footerRef}
-      className={`mt-14 overflow-hidden border-t border-[#cfeaf6] bg-[#f7fdff] transition-all duration-700 ease-out sm:mt-16 xl:mt-20 ${
+      className={`mt-14 overflow-hidden border-t border-[var(--border)] bg-[var(--surface)] transition-all duration-700 ease-out sm:mt-16 xl:mt-20 ${
         isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
       }`}
     >
-      <div className="h-2 w-full bg-gradient-to-r from-[#dff4ff] via-[#eef9ff] to-[#d9f7ff] sm:h-3" />
+      <div className="h-2 w-full bg-gradient-to-r from-[var(--cos-soft)] via-[var(--bg)] to-[var(--primary-light)] sm:h-3" />
 
       <div className="mx-auto w-full max-w-[1700px] px-5 py-8 sm:px-6 sm:py-10 md:px-8 md:py-11 lg:px-12 xl:px-20 xl:py-12 2xl:px-24">
         {/* MOBILE / TABLET */}
         <div className="xl:hidden">
           <div className="mb-6 flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1 text-center">
-              <h3 className="text-[2rem] font-extrabold tracking-wide text-[#19b7c9] sm:text-[2.2rem]">
+              <h3 className="text-[2rem] font-extrabold tracking-wide text-[var(--primary)] sm:text-[2.2rem]">
                 CosLess
               </h3>
 
-              <p className="mx-auto mt-2 max-w-[260px] text-[14px] leading-6 text-[#4b6b80] sm:max-w-[420px] sm:text-[16px] sm:leading-8">
+              <p className="mx-auto mt-2 max-w-[260px] text-[14px] leading-6 text-[var(--text-soft)] sm:max-w-[420px] sm:text-[16px] sm:leading-8">
                 Tienda online de cosplay en Bolivia.
               </p>
             </div>
 
             <Link
               href="/novedades"
-              className="group mt-1 inline-flex shrink-0 items-center gap-2 rounded-2xl border border-[#cfeaf6] bg-white px-3 py-3 text-[12px] font-extrabold text-[#16324a] shadow-[0_10px_24px_rgba(22,50,74,0.05)] transition duration-200 hover:-translate-y-0.5 hover:border-[#19b7c9] hover:text-[#19b7c9] sm:px-5 sm:text-[13px]"
+              className="group mt-1 inline-flex shrink-0 items-center gap-2 rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-3 py-3 text-[12px] font-extrabold text-[var(--text)] shadow-[0_10px_24px_var(--shadow)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--primary)] hover:text-[var(--primary)] sm:px-5 sm:text-[13px]"
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#eaf8ff] text-[#19b7c9] transition group-hover:bg-[#19b7c9] group-hover:text-white">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--surface-soft)] text-[var(--primary)] transition group-hover:bg-[var(--primary)] group-hover:text-white">
                 <FiBell className="text-[1rem]" />
               </span>
 
@@ -119,7 +119,7 @@ export default function Footer() {
 
           <div className="grid grid-cols-2 gap-x-7 gap-y-7 sm:gap-x-10">
             <div className="min-w-0 pl-1 sm:pl-2">
-              <h4 className="text-[0.98rem] font-semibold uppercase tracking-[0.12em] text-[#16324a]">
+              <h4 className="text-[0.98rem] font-semibold uppercase tracking-[0.12em] text-[var(--text)]">
                 Categorías
               </h4>
 
@@ -135,7 +135,7 @@ export default function Footer() {
             </div>
 
             <div className="min-w-0">
-              <h4 className="text-[0.98rem] font-semibold uppercase tracking-[0.12em] text-[#16324a]">
+              <h4 className="text-[0.98rem] font-semibold uppercase tracking-[0.12em] text-[var(--text)]">
                 Contacto
               </h4>
 
@@ -144,7 +144,7 @@ export default function Footer() {
                   href={WHATSAPP_ORDER_URL}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-start gap-2 text-left text-[14px] text-[#4b6b80] transition duration-200 hover:text-[#19b7c9] sm:text-[15px]"
+                  className="flex items-start gap-2 text-left text-[14px] text-[var(--text-soft)] transition duration-200 hover:text-[var(--primary)] sm:text-[15px]"
                 >
                   <FaWhatsapp className="mt-1 shrink-0 text-[0.9rem]" />
                   <span className="break-words leading-6 hover:underline hover:underline-offset-4">
@@ -154,7 +154,7 @@ export default function Footer() {
 
                 <a
                   href={EMAIL_URL}
-                  className="flex items-start gap-2 text-left text-[14px] text-[#4b6b80] transition duration-200 hover:text-[#19b7c9] sm:text-[15px]"
+                  className="flex items-start gap-2 text-left text-[14px] text-[var(--text-soft)] transition duration-200 hover:text-[var(--primary)] sm:text-[15px]"
                 >
                   <FiMail className="mt-1 shrink-0 text-[0.9rem]" />
                   <span className="break-words leading-6 hover:underline hover:underline-offset-4">
@@ -166,7 +166,7 @@ export default function Footer() {
                   href={WHATSAPP_HELP_URL}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-start gap-2 text-left text-[14px] text-[#4b6b80] transition duration-200 hover:text-[#19b7c9] sm:text-[15px]"
+                  className="flex items-start gap-2 text-left text-[14px] text-[var(--text-soft)] transition duration-200 hover:text-[var(--primary)] sm:text-[15px]"
                 >
                   <FiHelpCircle className="mt-1 shrink-0 text-[0.9rem]" />
                   <span className="break-words leading-6 hover:underline hover:underline-offset-4">
@@ -227,11 +227,11 @@ export default function Footer() {
         {/* DESKTOP */}
         <div className="hidden gap-12 xl:grid xl:grid-cols-4">
           <div>
-            <h3 className="text-[2rem] font-extrabold tracking-wide text-[#19b7c9]">
+            <h3 className="text-[2rem] font-extrabold tracking-wide text-[var(--primary)]">
               CosLess
             </h3>
 
-            <p className="mt-4 max-w-sm text-[17px] leading-8 text-[#4b6b80]">
+            <p className="mt-4 max-w-sm text-[17px] leading-8 text-[var(--text-soft)]">
               Cosplays, pelucas, lentes, mallas, accesorios, renta y preventas.
               Cotiza rápido por WhatsApp.
             </p>
@@ -257,11 +257,7 @@ export default function Footer() {
                 <FaFacebookF className="text-[0.95rem]" />
               </a>
 
-              <a
-                href={INSTAGRAM_URL}
-                aria-label="Instagram"
-                className={socialClass}
-              >
+              <a href={INSTAGRAM_URL} aria-label="Instagram" className={socialClass}>
                 <FaInstagram className="text-[1rem]" />
               </a>
 
@@ -269,18 +265,14 @@ export default function Footer() {
                 <FaTiktok className="text-[0.95rem]" />
               </a>
 
-              <a
-                href={YOUTUBE_URL}
-                aria-label="YouTube"
-                className={socialClass}
-              >
+              <a href={YOUTUBE_URL} aria-label="YouTube" className={socialClass}>
                 <FaYoutube className="text-[1rem]" />
               </a>
             </div>
           </div>
 
           <div>
-            <h4 className="text-[1.05rem] font-semibold uppercase tracking-[0.14em] text-[#16324a]">
+            <h4 className="text-[1.05rem] font-semibold uppercase tracking-[0.14em] text-[var(--text)]">
               Categorías
             </h4>
 
@@ -296,7 +288,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-[1.05rem] font-semibold uppercase tracking-[0.14em] text-[#16324a]">
+            <h4 className="text-[1.05rem] font-semibold uppercase tracking-[0.14em] text-[var(--text)]">
               Noticias y actualizaciones
             </h4>
 
@@ -312,7 +304,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-[1.05rem] font-semibold uppercase tracking-[0.14em] text-[#16324a]">
+            <h4 className="text-[1.05rem] font-semibold uppercase tracking-[0.14em] text-[var(--text)]">
               Contacto
             </h4>
 
@@ -321,7 +313,7 @@ export default function Footer() {
                 href={WHATSAPP_ORDER_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-3 text-left text-[15px] text-[#4b6b80] transition duration-200 hover:scale-[1.03] hover:text-[#19b7c9]"
+                className="flex items-center gap-3 text-left text-[15px] text-[var(--text-soft)] transition duration-200 hover:scale-[1.03] hover:text-[var(--primary)]"
               >
                 <FaWhatsapp className="text-[1rem]" />
                 <span className="hover:underline hover:underline-offset-4">
@@ -331,7 +323,7 @@ export default function Footer() {
 
               <a
                 href={EMAIL_URL}
-                className="flex items-center gap-3 text-left text-[15px] text-[#4b6b80] transition duration-200 hover:scale-[1.03] hover:text-[#19b7c9]"
+                className="flex items-center gap-3 text-left text-[15px] text-[var(--text-soft)] transition duration-200 hover:scale-[1.03] hover:text-[var(--primary)]"
               >
                 <FiMail className="text-[1rem]" />
                 <span className="hover:underline hover:underline-offset-4">
@@ -343,7 +335,7 @@ export default function Footer() {
                 href={WHATSAPP_HELP_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-3 text-left text-[15px] text-[#4b6b80] transition duration-200 hover:scale-[1.03] hover:text-[#19b7c9]"
+                className="flex items-center gap-3 text-left text-[15px] text-[var(--text-soft)] transition duration-200 hover:scale-[1.03] hover:text-[var(--primary)]"
               >
                 <FiHelpCircle className="text-[1rem]" />
                 <span className="hover:underline hover:underline-offset-4">
@@ -356,19 +348,19 @@ export default function Footer() {
               href={WHATSAPP_HELP_URL}
               target="_blank"
               rel="noreferrer"
-              className="mt-7 inline-flex rounded-2xl bg-[#19b7c9] px-6 py-3 text-sm font-semibold text-white transition duration-200 hover:scale-105 hover:bg-[#0ea5b7]"
+              className="mt-7 inline-flex rounded-2xl bg-[var(--primary)] px-6 py-3 text-sm font-semibold text-white transition duration-200 hover:scale-105 hover:bg-[var(--primary-dark)]"
             >
               Escribir al WhatsApp
             </a>
           </div>
         </div>
 
-        <div className="mt-10 border-t border-[#d9eef7] pt-5 sm:mt-12 sm:pt-6 md:mt-14">
-          <div className="flex flex-col items-center justify-between gap-2 text-center text-[13px] text-[#5f7f93] sm:text-[14px] md:flex-row md:text-left">
-            <p className="transition duration-200 hover:text-[#19b7c9]">
+        <div className="mt-10 border-t border-[var(--border)] pt-5 sm:mt-12 sm:pt-6 md:mt-14">
+          <div className="flex flex-col items-center justify-between gap-2 text-center text-[13px] text-[var(--text-muted)] sm:text-[14px] md:flex-row md:text-left">
+            <p className="transition duration-200 hover:text-[var(--primary)]">
               © 2026 CosLess.
             </p>
-            <p className="transition duration-200 hover:text-[#19b7c9]">
+            <p className="transition duration-200 hover:text-[var(--primary)]">
               Tienda cosplay en desarrollo.
             </p>
           </div>

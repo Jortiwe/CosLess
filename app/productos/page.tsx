@@ -96,20 +96,20 @@ export default async function ProductsPage({
   const pageInfo = getPageInfo(section);
 
   return (
-    <main className="min-h-screen bg-[#eef9ff] text-[#16324a]">
+    <main className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
       <Header />
 
       <section className="mx-auto w-full max-w-[1380px] px-4 pb-8 pt-5 sm:px-6 sm:py-8 lg:px-8">
         <div className="mb-4 sm:mb-6">
-          <span className="inline-flex rounded-full bg-[#dff4ff] px-4 py-2 text-sm font-bold text-[#19b7c9]">
+          <span className="inline-flex rounded-full bg-[var(--surface-soft)] px-4 py-2 text-sm font-bold text-[var(--primary)]">
             {pageInfo.badge}
           </span>
 
-          <h1 className="mt-4 hidden text-[2.3rem] font-extrabold leading-tight sm:block sm:text-[3rem]">
+          <h1 className="mt-4 hidden text-[2.3rem] font-extrabold leading-tight text-[var(--text)] sm:block sm:text-[3rem]">
             {pageInfo.title}
           </h1>
 
-          <p className="mt-3 hidden max-w-2xl text-base leading-7 text-[#4b6b80] sm:block">
+          <p className="mt-3 hidden max-w-2xl text-base leading-7 text-[var(--text-soft)] sm:block">
             {pageInfo.description}
           </p>
         </div>
@@ -117,7 +117,7 @@ export default async function ProductsPage({
         {products.length > 0 ? (
           <ProductCatalog products={products} showCategoryFilter />
         ) : (
-          <div className="rounded-[28px] border border-[#cfeaf6] bg-white px-6 py-10 text-[#4b6b80] shadow-sm">
+          <div className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] px-6 py-10 text-[var(--text-soft)] shadow-sm">
             No hay productos en esta sección todavía.
           </div>
         )}

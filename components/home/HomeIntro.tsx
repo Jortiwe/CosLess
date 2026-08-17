@@ -30,9 +30,9 @@ const infoItems = [
 
 export default function HomeIntro() {
   return (
-    <section className="mt-12 rounded-[28px] border border-[#cfeaf6] bg-white px-5 py-7 shadow-[0_12px_30px_rgba(22,50,74,0.05)] sm:px-8 sm:py-9 lg:px-10">
+    <section className="mt-12 rounded-[28px] border border-[var(--border)] bg-[var(--surface)] px-5 py-7 shadow-[0_12px_30px_var(--shadow)] sm:px-8 sm:py-9 lg:px-10">
       <div className="max-w-5xl">
-        <h2 className="text-[2rem] font-extrabold leading-tight tracking-tight text-[#16324a] sm:text-[2.45rem] lg:text-[2.8rem]">
+        <h2 className="text-[2rem] font-extrabold leading-tight tracking-tight text-[var(--text)] sm:text-[2.45rem] lg:text-[2.8rem]">
           Tienda online de cosplay en Cochabamba
         </h2>
       </div>
@@ -44,17 +44,17 @@ export default function HomeIntro() {
           return (
             <div
               key={item.title}
-              className="rounded-[18px] border border-[#e5f3fa] bg-[#f9fdff] px-3 py-4 sm:rounded-[20px] sm:px-4"
+              className="rounded-[18px] border border-[var(--border-soft)] bg-[var(--surface-soft)] px-3 py-4 sm:rounded-[20px] sm:px-4"
             >
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#19b7c9] shadow-sm">
+              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-[var(--surface)] text-[var(--primary)] shadow-sm">
                 <Icon className="text-[1rem]" />
               </div>
 
-              <h3 className="text-[0.9rem] font-extrabold leading-tight text-[#16324a] sm:text-[1rem]">
+              <h3 className="text-[0.9rem] font-extrabold leading-tight text-[var(--text)] sm:text-[1rem]">
                 {item.title}
               </h3>
 
-              <p className="mt-1 text-xs leading-5 text-[#5f7f93] sm:text-sm">
+              <p className="mt-1 text-xs leading-5 text-[var(--text-muted)] sm:text-sm">
                 {item.text}
               </p>
             </div>

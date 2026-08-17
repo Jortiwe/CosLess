@@ -21,7 +21,7 @@ export default function SearchTrigger({
         onClick={() => setIsOpen(true)}
         className={className}
       >
-        <FiSearch className="text-[1.35rem] transition duration-200 group-hover:text-[#19b7c9] sm:text-[1.45rem]" />
+        <FiSearch className="text-[1.35rem] transition duration-200 group-hover:text-[var(--primary)] sm:text-[1.45rem]" />
       </button>
 
       <SearchOverlay isOpen={isOpen} onClose={() => setIsOpen(false)} />

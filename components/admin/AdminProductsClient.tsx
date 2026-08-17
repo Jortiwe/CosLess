@@ -81,28 +81,28 @@ export default function AdminProductsClient({
   }, [products, search]);
 
   return (
-    <main className="min-h-screen bg-[#eef9ff] px-4 py-6 text-[#16324a] sm:px-8 sm:py-8 lg:px-12">
+    <main className="min-h-screen bg-[var(--bg)] px-4 py-6 text-[var(--text)] sm:px-8 sm:py-8 lg:px-12">
       <div className="mx-auto max-w-[1600px]">
         <div className="mb-5">
-          <h1 className="text-[2.05rem] font-extrabold leading-[1.05] tracking-[-0.045em] text-[#16324a] sm:text-4xl">
+          <h1 className="text-[2.05rem] font-extrabold leading-[1.05] tracking-[-0.045em] text-[var(--text)] sm:text-4xl">
             Gestión de productos
           </h1>
 
-          <p className="mt-2 hidden text-[#4b6b80] sm:block">
+          <p className="mt-2 hidden text-[var(--text-soft)] sm:block">
             Crea, edita y organiza productos por categoría y secciones.
           </p>
 
           <div className="mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
             <Link
               href="/admin"
-              className="inline-flex h-11 items-center justify-center rounded-2xl border border-[#cfeaf6] bg-white px-3 text-xs font-extrabold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9] sm:h-12 sm:px-5 sm:text-sm"
+              className="inline-flex h-11 items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-3 text-xs font-extrabold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)] sm:h-12 sm:px-5 sm:text-sm"
             >
               ← Panel admin
             </Link>
 
             <Link
               href="/admin/productos/reporte"
-              className="inline-flex h-11 items-center justify-center rounded-2xl border border-[#cfeaf6] bg-white px-3 text-xs font-extrabold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9] sm:h-12 sm:px-5 sm:text-sm"
+              className="inline-flex h-11 items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-3 text-xs font-extrabold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)] sm:h-12 sm:px-5 sm:text-sm"
             >
               <span className="sm:hidden">Reporte</span>
               <span className="hidden sm:inline">Reporte PDF</span>
@@ -110,27 +110,27 @@ export default function AdminProductsClient({
 
             <Link
               href="/admin/productos/nuevo"
-              className="col-span-2 inline-flex h-11 items-center justify-center rounded-2xl bg-[#19b7c9] px-3 text-xs font-extrabold text-white transition hover:bg-[#0ea5b7] sm:col-span-1 sm:h-12 sm:px-5 sm:text-sm"
+              className="col-span-2 inline-flex h-11 items-center justify-center rounded-2xl bg-[var(--primary)] px-3 text-xs font-extrabold text-white transition hover:bg-[var(--primary-dark)] sm:col-span-1 sm:h-12 sm:px-5 sm:text-sm"
             >
               Crear producto
             </Link>
           </div>
         </div>
 
-        <div className="mb-5 rounded-[26px] border border-[#cfeaf6] bg-white p-3 shadow-[0_10px_26px_rgba(22,50,74,0.05)] sm:rounded-[30px] sm:p-4">
+        <div className="mb-5 rounded-[26px] border border-[var(--border)] bg-[var(--surface)] p-3 shadow-[0_10px_26px_var(--shadow)] sm:rounded-[30px] sm:p-4">
           <div className="relative">
-            <FiSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#7a98aa]" />
+            <FiSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
 
             <input
               type="search"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Buscar producto..."
-              className="h-12 w-full rounded-[20px] border border-[#cfeaf6] bg-[#f7fdff] pl-11 pr-4 text-sm font-semibold text-[#16324a] outline-none transition placeholder:text-[#8ba4b3] focus:border-[#19b7c9] focus:bg-white focus:shadow-[0_0_0_4px_rgba(25,183,201,0.12)] sm:h-14 sm:placeholder:text-sm"
+              className="h-12 w-full rounded-[20px] border border-[var(--border)] bg-[var(--surface-soft)] pl-11 pr-4 text-sm font-semibold text-[var(--text)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--primary)] focus:bg-[var(--surface)] focus:shadow-[0_0_0_4px_var(--shadow)] sm:h-14 sm:placeholder:text-sm"
             />
           </div>
 
-          <div className="mt-3 flex items-center justify-between px-1 text-xs font-extrabold text-[#7a96a7]">
+          <div className="mt-3 flex items-center justify-between px-1 text-xs font-extrabold text-[var(--text-muted)]">
             <span>
               {filteredProducts.length} de {products.length} productos
             </span>
@@ -139,7 +139,7 @@ export default function AdminProductsClient({
               <button
                 type="button"
                 onClick={() => setSearch("")}
-                className="text-[#19b7c9] transition hover:text-[#0ea5b7]"
+                className="text-[var(--primary)] transition hover:text-[var(--primary-dark)]"
               >
                 Limpiar
               </button>
@@ -147,30 +147,30 @@ export default function AdminProductsClient({
           </div>
         </div>
 
-        <section className="rounded-[30px] border border-[#cfeaf6] bg-[#f7fdff] p-4 shadow-[0_10px_30px_rgba(22,50,74,0.05)] sm:rounded-[32px] sm:p-6">
+        <section className="rounded-[30px] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[0_10px_30px_var(--shadow)] sm:rounded-[32px] sm:p-6">
           <div className="space-y-3 sm:space-y-4">
             {filteredProducts.length === 0 ? (
-              <div className="rounded-[24px] bg-white px-4 py-6 text-sm font-semibold text-[#4b6b80]">
+              <div className="rounded-[24px] bg-[var(--surface)] px-4 py-6 text-sm font-semibold text-[var(--text-soft)]">
                 No hay productos que coincidan con la búsqueda.
               </div>
             ) : (
               filteredProducts.map((product) => (
                 <article
                   key={product._id}
-                  className="rounded-[24px] border border-transparent bg-white p-4 shadow-[0_8px_22px_rgba(22,50,74,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-[#19b7c9] hover:shadow-[0_12px_26px_rgba(22,50,74,0.08)] sm:p-5"
+                  className="rounded-[24px] border border-transparent bg-[var(--surface)] p-4 shadow-[0_8px_22px_var(--shadow)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--primary)] hover:shadow-[0_12px_26px_var(--shadow-strong)] sm:p-5"
                 >
                   <div className="flex items-start justify-between gap-3 sm:gap-4">
                     <div className="min-w-0 flex-1">
-                      <h2 className="line-clamp-2 text-[1rem] font-extrabold leading-5 text-[#16324a] sm:text-xl sm:leading-7">
+                      <h2 className="line-clamp-2 text-[1rem] font-extrabold leading-5 text-[var(--text)] sm:text-xl sm:leading-7">
                         {product.title || "Sin título"}
                       </h2>
 
-                      <p className="mt-2 text-sm text-[#4b6b80]">
+                      <p className="mt-2 text-sm text-[var(--text-soft)]">
                         {categoryLabel(product.category)} ·{" "}
                         {statusLabel(product.status)}
                       </p>
 
-                      <p className="mt-1 line-clamp-1 text-xs font-semibold text-[#6f8798] sm:mt-2 sm:text-sm">
+                      <p className="mt-1 line-clamp-1 text-xs font-semibold text-[var(--text-muted)] sm:mt-2 sm:text-sm">
                         Slug: {product.slug || "Sin slug"}
                       </p>
                     </div>
@@ -178,16 +178,16 @@ export default function AdminProductsClient({
                     <div className="shrink-0 text-right">
                       {typeof product.oldPrice === "number" &&
                         product.oldPrice > 0 && (
-                          <p className="text-xs font-bold text-[#8ba4b3] line-through sm:text-sm">
+                          <p className="text-xs font-bold text-[var(--text-muted)] line-through sm:text-sm">
                             {formatBs(product.oldPrice)}
                           </p>
                         )}
 
-                      <p className="text-[1.05rem] font-black leading-none text-[#19b7c9] sm:text-2xl">
+                      <p className="text-[1.05rem] font-black leading-none text-[var(--primary)] sm:text-2xl">
                         {formatBs(product.price)}
                       </p>
 
-                      <p className="mt-1 text-xs font-semibold text-[#4b6b80] sm:text-sm">
+                      <p className="mt-1 text-xs font-semibold text-[var(--text-soft)] sm:text-sm">
                         Stock:{" "}
                         {typeof product.stock === "number" ? product.stock : 0}
                       </p>
@@ -198,27 +198,27 @@ export default function AdminProductsClient({
                     <span
                       className={`rounded-full px-3 py-1 text-[0.68rem] font-extrabold sm:text-xs ${
                         product.isActive
-                          ? "bg-[#e6f6ed] text-[#16824c]"
-                          : "bg-[#fff0f2] text-[#d62839]"
+                          ? "bg-[var(--success-bg)] text-[var(--success)]"
+                          : "bg-[var(--danger-bg)] text-[var(--danger)]"
                       }`}
                     >
                       {product.isActive ? "Activo" : "Inactivo"}
                     </span>
 
                     {product.isOffer && (
-                      <span className="rounded-full bg-[#fff3dc] px-3 py-1 text-[0.68rem] font-extrabold text-[#b87d00] sm:text-xs">
+                      <span className="rounded-full bg-[var(--warning-bg)] px-3 py-1 text-[0.68rem] font-extrabold text-[var(--warning)] sm:text-xs">
                         Oferta
                       </span>
                     )}
 
                     {product.isWeeklyNew && (
-                      <span className="rounded-full bg-[#eaf8ff] px-3 py-1 text-[0.68rem] font-extrabold text-[#19b7c9] sm:text-xs">
+                      <span className="rounded-full bg-[var(--surface-soft)] px-3 py-1 text-[0.68rem] font-extrabold text-[var(--primary)] sm:text-xs">
                         Nuevo semanal
                       </span>
                     )}
 
                     {product.isFeatured && (
-                      <span className="rounded-full bg-[#f2eaff] px-3 py-1 text-[0.68rem] font-extrabold text-[#7c3aed] sm:text-xs">
+                      <span className="rounded-full bg-[var(--featured-bg)] px-3 py-1 text-[0.68rem] font-extrabold text-[var(--featured)] sm:text-xs">
                         Destacado
                       </span>
                     )}
@@ -227,14 +227,14 @@ export default function AdminProductsClient({
                   <div className="mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
                     <Link
                       href={`/admin/productos/${product._id}`}
-                      className="inline-flex h-11 items-center justify-center rounded-2xl bg-[#19b7c9] px-4 text-xs font-extrabold text-white transition hover:bg-[#0ea5b7] sm:w-auto sm:text-sm"
+                      className="inline-flex h-11 items-center justify-center rounded-2xl bg-[var(--primary)] px-4 text-xs font-extrabold text-white transition hover:bg-[var(--primary-dark)] sm:w-auto sm:text-sm"
                     >
                       Editar
                     </Link>
 
                     <Link
                       href={`/producto/${product.slug}`}
-                      className="inline-flex h-11 items-center justify-center rounded-2xl border border-[#cfeaf6] bg-white px-4 text-xs font-extrabold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9] sm:w-auto sm:text-sm"
+                      className="inline-flex h-11 items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 text-xs font-extrabold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)] sm:w-auto sm:text-sm"
                     >
                       Ver tienda
                     </Link>

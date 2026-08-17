@@ -34,7 +34,7 @@ export default function AdminToolbar() {
         type="button"
         onClick={handleGoStore}
         disabled={loading !== null}
-        className="rounded-2xl border border-[#cfeaf6] bg-white px-5 py-3 text-sm font-bold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9] disabled:opacity-70"
+        className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-5 py-3 text-sm font-bold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)] disabled:opacity-70"
       >
         {loading === "store" ? "Abriendo..." : "Ver tienda"}
       </button>
@@ -43,7 +43,7 @@ export default function AdminToolbar() {
         type="button"
         onClick={handleLogout}
         disabled={loading !== null}
-        className="rounded-2xl border border-[#cfeaf6] bg-white px-5 py-3 text-sm font-bold text-[#16324a] transition hover:border-red-300 hover:text-red-500 disabled:opacity-70"
+        className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-5 py-3 text-sm font-bold text-[var(--text)] transition hover:border-[var(--danger-bg-hover)] hover:text-[var(--danger)] disabled:opacity-70"
       >
         {loading === "logout" ? "Cerrando..." : "Cerrar sesión"}
       </button>

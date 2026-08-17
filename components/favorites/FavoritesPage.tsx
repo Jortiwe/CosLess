@@ -99,60 +99,60 @@ export default function FavoritesPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#eef9ff] text-[#16324a]">
+    <main className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
       <Header />
 
       <section className="mx-auto w-full max-w-[1380px] px-4 pb-10 pt-4 sm:px-6 lg:px-8 lg:pt-6">
         <div className="mb-4">
-          <span className="inline-flex items-center rounded-full bg-[#dff4ff] px-4 py-2 text-sm font-semibold text-[#19b7c9]">
+          <span className="inline-flex items-center rounded-full bg-[var(--surface-soft)] px-4 py-2 text-sm font-semibold text-[var(--primary)]">
             <FiHeart className="mr-2 text-[1.05rem]" />
             Favoritos
           </span>
         </div>
 
         <div className="mb-6 grid grid-cols-3 gap-2 sm:flex sm:justify-end sm:gap-3">
-          <div className="min-w-[110px] rounded-[22px] bg-[#dff1fb] px-4 py-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#68839a]">
+          <div className="min-w-[110px] rounded-[22px] bg-[var(--surface-soft)] px-4 py-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
               Guardados
             </p>
 
-            <p className="mt-1 text-2xl font-extrabold text-[#16324a]">
+            <p className="mt-1 text-2xl font-extrabold text-[var(--text)]">
               {totalFavorites}
             </p>
           </div>
 
-          <div className="min-w-[110px] rounded-[22px] bg-[#dff1fb] px-4 py-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#68839a]">
+          <div className="min-w-[110px] rounded-[22px] bg-[var(--surface-soft)] px-4 py-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
               Stock
             </p>
 
-            <p className="mt-1 text-2xl font-extrabold text-[#16324a]">
+            <p className="mt-1 text-2xl font-extrabold text-[var(--text)]">
               {stockCount}
             </p>
           </div>
 
-          <div className="min-w-[110px] rounded-[22px] bg-[#dff1fb] px-4 py-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#68839a]">
+          <div className="min-w-[110px] rounded-[22px] bg-[var(--surface-soft)] px-4 py-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
               Preventa
             </p>
 
-            <p className="mt-1 text-2xl font-extrabold text-[#16324a]">
+            <p className="mt-1 text-2xl font-extrabold text-[var(--text)]">
               {preventaCount}
             </p>
           </div>
         </div>
 
         {mounted && favorites.length === 0 ? (
-          <div className="rounded-[28px] border border-[#cfeaf6] bg-white px-5 py-10 text-center shadow-[0_10px_30px_rgba(22,50,74,0.05)] sm:px-8">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#eaf8ff] text-[#19b7c9]">
+          <div className="rounded-[28px] border border-[var(--border)] bg-[var(--surface)] px-5 py-10 text-center shadow-[0_10px_30px_var(--shadow)] sm:px-8">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[var(--surface-soft)] text-[var(--primary)]">
               <FiHeart className="text-[2rem]" />
             </div>
 
-            <h2 className="mt-5 text-[2rem] font-extrabold leading-tight text-[#16324a] sm:text-[2.5rem]">
+            <h2 className="mt-5 text-[2rem] font-extrabold leading-tight text-[var(--text)] sm:text-[2.5rem]">
               Aún no tienes favoritos
             </h2>
 
-            <p className="mx-auto mt-3 max-w-2xl text-base leading-7 text-[#4b6b80]">
+            <p className="mx-auto mt-3 max-w-2xl text-base leading-7 text-[var(--text-soft)]">
               Guarda aquí los productos que más te gusten para revisarlos
               después o añadirlos al carrito.
             </p>
@@ -160,7 +160,7 @@ export default function FavoritesPage() {
             <div className="mt-6 flex justify-center">
               <Link
                 href="/"
-                className="inline-flex items-center justify-center rounded-2xl bg-[#19b7c9] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0ea5b7]"
+                className="inline-flex items-center justify-center rounded-2xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-white transition hover:bg-[var(--primary-dark)]"
               >
                 Seguir comprando
               </Link>
@@ -172,14 +172,12 @@ export default function FavoritesPage() {
               {favorites.map((item) => {
                 const status = item.status || "stock";
                 const category = categoryLabel(item.category);
-                const productHref = item.slug
-                  ? `/producto/${item.slug}`
-                  : "/";
+                const productHref = item.slug ? `/producto/${item.slug}` : "/";
 
                 return (
                   <article
                     key={item.productId}
-                    className="group relative flex h-full flex-col overflow-hidden rounded-[26px] border border-[#cfeaf6] bg-white shadow-[0_8px_24px_rgba(22,50,74,0.04)] transition hover:-translate-y-1 hover:border-[#19b7c9] hover:shadow-[0_16px_34px_rgba(22,50,74,0.10)]"
+                    className="group relative flex h-full flex-col overflow-hidden rounded-[26px] border border-[var(--border)] bg-[var(--surface)] shadow-[0_8px_24px_var(--shadow)] transition hover:-translate-y-1 hover:border-[var(--primary)] hover:shadow-[0_16px_34px_var(--shadow-strong)]"
                   >
                     <Link
                       href={productHref}
@@ -188,7 +186,7 @@ export default function FavoritesPage() {
                     />
 
                     <div className="relative z-10 pointer-events-none">
-                      <div className="relative aspect-square overflow-hidden bg-[#eaf8ff]">
+                      <div className="relative aspect-square overflow-hidden bg-[var(--surface-soft)]">
                         <img
                           src={getSafeImage(item.mainImage)}
                           alt={item.title}
@@ -200,15 +198,15 @@ export default function FavoritesPage() {
                         />
 
                         <div className="absolute left-3 top-3 flex flex-wrap gap-2">
-                          <span className="rounded-full bg-white/90 px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#16324a] shadow-sm">
+                          <span className="rounded-full bg-white/90 px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] text-[var(--text)] shadow-sm">
                             {category}
                           </span>
 
                           <span
                             className={`rounded-full px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.14em] shadow-sm ${
                               status === "preventa"
-                                ? "bg-[#fff3dc] text-[#b87d00]"
-                                : "bg-[#e6f6ed] text-[#16824c]"
+                                ? "bg-[var(--warning-bg)] text-[var(--warning)]"
+                                : "bg-[var(--success-bg)] text-[var(--success)]"
                             }`}
                           >
                             {status === "preventa" ? "Preventa" : "Stock"}
@@ -217,11 +215,11 @@ export default function FavoritesPage() {
                       </div>
 
                       <div className="flex flex-1 flex-col p-4">
-                        <h3 className="line-clamp-2 text-[0.98rem] font-extrabold leading-6 text-[#16324a] transition group-hover:text-[#19b7c9] sm:text-[1.08rem]">
+                        <h3 className="line-clamp-2 text-[0.98rem] font-extrabold leading-6 text-[var(--text)] transition group-hover:text-[var(--primary)] sm:text-[1.08rem]">
                           {item.title}
                         </h3>
 
-                        <p className="mt-3 text-[1.08rem] font-extrabold text-[#19b7c9]">
+                        <p className="mt-3 text-[1.08rem] font-extrabold text-[var(--primary)]">
                           {formatBs(item.price)}
                         </p>
                       </div>
@@ -232,7 +230,7 @@ export default function FavoritesPage() {
                         href={productHref}
                         aria-label="Ver producto"
                         title="Ver producto"
-                        className="inline-flex h-11 items-center justify-center rounded-2xl bg-[#19b7c9] px-3 text-sm font-bold text-white transition hover:bg-[#0ea5b7] sm:h-12"
+                        className="inline-flex h-11 items-center justify-center rounded-2xl bg-[var(--primary)] px-3 text-sm font-bold text-white transition hover:bg-[var(--primary-dark)] sm:h-12"
                       >
                         <span className="hidden sm:inline">Ver producto</span>
                         <FiEye className="text-[1.15rem] sm:hidden" />
@@ -247,7 +245,7 @@ export default function FavoritesPage() {
                         }}
                         aria-label="Quitar de favoritos"
                         title="Quitar de favoritos"
-                        className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl border border-[#d7e8f2] bg-white px-3 text-sm font-bold text-[#16324a] transition hover:border-[#f0c9c9] hover:text-[#c94b4b] sm:h-12"
+                        className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl border border-[var(--border-soft)] bg-[var(--surface)] px-3 text-sm font-bold text-[var(--text)] transition hover:border-[var(--danger-bg-hover)] hover:text-[var(--danger)] sm:h-12"
                       >
                         <FiTrash2 className="text-[1.05rem]" />
                         <span className="hidden sm:inline">Quitar</span>
@@ -262,7 +260,7 @@ export default function FavoritesPage() {
               <div className="flex flex-wrap items-center justify-center gap-3">
                 <Link
                   href="/"
-                  className="inline-flex h-[56px] min-w-[190px] items-center justify-center rounded-2xl border border-[#cfeaf6] bg-white px-6 text-sm font-bold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9] sm:min-w-[240px] sm:text-base"
+                  className="inline-flex h-[56px] min-w-[190px] items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-6 text-sm font-bold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)] sm:min-w-[240px] sm:text-base"
                 >
                   Seguir comprando
                 </Link>
@@ -270,7 +268,7 @@ export default function FavoritesPage() {
                 <button
                   type="button"
                   onClick={addAllToCart}
-                  className="inline-flex h-[56px] min-w-[190px] items-center justify-center rounded-2xl bg-[#19b7c9] px-6 text-sm font-bold text-white transition hover:bg-[#0ea5b7] sm:min-w-[240px] sm:text-base"
+                  className="inline-flex h-[56px] min-w-[190px] items-center justify-center rounded-2xl bg-[var(--primary)] px-6 text-sm font-bold text-white transition hover:bg-[var(--primary-dark)] sm:min-w-[240px] sm:text-base"
                 >
                   Añadir todo
                 </button>

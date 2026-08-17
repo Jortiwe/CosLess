@@ -98,21 +98,21 @@ async function saveAccountCart(items: CartItem[]) {
 
 function CartLoadingBlock() {
   return (
-    <div className="rounded-[30px] border border-[#cfeaf6] bg-[#f7fdff] px-5 py-16 text-center shadow-[0_10px_30px_rgba(22,50,74,0.06)] sm:px-8 sm:py-20">
+    <div className="rounded-[30px] border border-[var(--border)] bg-[var(--surface)] px-5 py-16 text-center shadow-[0_10px_30px_var(--shadow)] sm:px-8 sm:py-20">
       <div className="mx-auto flex flex-col items-center justify-center">
         <div className="relative flex h-20 w-20 items-center justify-center">
-          <div className="absolute inset-0 rounded-full border-[7px] border-[#d8eef8]" />
-          <div className="absolute inset-0 animate-spin rounded-full border-[7px] border-transparent border-b-[#19b7c9] border-r-[#19b7c9]" />
+          <div className="absolute inset-0 rounded-full border-[7px] border-[var(--border-soft)]" />
+          <div className="absolute inset-0 animate-spin rounded-full border-[7px] border-transparent border-b-[var(--primary)] border-r-[var(--primary)]" />
 
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#eaf8ff] text-[1.5rem] font-extrabold text-[#19b7c9] shadow-sm">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--surface-soft)] text-[1.5rem] font-extrabold text-[var(--primary)] shadow-sm">
             C
           </div>
         </div>
 
         <div className="mt-5 flex items-center gap-2">
-          <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#19b7c9] [animation-delay:0ms]" />
-          <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#19b7c9] [animation-delay:150ms]" />
-          <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[#19b7c9] [animation-delay:300ms]" />
+          <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[var(--primary)] [animation-delay:0ms]" />
+          <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[var(--primary)] [animation-delay:150ms]" />
+          <span className="h-2.5 w-2.5 animate-bounce rounded-full bg-[var(--primary)] [animation-delay:300ms]" />
         </div>
       </div>
     </div>
@@ -305,12 +305,12 @@ export default function CartPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#eef9ff] text-[#16324a]">
+    <main className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
       <Header />
 
       <section className="mx-auto w-full max-w-[1380px] px-4 pb-8 pt-4 sm:px-6 sm:pb-10 sm:pt-5 lg:px-8 lg:pt-6">
         <div className="mb-4">
-          <span className="inline-flex items-center rounded-full bg-[#dff4ff] px-4 py-2 text-sm font-semibold text-[#19b7c9]">
+          <span className="inline-flex items-center rounded-full bg-[var(--surface-soft)] px-4 py-2 text-sm font-semibold text-[var(--primary)]">
             <FiShoppingBag className="mr-2 text-[1.05rem]" />
             Tu carrito
           </span>
@@ -321,28 +321,28 @@ export default function CartPage() {
         ) : (
           <>
             {syncMessage && (
-              <div className="mb-4 rounded-2xl border border-[#cfeaf6] bg-white px-4 py-3 text-sm font-bold text-[#4b6b80]">
+              <div className="mb-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm font-bold text-[var(--text-soft)]">
                 {syncMessage}
               </div>
             )}
 
             {errorMessage && (
-              <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-600">
+              <div className="mb-4 rounded-2xl border border-[var(--danger-bg-hover)] bg-[var(--danger-bg)] px-4 py-3 text-sm font-bold text-[var(--danger)]">
                 {errorMessage}
               </div>
             )}
 
             {cartItems.length === 0 ? (
-              <div className="rounded-[30px] border border-[#cfeaf6] bg-[#f7fdff] px-5 py-10 text-center shadow-[0_10px_30px_rgba(22,50,74,0.06)] sm:px-8 sm:py-12">
-                <div className="mx-auto flex h-18 w-18 items-center justify-center rounded-full bg-[#eaf8ff] text-[#19b7c9] sm:h-20 sm:w-20">
+              <div className="rounded-[30px] border border-[var(--border)] bg-[var(--surface)] px-5 py-10 text-center shadow-[0_10px_30px_var(--shadow)] sm:px-8 sm:py-12">
+                <div className="mx-auto flex h-18 w-18 items-center justify-center rounded-full bg-[var(--surface-soft)] text-[var(--primary)] sm:h-20 sm:w-20">
                   <FiShoppingBag className="text-[1.8rem] sm:text-[2rem]" />
                 </div>
 
-                <h2 className="mt-5 text-[2.1rem] font-extrabold leading-tight text-[#16324a] sm:text-[2.8rem]">
+                <h2 className="mt-5 text-[2.1rem] font-extrabold leading-tight text-[var(--text)] sm:text-[2.8rem]">
                   Tu carrito está vacío
                 </h2>
 
-                <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-[#4b6b80]">
+                <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-[var(--text-soft)]">
                   Cuando añadas productos al carrito, aparecerán aquí para que
                   puedas revisarlos antes de enviar tu pedido.
                 </p>
@@ -350,21 +350,21 @@ export default function CartPage() {
                 <div className="mt-6">
                   <Link
                     href="/"
-                    className="inline-flex items-center justify-center rounded-2xl bg-[#19b7c9] px-7 py-4 text-base font-bold text-white transition duration-200 hover:scale-[1.02] hover:bg-[#0ea5b7]"
+                    className="inline-flex items-center justify-center rounded-2xl bg-[var(--primary)] px-7 py-4 text-base font-bold text-white transition duration-200 hover:scale-[1.02] hover:bg-[var(--primary-dark)]"
                   >
                     Continuar comprando
                   </Link>
                 </div>
 
                 <div className="mt-7">
-                  <h3 className="text-2xl font-bold text-[#16324a]">
+                  <h3 className="text-2xl font-bold text-[var(--text)]">
                     ¿Tienes una cuenta?
                   </h3>
 
-                  <p className="mt-2 text-base leading-8 text-[#4b6b80]">
+                  <p className="mt-2 text-base leading-8 text-[var(--text-soft)]">
                     <Link
                       href="/account"
-                      className="font-semibold text-[#19b7c9] underline underline-offset-4"
+                      className="font-semibold text-[var(--primary)] underline underline-offset-4"
                     >
                       Acceso
                     </Link>{" "}
@@ -374,7 +374,7 @@ export default function CartPage() {
               </div>
             ) : (
               <div className="grid gap-5 lg:grid-cols-[1.18fr_0.82fr] lg:items-start">
-                <div className="rounded-[30px] border border-[#cfeaf6] bg-[#f7fdff] p-4 shadow-[0_10px_30px_rgba(22,50,74,0.05)] sm:p-5 lg:p-6">
+                <div className="rounded-[30px] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[0_10px_30px_var(--shadow)] sm:p-5 lg:p-6">
                   <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                     <h2 className="text-[1.45rem] font-extrabold">
                       Productos añadidos
@@ -384,7 +384,7 @@ export default function CartPage() {
                       <button
                         type="button"
                         onClick={clearCart}
-                        className="rounded-2xl border border-[#f2c7c7] bg-white px-4 py-2.5 text-sm font-bold text-[#c94b4b] transition hover:bg-[#fff5f5]"
+                        className="rounded-2xl border border-[var(--danger-bg-hover)] bg-[var(--surface)] px-4 py-2.5 text-sm font-bold text-[var(--danger)] transition hover:bg-[var(--danger-bg)]"
                       >
                         Vaciar carrito
                       </button>
@@ -406,13 +406,13 @@ export default function CartPage() {
                       return (
                         <article
                           key={item.productId}
-                          className="rounded-[24px] border border-[#d9eef7] bg-white p-4"
+                          className="rounded-[24px] border border-[var(--border)] bg-[var(--surface)] p-4"
                         >
                           <div className="flex flex-row items-start gap-3 sm:gap-4">
                             {productHref ? (
                               <Link
                                 href={productHref}
-                                className="block w-[88px] shrink-0 overflow-hidden rounded-[16px] bg-[#eef9ff] transition hover:scale-[1.02] hover:ring-2 hover:ring-[#19b7c9]/40 sm:w-[105px]"
+                                className="block w-[88px] shrink-0 overflow-hidden rounded-[16px] bg-[var(--bg)] transition hover:scale-[1.02] hover:ring-2 hover:ring-[var(--primary)]/40 sm:w-[105px]"
                               >
                                 <img
                                   src={getSafeImage(item.mainImage)}
@@ -425,7 +425,7 @@ export default function CartPage() {
                                 />
                               </Link>
                             ) : (
-                              <div className="w-[88px] shrink-0 overflow-hidden rounded-[16px] bg-[#eef9ff] sm:w-[105px]">
+                              <div className="w-[88px] shrink-0 overflow-hidden rounded-[16px] bg-[var(--bg)] sm:w-[105px]">
                                 <img
                                   src={getSafeImage(item.mainImage)}
                                   alt={item.title}
@@ -442,21 +442,21 @@ export default function CartPage() {
                               {productHref ? (
                                 <Link
                                   href={productHref}
-                                  className="line-clamp-2 text-[1.15rem] font-extrabold leading-6 text-[#16324a] transition hover:text-[#19b7c9] sm:text-[1.35rem] sm:leading-7"
+                                  className="line-clamp-2 text-[1.15rem] font-extrabold leading-6 text-[var(--text)] transition hover:text-[var(--primary)] sm:text-[1.35rem] sm:leading-7"
                                 >
                                   {item.title}
                                 </Link>
                               ) : (
-                                <h3 className="line-clamp-2 text-[1.15rem] font-extrabold leading-6 text-[#16324a] sm:text-[1.35rem] sm:leading-7">
+                                <h3 className="line-clamp-2 text-[1.15rem] font-extrabold leading-6 text-[var(--text)] sm:text-[1.35rem] sm:leading-7">
                                   {item.title}
                                 </h3>
                               )}
 
-                              <p className="mt-2 text-lg font-bold text-[#19b7c9]">
+                              <p className="mt-2 text-lg font-bold text-[var(--primary)]">
                                 {formatBs(item.price)}
                               </p>
 
-                              <p className="mt-1 text-sm font-semibold text-[#6a8798]">
+                              <p className="mt-1 text-sm font-semibold text-[var(--text-muted)]">
                                 {product
                                   ? isPreventa
                                     ? `Preventa · Stock disponible: ${stock}`
@@ -465,20 +465,20 @@ export default function CartPage() {
                               </p>
 
                               {reachedLimit && (
-                                <p className="mt-1 text-sm font-bold text-red-500">
+                                <p className="mt-1 text-sm font-bold text-[var(--danger)]">
                                   Llegaste al límite de stock disponible.
                                 </p>
                               )}
 
                               <div className="mt-4 flex flex-col gap-3">
                                 <div className="flex items-center justify-between gap-3">
-                                  <div className="flex items-center gap-2 rounded-2xl border border-[#cfeaf6] bg-[#f7fdff] px-2 py-2 sm:px-3">
+                                  <div className="flex items-center gap-2 rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] px-2 py-2 sm:px-3">
                                     <button
                                       type="button"
                                       onClick={() =>
                                         decreaseQuantity(item.productId)
                                       }
-                                      className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-[#16324a] transition hover:bg-[#eef9ff]"
+                                      className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--surface)] text-[var(--text)] transition hover:bg-[var(--bg)]"
                                     >
                                       <FiMinus />
                                     </button>
@@ -493,7 +493,7 @@ export default function CartPage() {
                                         increaseQuantity(item.productId)
                                       }
                                       disabled={Boolean(reachedLimit)}
-                                      className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-[#16324a] transition hover:bg-[#eef9ff] disabled:cursor-not-allowed disabled:opacity-40"
+                                      className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--surface)] text-[var(--text)] transition hover:bg-[var(--bg)] disabled:cursor-not-allowed disabled:opacity-40"
                                     >
                                       <FiPlus />
                                     </button>
@@ -504,7 +504,7 @@ export default function CartPage() {
                                   {productHref && (
                                     <Link
                                       href={productHref}
-                                      className="rounded-2xl border border-[#cfeaf6] bg-white px-4 py-2.5 text-sm font-bold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9]"
+                                      className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-2.5 text-sm font-bold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)]"
                                     >
                                       Ver producto
                                     </Link>
@@ -513,7 +513,7 @@ export default function CartPage() {
                                   <button
                                     type="button"
                                     onClick={() => removeItem(item.productId)}
-                                    className="inline-flex items-center gap-2 rounded-2xl border border-[#f2c7c7] bg-white px-4 py-2.5 text-sm font-bold text-[#c94b4b] transition hover:bg-[#fff5f5]"
+                                    className="inline-flex items-center gap-2 rounded-2xl border border-[var(--danger-bg-hover)] bg-[var(--surface)] px-4 py-2.5 text-sm font-bold text-[var(--danger)] transition hover:bg-[var(--danger-bg)]"
                                   >
                                     <FiTrash2 />
                                     Quitar
@@ -528,51 +528,51 @@ export default function CartPage() {
                   </div>
                 </div>
 
-                <aside className="rounded-[30px] border border-[#cfeaf6] bg-[#f7fdff] p-4 shadow-[0_10px_30px_rgba(22,50,74,0.05)] sm:p-5 lg:sticky lg:top-24 lg:h-fit">
-                  <h2 className="text-[1.45rem] font-extrabold text-[#16324a]">
+                <aside className="rounded-[30px] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[0_10px_30px_var(--shadow)] sm:p-5 lg:sticky lg:top-24 lg:h-fit">
+                  <h2 className="text-[1.45rem] font-extrabold text-[var(--text)]">
                     Resumen
                   </h2>
 
-                  <div className="mt-4 space-y-3 rounded-[24px] border border-[#d9eef7] bg-white p-4">
-                    <div className="flex items-center justify-between text-sm text-[#4b6b80]">
+                  <div className="mt-4 space-y-3 rounded-[24px] border border-[var(--border)] bg-[var(--surface)] p-4">
+                    <div className="flex items-center justify-between text-sm text-[var(--text-soft)]">
                       <span>Productos</span>
-                      <span className="font-bold text-[#16324a]">
+                      <span className="font-bold text-[var(--text)]">
                         {totalItems}
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between text-sm text-[#4b6b80]">
+                    <div className="flex items-center justify-between text-sm text-[var(--text-soft)]">
                       <span>Subtotal</span>
-                      <span className="font-bold text-[#16324a]">
+                      <span className="font-bold text-[var(--text)]">
                         {formatBs(subtotal)}
                       </span>
                     </div>
 
-                    <div className="h-px bg-[#e4f1f7]" />
+                    <div className="h-px bg-[var(--border-soft)]" />
 
-                    <div className="flex items-center justify-between text-lg font-extrabold text-[#16324a]">
+                    <div className="flex items-center justify-between text-lg font-extrabold text-[var(--text)]">
                       <span>Total</span>
-                      <span className="text-[#19b7c9]">
+                      <span className="text-[var(--primary)]">
                         {formatBs(subtotal)}
                       </span>
                     </div>
                   </div>
 
-                  <div className="mt-4 rounded-2xl bg-[#eaf8ff] px-4 py-3 text-sm leading-6 text-[#4b6b80]">
+                  <div className="mt-4 rounded-2xl bg-[var(--surface-soft)] px-4 py-3 text-sm leading-6 text-[var(--text-soft)]">
                     El costo de envío se calculará en el checkout.
                   </div>
 
                   <div className="mt-5 space-y-3">
                     <Link
                       href="/checkout"
-                      className="inline-flex h-13 w-full items-center justify-center rounded-2xl bg-[#19b7c9] px-8 py-4 text-base font-bold text-white transition hover:scale-[1.01] hover:bg-[#0ea5b7]"
+                      className="inline-flex h-13 w-full items-center justify-center rounded-2xl bg-[var(--primary)] px-8 py-4 text-base font-bold text-white transition hover:scale-[1.01] hover:bg-[var(--primary-dark)]"
                     >
                       Ir a comprar
                     </Link>
 
                     <Link
                       href="/"
-                      className="inline-flex h-13 w-full items-center justify-center rounded-2xl border border-[#cfeaf6] bg-white px-8 py-4 text-base font-bold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9]"
+                      className="inline-flex h-13 w-full items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-8 py-4 text-base font-bold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)]"
                     >
                       Seguir comprando
                     </Link>

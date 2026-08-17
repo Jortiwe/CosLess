@@ -150,21 +150,21 @@ function statusLabel(status?: string) {
 function statusClass(status?: string) {
   switch (status) {
     case "paid":
-      return "bg-emerald-50 text-emerald-700 border-emerald-200";
+      return "bg-[var(--success-bg)] text-[var(--success)] border-[var(--success-bg)]";
     case "pending":
-      return "bg-amber-50 text-amber-700 border-amber-200";
+      return "bg-[var(--warning-bg)] text-[var(--warning)] border-[var(--warning-bg)]";
     case "contacted":
-      return "bg-sky-50 text-sky-700 border-sky-200";
+      return "bg-[var(--surface-soft)] text-[var(--primary)] border-[var(--border)]";
     case "preparing":
-      return "bg-violet-50 text-violet-700 border-violet-200";
+      return "bg-[var(--featured-bg)] text-[var(--featured)] border-[var(--featured-bg)]";
     case "shipped":
-      return "bg-indigo-50 text-indigo-700 border-indigo-200";
+      return "bg-[var(--surface-soft)] text-[var(--primary-dark)] border-[var(--border)]";
     case "delivered":
-      return "bg-teal-50 text-teal-700 border-teal-200";
+      return "bg-[var(--success-bg)] text-[var(--success)] border-[var(--success-bg)]";
     case "cancelled":
-      return "bg-red-50 text-red-700 border-red-200";
+      return "bg-[var(--danger-bg)] text-[var(--danger)] border-[var(--danger-bg-hover)]";
     default:
-      return "bg-gray-50 text-gray-700 border-gray-200";
+      return "bg-[var(--surface-soft)] text-[var(--text-muted)] border-[var(--border-soft)]";
   }
 }
 
@@ -172,35 +172,35 @@ function StatCard({ title, value, subtitle, href, disabled }: StatCardProps) {
   const content = (
     <>
       <div className="flex items-start justify-between gap-2">
-        <p className="min-w-0 break-words text-[0.58rem] font-extrabold uppercase tracking-[0.14em] text-[#6f8798] transition group-hover:text-[#19b7c9] sm:text-[0.7rem] sm:tracking-[0.18em] lg:text-xs">
+        <p className="min-w-0 break-words text-[0.58rem] font-extrabold uppercase tracking-[0.14em] text-[var(--text-muted)] transition group-hover:text-[var(--primary)] sm:text-[0.7rem] sm:tracking-[0.18em] lg:text-xs">
           {title}
         </p>
 
         <span
           className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-extrabold transition sm:h-8 sm:w-8 sm:text-sm ${
             disabled
-              ? "bg-[#f2f8fb] text-[#9ab1bf]"
-              : "bg-[#eaf8ff] text-[#19b7c9] group-hover:bg-[#19b7c9] group-hover:text-white"
+              ? "bg-[var(--surface-soft)] text-[var(--text-muted)]"
+              : "bg-[var(--surface-soft)] text-[var(--primary)] group-hover:bg-[var(--primary)] group-hover:text-white"
           }`}
         >
           →
         </span>
       </div>
 
-      <p className="mt-4 text-[1.8rem] font-black leading-none text-[#16324a] sm:mt-5 sm:text-[2.5rem] lg:text-[2.8rem]">
+      <p className="mt-4 text-[1.8rem] font-black leading-none text-[var(--text)] sm:mt-5 sm:text-[2.5rem] lg:text-[2.8rem]">
         {value}
       </p>
 
-      <p className="mt-2 text-[0.72rem] font-semibold leading-4 text-[#4b6b80] sm:mt-3 sm:text-sm sm:leading-6">
+      <p className="mt-2 text-[0.72rem] font-semibold leading-4 text-[var(--text-soft)] sm:mt-3 sm:text-sm sm:leading-6">
         {subtitle}
       </p>
     </>
   );
 
-  const className = `group block w-full min-w-0 overflow-hidden rounded-[22px] border border-[#cfeaf6] bg-white p-3 shadow-[0_8px_22px_rgba(22,50,74,0.04)] transition sm:rounded-[26px] sm:p-5 lg:rounded-[28px] ${
+  const className = `group block w-full min-w-0 overflow-hidden rounded-[22px] border border-[var(--border)] bg-white p-3 shadow-[0_8px_22px_var(--shadow)] transition sm:rounded-[26px] sm:p-5 lg:rounded-[28px] ${
     disabled
       ? "cursor-default opacity-90"
-      : "hover:-translate-y-1 hover:border-[#19b7c9] hover:shadow-[0_16px_34px_rgba(22,50,74,0.09)]"
+      : "hover:-translate-y-1 hover:border-[var(--primary)] hover:shadow-[0_16px_34px_var(--shadow-strong)]"
   }`;
 
   if (!href || disabled) {
@@ -292,11 +292,11 @@ export default async function AdminPage() {
   const favoriteProductsCount = existingFavoriteProducts.length;
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#eef9ff] px-4 py-6 text-[#16324a] sm:px-6 sm:py-8 lg:px-8">
+    <main className="min-h-screen overflow-x-hidden bg-[var(--bg)] px-4 py-6 text-[var(--text)] sm:px-6 sm:py-8 lg:px-8">
       <div className="mx-auto w-full max-w-[1700px]">
         <div className="mb-5">
           <div className="flex items-center justify-between gap-3">
-            <span className="inline-flex rounded-full bg-white px-4 py-2 text-[0.7rem] font-extrabold uppercase tracking-[0.16em] text-[#19b7c9] shadow-[0_8px_20px_rgba(22,50,74,0.04)] sm:px-5 sm:text-xs">
+            <span className="inline-flex rounded-full bg-white px-4 py-2 text-[0.7rem] font-extrabold uppercase tracking-[0.16em] text-[var(--primary)] shadow-[0_8px_20px_var(--shadow)] sm:px-5 sm:text-xs">
               Panel admin
             </span>
 
@@ -305,11 +305,11 @@ export default async function AdminPage() {
             </div>
           </div>
 
-          <h1 className="mt-3 whitespace-nowrap text-[2rem] font-extrabold leading-none tracking-[-0.04em] text-[#16324a] sm:text-[3.2rem]">
+          <h1 className="mt-3 whitespace-nowrap text-[2rem] font-extrabold leading-none tracking-[-0.04em] text-[var(--text)] sm:text-[3.2rem]">
             Gestión CosLess
           </h1>
 
-          <p className="mt-2 hidden max-w-3xl text-sm font-semibold leading-7 text-[#4b6b80] sm:block">
+          <p className="mt-2 hidden max-w-3xl text-sm font-semibold leading-7 text-[var(--text-soft)] sm:block">
             Resumen general de pedidos, productos, usuarios y novedades.
           </p>
         </div>
@@ -350,25 +350,30 @@ export default async function AdminPage() {
             href="/admin/novedades"
           />
 
-          <StatCard title="Pagos" value={0} subtitle="Pendientes" disabled />
+          <StatCard
+            title="Liquidaciones"
+            value={0}
+            subtitle="Ganancias"
+            href="/admin/pagos"
+          />
         </div>
 
         <div className="mt-6 grid gap-6 xl:grid-cols-[1.25fr_0.75fr]">
-          <section className="rounded-[30px] border border-[#cfeaf6] bg-white p-5 shadow-[0_12px_32px_rgba(22,50,74,0.06)] sm:rounded-[34px] sm:p-6">
+          <section className="rounded-[30px] border border-[var(--border)] bg-white p-5 shadow-[0_12px_32px_var(--shadow)] sm:rounded-[34px] sm:p-6">
             <div className="mb-5 flex items-center justify-between gap-4">
               <div>
-                <span className="inline-flex rounded-full bg-[#dff4ff] px-4 py-2 text-xs font-extrabold text-[#19b7c9]">
+                <span className="inline-flex rounded-full bg-[var(--surface-soft)] px-4 py-2 text-xs font-extrabold text-[var(--primary)]">
                   Pedidos
                 </span>
 
-                <h2 className="mt-3 text-2xl font-extrabold text-[#16324a]">
+                <h2 className="mt-3 text-2xl font-extrabold text-[var(--text)]">
                   Recientes
                 </h2>
               </div>
 
               <Link
                 href="/admin/pedidos"
-                className="shrink-0 rounded-2xl bg-[#19b7c9] px-4 py-2 text-sm font-extrabold text-white transition hover:bg-[#0ea5b7]"
+                className="shrink-0 rounded-2xl bg-[var(--primary)] px-4 py-2 text-sm font-extrabold text-white transition hover:bg-[var(--primary-dark)]"
               >
                 Gestionar
               </Link>
@@ -377,7 +382,7 @@ export default async function AdminPage() {
             <div className="hidden overflow-x-auto md:block">
               <table className="min-w-full border-separate border-spacing-y-3">
                 <thead>
-                  <tr className="text-left text-sm text-[#6f8798]">
+                  <tr className="text-left text-sm text-[var(--text-muted)]">
                     <th className="px-3 py-2">Código</th>
                     <th className="px-3 py-2">Cliente</th>
                     <th className="px-3 py-2">Total</th>
@@ -391,18 +396,18 @@ export default async function AdminPage() {
                     <tr>
                       <td
                         colSpan={5}
-                        className="rounded-2xl bg-[#f7fdff] px-4 py-6 text-sm text-[#4b6b80]"
+                        className="rounded-2xl bg-[var(--surface)] px-4 py-6 text-sm text-[var(--text-soft)]"
                       >
                         No hay pedidos todavía.
                       </td>
                     </tr>
                   ) : (
                     recentOrders.slice(0, 5).map((order) => (
-                      <tr key={order._id} className="bg-[#f7fdff]">
+                      <tr key={order._id} className="bg-[var(--surface)]">
                         <td className="rounded-l-2xl px-3 py-4 font-bold">
                           <Link
                             href="/admin/pedidos"
-                            className="hover:text-[#19b7c9]"
+                            className="hover:text-[var(--primary)]"
                           >
                             {order.orderCode || "Sin código"}
                           </Link>
@@ -426,7 +431,7 @@ export default async function AdminPage() {
                           </span>
                         </td>
 
-                        <td className="rounded-r-2xl px-3 py-4 text-sm text-[#4b6b80]">
+                        <td className="rounded-r-2xl px-3 py-4 text-sm text-[var(--text-soft)]">
                           {formatDate(order.createdAt)}
                         </td>
                       </tr>
@@ -438,7 +443,7 @@ export default async function AdminPage() {
 
             <div className="space-y-3 md:hidden">
               {recentOrders.slice(0, 5).length === 0 ? (
-                <div className="rounded-2xl bg-[#f7fdff] px-4 py-6 text-sm text-[#4b6b80]">
+                <div className="rounded-2xl bg-[var(--surface)] px-4 py-6 text-sm text-[var(--text-soft)]">
                   No hay pedidos todavía.
                 </div>
               ) : (
@@ -446,20 +451,20 @@ export default async function AdminPage() {
                   <Link
                     key={order._id}
                     href="/admin/pedidos"
-                    className="block rounded-[24px] border border-[#e5f3fa] bg-[#f7fdff] p-4 transition hover:border-[#19b7c9]"
+                    className="block rounded-[24px] border border-[var(--border-soft)] bg-[var(--surface)] p-4 transition hover:border-[var(--primary)]"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <p className="text-sm font-extrabold text-[#16324a]">
+                        <p className="text-sm font-extrabold text-[var(--text)]">
                           {order.orderCode || "Sin código"}
                         </p>
 
-                        <p className="mt-1 text-sm text-[#4b6b80]">
+                        <p className="mt-1 text-sm text-[var(--text-soft)]">
                           {order.customerName || "Sin cliente"}
                         </p>
                       </div>
 
-                      <p className="shrink-0 text-sm font-extrabold text-[#19b7c9]">
+                      <p className="shrink-0 text-sm font-extrabold text-[var(--primary)]">
                         {formatBs(order.total)}
                       </p>
                     </div>
@@ -473,7 +478,7 @@ export default async function AdminPage() {
                         {statusLabel(order.status)}
                       </span>
 
-                      <span className="text-xs font-semibold text-[#6f8798]">
+                      <span className="text-xs font-semibold text-[var(--text-muted)]">
                         {formatDate(order.createdAt)}
                       </span>
                     </div>
@@ -484,21 +489,21 @@ export default async function AdminPage() {
           </section>
 
           <div className="space-y-6">
-            <section className="rounded-[30px] border border-[#cfeaf6] bg-white p-5 shadow-[0_12px_32px_rgba(22,50,74,0.06)] sm:rounded-[34px] sm:p-6">
+            <section className="rounded-[30px] border border-[var(--border)] bg-white p-5 shadow-[0_12px_32px_var(--shadow)] sm:rounded-[34px] sm:p-6">
               <div className="mb-5 flex items-center justify-between gap-3">
                 <div>
-                  <span className="inline-flex rounded-full bg-[#dff4ff] px-4 py-2 text-xs font-extrabold text-[#19b7c9]">
+                  <span className="inline-flex rounded-full bg-[var(--surface-soft)] px-4 py-2 text-xs font-extrabold text-[var(--primary)]">
                     Productos
                   </span>
 
-                  <h2 className="mt-3 text-2xl font-extrabold text-[#16324a]">
+                  <h2 className="mt-3 text-2xl font-extrabold text-[var(--text)]">
                     Nuevos
                   </h2>
                 </div>
 
                 <Link
                   href="/admin/productos"
-                  className="shrink-0 rounded-2xl bg-[#19b7c9] px-4 py-2 text-sm font-extrabold text-white transition hover:bg-[#0ea5b7]"
+                  className="shrink-0 rounded-2xl bg-[var(--primary)] px-4 py-2 text-sm font-extrabold text-white transition hover:bg-[var(--primary-dark)]"
                 >
                   Gestionar
                 </Link>
@@ -506,7 +511,7 @@ export default async function AdminPage() {
 
               <div className="space-y-3">
                 {recentProducts.slice(0, 5).length === 0 ? (
-                  <div className="rounded-2xl bg-[#f7fdff] px-4 py-4 text-sm text-[#4b6b80]">
+                  <div className="rounded-2xl bg-[var(--surface)] px-4 py-4 text-sm text-[var(--text-soft)]">
                     No hay productos todavía.
                   </div>
                 ) : (
@@ -514,26 +519,26 @@ export default async function AdminPage() {
                     <Link
                       key={product._id}
                       href="/admin/productos"
-                      className="group block rounded-[22px] border border-transparent bg-[#f7fdff] px-4 py-4 transition duration-200 hover:-translate-y-0.5 hover:border-[#19b7c9] hover:bg-white hover:shadow-[0_12px_26px_rgba(22,50,74,0.08)]"
+                      className="group block rounded-[22px] border border-transparent bg-[var(--surface)] px-4 py-4 transition duration-200 hover:-translate-y-0.5 hover:border-[var(--primary)] hover:bg-white hover:shadow-[0_12px_26px_var(--shadow-strong)]"
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="min-w-0">
-                          <h3 className="line-clamp-1 font-extrabold text-[#16324a] transition group-hover:text-[#19b7c9]">
+                          <h3 className="line-clamp-1 font-extrabold text-[var(--text)] transition group-hover:text-[var(--primary)]">
                             {product.title || "Sin título"}
                           </h3>
 
-                          <p className="mt-1 text-sm text-[#4b6b80]">
+                          <p className="mt-1 text-sm text-[var(--text-soft)]">
                             {product.category || "Sin categoría"} ·{" "}
                             {product.status || "Sin estado"}
                           </p>
                         </div>
 
                         <div className="shrink-0 text-right">
-                          <p className="font-extrabold text-[#19b7c9]">
+                          <p className="font-extrabold text-[var(--primary)]">
                             {formatBs(product.price)}
                           </p>
 
-                          <p className="mt-1 text-xs text-[#6f8798]">
+                          <p className="mt-1 text-xs text-[var(--text-muted)]">
                             Stock:{" "}
                             {typeof product.stock === "number"
                               ? product.stock
@@ -547,21 +552,21 @@ export default async function AdminPage() {
               </div>
             </section>
 
-            <section className="rounded-[30px] border border-[#cfeaf6] bg-white p-5 shadow-[0_12px_32px_rgba(22,50,74,0.06)] sm:rounded-[34px] sm:p-6">
+            <section className="rounded-[30px] border border-[var(--border)] bg-white p-5 shadow-[0_12px_32px_var(--shadow)] sm:rounded-[34px] sm:p-6">
               <div className="mb-5 flex items-center justify-between gap-3">
                 <div>
-                  <span className="inline-flex rounded-full bg-[#dff4ff] px-4 py-2 text-xs font-extrabold text-[#19b7c9]">
+                  <span className="inline-flex rounded-full bg-[var(--surface-soft)] px-4 py-2 text-xs font-extrabold text-[var(--primary)]">
                     Usuarios
                   </span>
 
-                  <h2 className="mt-3 text-2xl font-extrabold text-[#16324a]">
+                  <h2 className="mt-3 text-2xl font-extrabold text-[var(--text)]">
                     Nuevos
                   </h2>
                 </div>
 
                 <Link
                   href="/admin/usuarios"
-                  className="shrink-0 rounded-2xl bg-[#19b7c9] px-4 py-2 text-sm font-extrabold text-white transition hover:bg-[#0ea5b7]"
+                  className="shrink-0 rounded-2xl bg-[var(--primary)] px-4 py-2 text-sm font-extrabold text-white transition hover:bg-[var(--primary-dark)]"
                 >
                   Gestionar
                 </Link>
@@ -569,7 +574,7 @@ export default async function AdminPage() {
 
               <div className="space-y-3">
                 {recentUsers.slice(0, 5).length === 0 ? (
-                  <div className="rounded-2xl bg-[#f7fdff] px-4 py-4 text-sm text-[#4b6b80]">
+                  <div className="rounded-2xl bg-[var(--surface)] px-4 py-4 text-sm text-[var(--text-soft)]">
                     No hay usuarios todavía.
                   </div>
                 ) : (
@@ -577,17 +582,17 @@ export default async function AdminPage() {
                     <Link
                       key={user._id}
                       href="/admin/usuarios"
-                      className="group block rounded-[22px] border border-transparent bg-[#f7fdff] px-4 py-4 transition duration-200 hover:-translate-y-0.5 hover:border-[#19b7c9] hover:bg-white hover:shadow-[0_12px_26px_rgba(22,50,74,0.08)]"
+                      className="group block rounded-[22px] border border-transparent bg-[var(--surface)] px-4 py-4 transition duration-200 hover:-translate-y-0.5 hover:border-[var(--primary)] hover:bg-white hover:shadow-[0_12px_26px_var(--shadow-strong)]"
                     >
-                      <h3 className="font-extrabold text-[#16324a] transition group-hover:text-[#19b7c9]">
+                      <h3 className="font-extrabold text-[var(--text)] transition group-hover:text-[var(--primary)]">
                         {user.fullName || "Sin nombre"}
                       </h3>
 
-                      <p className="mt-1 break-all text-sm text-[#4b6b80]">
+                      <p className="mt-1 break-all text-sm text-[var(--text-soft)]">
                         {user.email || "Sin correo"}
                       </p>
 
-                      <p className="mt-3 inline-flex rounded-full bg-[#eaf8ff] px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#19b7c9]">
+                      <p className="mt-3 inline-flex rounded-full bg-[var(--surface-soft)] px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[var(--primary)]">
                         {user.role || "Sin rol"}
                       </p>
                     </Link>

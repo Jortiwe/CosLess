@@ -20,17 +20,17 @@ function getFieldState(value: string, valid: boolean, touched: boolean) {
 
 function getInputClass(state: FieldState) {
   const base =
-    "w-full rounded-[18px] border bg-white px-4 py-3 text-[15px] text-[#16324a] outline-none transition duration-200 placeholder:text-[#6f8798]";
+    "w-full rounded-[18px] border bg-[var(--surface)] px-4 py-3 text-[15px] text-[var(--text)] outline-none transition duration-200 placeholder:text-[var(--text-muted)]";
 
   if (state === "valid") {
-    return `${base} border-emerald-300 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100`;
+    return `${base} border-[var(--success)] focus:border-[var(--success)] focus:ring-2 focus:ring-[var(--success-bg)]`;
   }
 
   if (state === "invalid") {
-    return `${base} border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100`;
+    return `${base} border-[var(--danger)] focus:border-[var(--danger)] focus:ring-2 focus:ring-[var(--danger-bg)]`;
   }
 
-  return `${base} border-[#cfeaf6] focus:border-[#19b7c9] focus:ring-2 focus:ring-[#bfefff]`;
+  return `${base} border-[var(--border)] focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--surface-soft)]`;
 }
 
 function FloatingMessage({
@@ -46,14 +46,14 @@ function FloatingMessage({
 
   const classes =
     type === "valid"
-      ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+      ? "border-[var(--success)] bg-[var(--success-bg)] text-[var(--success)]"
       : type === "invalid"
-      ? "border-red-200 bg-red-50 text-red-600"
-      : "border-[#cfeaf6] bg-white text-[#6f8798]";
+      ? "border-[var(--danger-bg-hover)] bg-[var(--danger-bg)] text-[var(--danger)]"
+      : "border-[var(--border)] bg-[var(--surface)] text-[var(--text-muted)]";
 
   return (
     <span
-      className={`pointer-events-none absolute right-3 top-full z-20 mt-1 rounded-full border px-3 py-1 text-[11px] font-extrabold shadow-[0_8px_20px_rgba(22,50,74,0.10)] ${classes}`}
+      className={`pointer-events-none absolute right-3 top-full z-20 mt-1 rounded-full border px-3 py-1 text-[11px] font-extrabold shadow-[0_8px_20px_var(--shadow-strong)] ${classes}`}
     >
       {children}
     </span>
@@ -105,7 +105,7 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
   );
 
   const socialBase =
-    "flex items-center justify-center gap-2 rounded-[18px] border border-[#cfeaf6] bg-white text-[#16324a] transition duration-200 hover:-translate-y-0.5 hover:border-[#19b7c9] hover:text-[#19b7c9]";
+    "flex items-center justify-center gap-2 rounded-[18px] border border-[var(--border)] bg-[var(--surface)] text-[var(--text)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--primary)] hover:text-[var(--primary)]";
 
   function markTouched(field: keyof typeof touched) {
     setTouched((current) => ({
@@ -215,11 +215,11 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
     return (
       <div className={isMobile ? "pt-2" : "pt-1"}>
         <div className="mb-3 flex items-center gap-3">
-          <div className="h-px flex-1 bg-[#d9eef7]" />
-          <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#6f8798]">
+          <div className="h-px flex-1 bg-[var(--border-soft)]" />
+          <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">
             O continúa con redes
           </span>
-          <div className="h-px flex-1 bg-[#d9eef7]" />
+          <div className="h-px flex-1 bg-[var(--border-soft)]" />
         </div>
 
         {isMobile ? (
@@ -286,10 +286,12 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
     return (
       <>
         {showDevMessage && (
-          <div className="mb-4 flex items-start justify-between gap-4 rounded-2xl border border-[#bfefff] bg-[#eaf8ff] px-4 py-3">
+          <div className="mb-4 flex items-start justify-between gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] px-4 py-3">
             <div>
-              <p className="text-sm font-bold text-[#16324a]">Login rápido</p>
-              <p className="mt-1 text-sm text-[#4b6b80]">
+              <p className="text-sm font-bold text-[var(--text)]">
+                Login rápido
+              </p>
+              <p className="mt-1 text-sm text-[var(--text-soft)]">
                 Esta opción está en desarrollo por ahora.
               </p>
             </div>
@@ -297,7 +299,7 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
             <button
               type="button"
               onClick={() => setShowDevMessage(false)}
-              className="rounded-xl px-2 py-1 text-sm font-bold text-[#19b7c9] transition hover:bg-white"
+              className="rounded-xl px-2 py-1 text-sm font-bold text-[var(--primary)] transition hover:bg-[var(--surface)]"
             >
               ✕
             </button>
@@ -307,8 +309,8 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
         <h1
           className={
             isMobile
-              ? "text-[25px] font-extrabold leading-none tracking-[-0.045em] text-[#16324a]"
-              : "text-[58px] font-extrabold leading-[0.98] tracking-[-0.045em] text-[#16324a]"
+              ? "text-[25px] font-extrabold leading-none tracking-[-0.045em] text-[var(--text)]"
+              : "text-[58px] font-extrabold leading-[0.98] tracking-[-0.045em] text-[var(--text)]"
           }
         >
           {mode === "login" ? "Bienvenido de nuevo" : "Crea tu cuenta"}
@@ -321,7 +323,7 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
           {mode === "register" && (
             <>
               <div className="relative">
-                <label className="mb-2 block text-sm font-semibold text-[#16324a]">
+                <label className="mb-2 block text-sm font-semibold text-[var(--text)]">
                   Nickname
                 </label>
 
@@ -350,7 +352,7 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
               </div>
 
               <div className="relative">
-                <label className="mb-2 block text-sm font-semibold text-[#16324a]">
+                <label className="mb-2 block text-sm font-semibold text-[var(--text)]">
                   Nombre completo
                 </label>
 
@@ -381,7 +383,7 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
           )}
 
           <div className="relative">
-            <label className="mb-2 block text-sm font-semibold text-[#16324a]">
+            <label className="mb-2 block text-sm font-semibold text-[var(--text)]">
               Correo electrónico
             </label>
 
@@ -404,7 +406,7 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
           </div>
 
           <div className="relative">
-            <label className="mb-2 block text-sm font-semibold text-[#16324a]">
+            <label className="mb-2 block text-sm font-semibold text-[var(--text)]">
               Contraseña
             </label>
 
@@ -421,7 +423,7 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-4 top-1/2 flex -translate-y-1/2 items-center justify-center text-[#6f8798] transition hover:text-[#19b7c9]"
+                className="absolute right-4 top-1/2 flex -translate-y-1/2 items-center justify-center text-[var(--text-muted)] transition hover:text-[var(--primary)]"
               >
                 {showPassword ? (
                   <FiEyeOff className="text-[1.2rem]" />
@@ -445,14 +447,17 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
 
           {mode === "login" && (
             <div className="flex items-center justify-between gap-3 pt-1">
-              <label className="flex items-center gap-2 text-sm text-[#4b6b80]">
-                <input type="checkbox" className="h-4 w-4 accent-[#19b7c9]" />
+              <label className="flex items-center gap-2 text-sm text-[var(--text-soft)]">
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 accent-[var(--primary)]"
+                />
                 Recuérdame
               </label>
 
               <button
                 type="button"
-                className="text-sm font-semibold text-[#19b7c9] underline underline-offset-4"
+                className="text-sm font-semibold text-[var(--primary)] underline underline-offset-4"
               >
                 ¿Olvidaste tu contraseña?
               </button>
@@ -460,13 +465,13 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
           )}
 
           {errorText && (
-            <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
+            <div className="rounded-2xl border border-[var(--danger-bg-hover)] bg-[var(--danger-bg)] px-4 py-3 text-sm font-medium text-[var(--danger)]">
               {errorText}
             </div>
           )}
 
           {successText && (
-            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+            <div className="rounded-2xl border border-[var(--success)] bg-[var(--success-bg)] px-4 py-3 text-sm font-medium text-[var(--success)]">
               {successText}
             </div>
           )}
@@ -476,8 +481,8 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
             disabled={loading}
             className={
               isMobile
-                ? "w-full rounded-[20px] bg-[#19b7c9] px-5 py-3.5 text-base font-bold text-white transition duration-200 hover:bg-[#0ea5b7] disabled:cursor-not-allowed disabled:opacity-70"
-                : "w-full rounded-2xl bg-[#19b7c9] px-5 py-3.5 text-base font-bold text-white transition duration-200 hover:scale-[1.01] hover:bg-[#0ea5b7] disabled:cursor-not-allowed disabled:opacity-70"
+                ? "w-full rounded-[20px] bg-[var(--primary)] px-5 py-3.5 text-base font-bold text-white transition duration-200 hover:bg-[var(--primary-dark)] disabled:cursor-not-allowed disabled:opacity-70"
+                : "w-full rounded-2xl bg-[var(--primary)] px-5 py-3.5 text-base font-bold text-white transition duration-200 hover:scale-[1.01] hover:bg-[var(--primary-dark)] disabled:cursor-not-allowed disabled:opacity-70"
             }
           >
             {loading
@@ -492,7 +497,7 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
           {renderSocialBlock(isMobile)}
 
           {isMobile && (
-            <div className="pointer-events-none -mx-4 -mb-2 mt-4 h-10 bg-gradient-to-b from-transparent via-[#e9f7fd]/72 to-[#eef9ff]/95" />
+            <div className="pointer-events-none -mx-4 -mb-2 mt-4 h-10 bg-gradient-to-b from-transparent via-[var(--surface-soft)] to-[var(--bg)]" />
           )}
         </form>
       </>
@@ -503,15 +508,15 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
     <>
       {/* MÓVIL */}
       <div className="lg:hidden">
-        <div className="overflow-hidden rounded-t-[30px] border border-[#b8dceb] border-b-0 bg-[#eaf7fd]/92 backdrop-blur-[2px]">
+        <div className="overflow-hidden rounded-t-[30px] border border-[var(--border)] border-b-0 bg-[var(--surface-soft)] backdrop-blur-[2px]">
           <div className="grid h-[62px] grid-cols-2">
             <button
               type="button"
               onClick={() => onModeChange("login")}
-              className={`border-r border-[#b8dceb] text-[15px] font-semibold transition ${
+              className={`border-r border-[var(--border)] text-[15px] font-semibold transition ${
                 mode === "login"
-                  ? "bg-[#28b8cd] text-white"
-                  : "bg-[#eaf7fd]/96 text-[#5f7890]"
+                  ? "bg-[var(--primary)] text-white"
+                  : "bg-[var(--surface-soft)] text-[var(--text-muted)]"
               }`}
             >
               Iniciar sesión
@@ -522,8 +527,8 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
               onClick={() => onModeChange("register")}
               className={`text-[15px] font-semibold transition ${
                 mode === "register"
-                  ? "bg-[#28b8cd] text-white"
-                  : "bg-[#eaf7fd]/96 text-[#5f7890]"
+                  ? "bg-[var(--primary)] text-white"
+                  : "bg-[var(--surface-soft)] text-[var(--text-muted)]"
               }`}
             >
               Crear cuenta
@@ -531,23 +536,23 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
           </div>
         </div>
 
-        <div className="rounded-b-[30px] border border-[#b8dceb] border-t-0 bg-[#eef9ff]/94 px-4 pb-6 pt-5 shadow-[0_12px_30px_rgba(20,58,93,0.08)] backdrop-blur-[2px]">
+        <div className="rounded-b-[30px] border border-[var(--border)] border-t-0 bg-[var(--bg)] px-4 pb-6 pt-5 shadow-[0_12px_30px_var(--shadow)] backdrop-blur-[2px]">
           {renderFormContent(true)}
         </div>
       </div>
 
       {/* PC */}
       <div className="hidden lg:block">
-        <div className="w-full rounded-[34px] border border-[#cfeaf6] bg-[#f7fcff] p-8">
-          <div className="rounded-full bg-[#e2f3fb] p-2">
+        <div className="w-full rounded-[34px] border border-[var(--border)] bg-[var(--surface)] p-8">
+          <div className="rounded-full bg-[var(--surface-soft)] p-2">
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => onModeChange("login")}
                 className={`h-[58px] rounded-full text-[16px] font-semibold transition-all xl:h-[60px] xl:text-[17px] ${
                   mode === "login"
-                    ? "bg-[#26b8cb] text-white shadow-[0_8px_20px_rgba(38,184,203,0.18)]"
-                    : "bg-transparent text-[#5f7890]"
+                    ? "bg-[var(--primary)] text-white shadow-[0_8px_20px_var(--shadow-strong)]"
+                    : "bg-transparent text-[var(--text-muted)]"
                 }`}
               >
                 Iniciar sesión
@@ -558,8 +563,8 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
                 onClick={() => onModeChange("register")}
                 className={`h-[58px] rounded-full text-[16px] font-semibold transition-all xl:h-[60px] xl:text-[17px] ${
                   mode === "register"
-                    ? "bg-[#26b8cb] text-white shadow-[0_8px_20px_rgba(38,184,203,0.18)]"
-                    : "bg-transparent text-[#5f7890]"
+                    ? "bg-[var(--primary)] text-white shadow-[0_8px_20px_var(--shadow-strong)]"
+                    : "bg-transparent text-[var(--text-muted)]"
                 }`}
               >
                 Crear cuenta

@@ -76,9 +76,9 @@ function RelatedProductCard({ product }: { product: ProductItem }) {
   return (
     <Link
       href={href}
-      className="group overflow-hidden rounded-[24px] border border-[#cfeaf6] bg-white shadow-[0_8px_24px_rgba(22,50,74,0.04)] transition hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(22,50,74,0.10)]"
+      className="group overflow-hidden rounded-[24px] border border-[var(--border)] bg-[var(--surface)] shadow-[0_8px_24px_var(--shadow)] transition hover:-translate-y-1 hover:shadow-[0_16px_34px_var(--shadow-strong)]"
     >
-      <div className="relative aspect-square overflow-hidden bg-[#eaf8ff]">
+      <div className="relative aspect-square overflow-hidden bg-[var(--surface-soft)]">
         <img
           src={image}
           alt={product.title || "Producto"}
@@ -86,17 +86,17 @@ function RelatedProductCard({ product }: { product: ProductItem }) {
         />
 
         <div className="absolute left-2 top-2 flex flex-wrap gap-1.5">
-          <span className="rounded-full bg-white/90 px-2.5 py-1 text-[8px] font-extrabold uppercase tracking-[0.12em] text-[#16324a] shadow-sm sm:text-[10px]">
+          <span className="rounded-full bg-white/90 px-2.5 py-1 text-[8px] font-extrabold uppercase tracking-[0.12em] text-[var(--text)] shadow-sm sm:text-[10px]">
             {categoryLabel(product.category)}
           </span>
 
           <span
             className={`rounded-full px-2.5 py-1 text-[8px] font-extrabold uppercase tracking-[0.12em] shadow-sm sm:text-[10px] ${
               isOutOfStock
-                ? "bg-[#ffe6ed] text-[#d63865]"
+                ? "bg-[var(--danger-bg)] text-[var(--danger)]"
                 : status === "preventa"
-                ? "bg-[#fff3dc] text-[#b87d00]"
-                : "bg-[#e6f6ed] text-[#16824c]"
+                ? "bg-[var(--warning-bg)] text-[var(--warning)]"
+                : "bg-[var(--success-bg)] text-[var(--success)]"
             }`}
           >
             {isOutOfStock
@@ -109,16 +109,16 @@ function RelatedProductCard({ product }: { product: ProductItem }) {
       </div>
 
       <div className="p-3 sm:p-4">
-        <h3 className="line-clamp-2 min-h-[42px] text-[0.9rem] font-extrabold leading-5 text-[#16324a] sm:min-h-[48px] sm:text-[1.02rem] sm:leading-6">
+        <h3 className="line-clamp-2 min-h-[42px] text-[0.9rem] font-extrabold leading-5 text-[var(--text)] sm:min-h-[48px] sm:text-[1.02rem] sm:leading-6">
           {product.title || "Producto sin título"}
         </h3>
 
         <div className="mt-3 flex items-center justify-between gap-2">
-          <p className="text-[0.98rem] font-extrabold text-[#19b7c9] sm:text-[1.08rem]">
+          <p className="text-[0.98rem] font-extrabold text-[var(--primary)] sm:text-[1.08rem]">
             {formatBs(product.price)}
           </p>
 
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#eaf8ff] text-sm font-extrabold text-[#19b7c9] transition group-hover:bg-[#19b7c9] group-hover:text-white sm:h-9 sm:w-9">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--surface-soft)] text-sm font-extrabold text-[var(--primary)] transition group-hover:bg-[var(--primary)] group-hover:text-white sm:h-9 sm:w-9">
             →
           </span>
         </div>
@@ -194,7 +194,7 @@ export default async function ProductPage({ params }: PageProps) {
     : "/productos";
 
   return (
-    <main className="min-h-screen bg-[#eef9ff] text-[#16324a]">
+    <main className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
       <Header />
 
       <section className="mx-auto w-full max-w-[1380px] px-4 pb-8 pt-3 sm:px-6 sm:pt-5 lg:px-8">
@@ -202,58 +202,58 @@ export default async function ProductPage({ params }: PageProps) {
           <ProductBackButton fallbackHref={fallbackBackHref} />
         </div>
 
-        <div className="overflow-hidden rounded-[30px] border border-[#cfeaf6] bg-white shadow-[0_12px_32px_rgba(22,50,74,0.06)] sm:rounded-[34px] lg:grid lg:grid-cols-[0.95fr_1.05fr]">
+        <div className="overflow-hidden rounded-[30px] border border-[var(--border)] bg-[var(--surface)] shadow-[0_12px_32px_var(--shadow)] sm:rounded-[34px] lg:grid lg:grid-cols-[0.95fr_1.05fr]">
           <ProductImageGallery title={product.title} images={gallery} />
 
           <div className="p-5 sm:p-8 lg:p-10">
             <div className="flex flex-wrap gap-2">
-              <span className="rounded-full bg-[#dff4ff] px-4 py-2 text-xs font-extrabold text-[#19b7c9] sm:text-sm">
+              <span className="rounded-full bg-[var(--surface-soft)] px-4 py-2 text-xs font-extrabold text-[var(--primary)] sm:text-sm">
                 {categoryLabel(product.category)}
               </span>
 
               {isPreventa && (
-                <span className="rounded-full bg-[#fff3dc] px-4 py-2 text-xs font-extrabold text-[#b87d00] sm:text-sm">
+                <span className="rounded-full bg-[var(--warning-bg)] px-4 py-2 text-xs font-extrabold text-[var(--warning)] sm:text-sm">
                   Preventa
                 </span>
               )}
 
               {product.isOffer && (
-                <span className="rounded-full bg-[#ffe8ec] px-4 py-2 text-xs font-extrabold text-[#d62839] sm:text-sm">
+                <span className="rounded-full bg-[var(--danger-bg)] px-4 py-2 text-xs font-extrabold text-[var(--danger)] sm:text-sm">
                   Oferta
                 </span>
               )}
 
               {product.isWeeklyNew && (
-                <span className="rounded-full bg-[#eaf8ff] px-4 py-2 text-xs font-extrabold text-[#19b7c9] sm:text-sm">
+                <span className="rounded-full bg-[var(--surface-soft)] px-4 py-2 text-xs font-extrabold text-[var(--primary)] sm:text-sm">
                   Nuevo
                 </span>
               )}
 
               {product.isFeatured && (
-                <span className="rounded-full bg-[#f2eaff] px-4 py-2 text-xs font-extrabold text-[#7c3aed] sm:text-sm">
+                <span className="rounded-full bg-[var(--featured-bg)] px-4 py-2 text-xs font-extrabold text-[var(--featured)] sm:text-sm">
                   Destacado
                 </span>
               )}
             </div>
 
-            <h1 className="mt-5 text-[2.05rem] font-extrabold leading-tight text-[#16324a] sm:text-[3rem] lg:max-w-[760px]">
+            <h1 className="mt-5 text-[2.05rem] font-extrabold leading-tight text-[var(--text)] sm:text-[3rem] lg:max-w-[760px]">
               {product.title}
             </h1>
 
             <div className="mt-4">
               {typeof product.oldPrice === "number" && product.oldPrice > 0 && (
-                <p className="text-base font-bold text-[#8ba4b3] line-through sm:text-lg">
+                <p className="text-base font-bold text-[var(--text-muted)] line-through sm:text-lg">
                   {formatBs(product.oldPrice)}
                 </p>
               )}
 
-              <p className="text-[2rem] font-black leading-tight text-[#19b7c9] sm:text-[2.35rem]">
+              <p className="text-[2rem] font-black leading-tight text-[var(--primary)] sm:text-[2.35rem]">
                 {formatBs(product.price)}
               </p>
             </div>
 
-            <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-[#4b6b80]">
-              <span className="font-extrabold text-[#16324a]">
+            <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-[var(--text-soft)]">
+              <span className="font-extrabold text-[var(--text)]">
                 {isPreventa
                   ? "Preventa"
                   : stock > 0
@@ -261,15 +261,15 @@ export default async function ProductPage({ params }: PageProps) {
                   : "Sin stock"}
               </span>
 
-              <span className="h-1.5 w-1.5 rounded-full bg-[#19b7c9]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--primary)]" />
 
               <span>
                 Stock:{" "}
                 <span
                   className={`font-extrabold ${
                     !isPreventa && stock <= 0
-                      ? "text-red-500"
-                      : "text-[#16324a]"
+                      ? "text-[var(--danger)]"
+                      : "text-[var(--text)]"
                   }`}
                 >
                   {stock}
@@ -304,12 +304,12 @@ export default async function ProductPage({ params }: PageProps) {
             </div>
 
             {product.description && (
-              <div className="mt-7 border-t border-[#e5f3fa] pt-5">
-                <h2 className="text-lg font-extrabold text-[#16324a]">
+              <div className="mt-7 border-t border-[var(--border-soft)] pt-5">
+                <h2 className="text-lg font-extrabold text-[var(--text)]">
                   Descripción
                 </h2>
 
-                <div className="mt-2 max-h-[150px] overflow-y-auto overscroll-contain whitespace-pre-line text-sm leading-7 text-[#4b6b80] [-ms-overflow-style:none] [scrollbar-width:none] sm:max-h-[190px] [&::-webkit-scrollbar]:hidden">
+                <div className="mt-2 max-h-[150px] overflow-y-auto overscroll-contain whitespace-pre-line text-sm leading-7 text-[var(--text-soft)] [-ms-overflow-style:none] [scrollbar-width:none] sm:max-h-[190px] [&::-webkit-scrollbar]:hidden">
                   {product.description}
                 </div>
               </div>
@@ -321,11 +321,11 @@ export default async function ProductPage({ params }: PageProps) {
           <section className="mt-8 sm:mt-10">
             <div className="mb-4 flex items-center justify-between gap-3">
               <div>
-                <span className="inline-flex rounded-full bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[#19b7c9] shadow-[0_8px_20px_rgba(22,50,74,0.04)]">
+                <span className="inline-flex rounded-full bg-[var(--surface)] px-4 py-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--primary)] shadow-[0_8px_20px_var(--shadow)]">
                   También te puede gustar
                 </span>
 
-                <h2 className="mt-3 text-[1.7rem] font-extrabold leading-tight text-[#16324a] sm:text-[2.2rem]">
+                <h2 className="mt-3 text-[1.7rem] font-extrabold leading-tight text-[var(--text)] sm:text-[2.2rem]">
                   Productos relacionados
                 </h2>
               </div>
@@ -333,7 +333,7 @@ export default async function ProductPage({ params }: PageProps) {
               {product.category && (
                 <Link
                   href={`/categoria/${product.category}`}
-                  className="hidden shrink-0 rounded-2xl border border-[#cfeaf6] bg-white px-5 py-3 text-sm font-extrabold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9] sm:inline-flex"
+                  className="hidden shrink-0 rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-5 py-3 text-sm font-extrabold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)] sm:inline-flex"
                 >
                   Ver más
                 </Link>

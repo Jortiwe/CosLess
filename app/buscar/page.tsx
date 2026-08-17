@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import { connectDB } from "../../lib/mongodb";
@@ -53,29 +52,30 @@ function ProductCard({ product }: { product: SearchProduct }) {
   return (
     <Link
       href={href}
-      className="group overflow-hidden rounded-[26px] border border-[#cfeaf6] bg-white shadow-[0_8px_24px_rgba(22,50,74,0.04)] transition hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(22,50,74,0.10)]"
+      className="group overflow-hidden rounded-[26px] border border-[var(--border)] bg-[var(--surface)] shadow-[0_8px_24px_var(--shadow)] transition hover:-translate-y-1 hover:shadow-[0_16px_34px_var(--shadow-strong)]"
     >
-      <div className="relative aspect-square overflow-hidden bg-[#eaf8ff]">
-        <Image
-          src={image}
-          alt={product.title || "Producto"}
-          width={500}
-          height={500}
-          className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-        />
+      <div className="relative aspect-square overflow-hidden bg-[var(--surface-soft)]">
+        <img
+  src={image}
+  alt={product.title || "Producto"}
+  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+  onError={(event) => {
+    event.currentTarget.src = "/placeholder-product.png";
+  }}
+/>
 
         <div className="absolute left-2 top-2 flex max-w-[calc(100%-16px)] flex-wrap gap-1.5 sm:left-3 sm:top-3 sm:gap-2">
-          <span className="rounded-full bg-white/90 px-2.5 py-1 text-[8px] font-extrabold uppercase tracking-[0.12em] text-[#16324a] shadow-sm sm:px-3 sm:text-[10px] sm:tracking-[0.14em]">
+          <span className="rounded-full bg-white/90 px-2.5 py-1 text-[8px] font-extrabold uppercase tracking-[0.12em] text-[var(--text)] shadow-sm sm:px-3 sm:text-[10px] sm:tracking-[0.14em]">
             {product.category || "Producto"}
           </span>
 
           <span
             className={`rounded-full px-2.5 py-1 text-[8px] font-extrabold uppercase tracking-[0.12em] shadow-sm sm:px-3 sm:text-[10px] sm:tracking-[0.14em] ${
               isOutOfStock
-                ? "bg-[#ffe6ed] text-[#d63865]"
+                ? "bg-[var(--danger-bg)] text-[var(--danger)]"
                 : status === "preventa"
-                ? "bg-[#fff3dc] text-[#b87d00]"
-                : "bg-[#e6f6ed] text-[#16824c]"
+                ? "bg-[var(--warning-bg)] text-[var(--warning)]"
+                : "bg-[var(--success-bg)] text-[var(--success)]"
             }`}
           >
             {isOutOfStock
@@ -88,16 +88,16 @@ function ProductCard({ product }: { product: SearchProduct }) {
       </div>
 
       <div className="p-3 sm:p-4">
-        <h3 className="line-clamp-2 min-h-[42px] text-[0.9rem] font-extrabold leading-5 text-[#16324a] sm:min-h-[48px] sm:text-[1.08rem] sm:leading-6">
+        <h3 className="line-clamp-2 min-h-[42px] text-[0.9rem] font-extrabold leading-5 text-[var(--text)] sm:min-h-[48px] sm:text-[1.08rem] sm:leading-6">
           {product.title || "Producto sin título"}
         </h3>
 
         <div className="mt-3 flex items-center justify-between gap-2 sm:gap-3">
-          <p className="text-[0.98rem] font-extrabold text-[#19b7c9] sm:text-[1.08rem]">
+          <p className="text-[0.98rem] font-extrabold text-[var(--primary)] sm:text-[1.08rem]">
             {formatBs(product.price)}
           </p>
 
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#eaf8ff] text-sm font-extrabold text-[#19b7c9] transition group-hover:bg-[#19b7c9] group-hover:text-white sm:h-9 sm:w-9">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--surface-soft)] text-sm font-extrabold text-[var(--primary)] transition group-hover:bg-[var(--primary)] group-hover:text-white sm:h-9 sm:w-9">
             →
           </span>
         </div>
@@ -108,7 +108,7 @@ function ProductCard({ product }: { product: SearchProduct }) {
 
 function EmptyState({ text }: { text: string }) {
   return (
-    <div className="rounded-[24px] border border-[#cfeaf6] bg-white px-5 py-6 text-sm font-semibold text-[#4b6b80] shadow-[0_8px_24px_rgba(22,50,74,0.04)]">
+    <div className="rounded-[24px] border border-[var(--border)] bg-[var(--surface)] px-5 py-6 text-sm font-semibold text-[var(--text-soft)] shadow-[0_8px_24px_var(--shadow)]">
       {text}
     </div>
   );
@@ -168,30 +168,30 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     : [];
 
   return (
-    <main className="min-h-screen bg-[#eef9ff] text-[#16324a]">
+    <main className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
       <Header />
 
       <section className="mx-auto w-full max-w-[1380px] px-4 pb-8 pt-3 sm:px-6 sm:pt-5 lg:px-8">
         <div className="mb-4 flex justify-start">
           <Link
             href="/"
-            className="group relative inline-flex items-center text-sm font-extrabold text-[#16324a] transition hover:text-[#19b7c9]"
+            className="group relative inline-flex items-center text-sm font-extrabold text-[var(--text)] transition hover:text-[var(--primary)]"
           >
             <span className="mr-1">←</span>
             Inicio
-            <span className="absolute -bottom-1 left-0 h-[2px] w-0 rounded-full bg-[#19b7c9] transition-all duration-300 group-hover:w-full" />
+            <span className="absolute -bottom-1 left-0 h-[2px] w-0 rounded-full bg-[var(--primary)] transition-all duration-300 group-hover:w-full" />
           </Link>
         </div>
 
-        <div className="mb-6 rounded-[26px] border border-[#cfeaf6] bg-white px-4 py-4 shadow-[0_10px_25px_rgba(22,50,74,0.04)] sm:mb-7 sm:rounded-[28px] sm:px-5 sm:py-5">
+        <div className="mb-6 rounded-[26px] border border-[var(--border)] bg-[var(--surface)] px-4 py-4 shadow-[0_10px_25px_var(--shadow)] sm:mb-7 sm:rounded-[28px] sm:px-5 sm:py-5">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="inline-flex rounded-full bg-[#dff4ff] px-4 py-2 text-xs font-extrabold text-[#19b7c9] sm:text-sm">
+            <span className="inline-flex rounded-full bg-[var(--surface-soft)] px-4 py-2 text-xs font-extrabold text-[var(--primary)] sm:text-sm">
               Búsqueda
             </span>
 
-            <p className="text-sm font-semibold text-[#4b6b80] sm:text-base">
+            <p className="text-sm font-semibold text-[var(--text-soft)] sm:text-base">
               Consulta por:{" "}
-              <span className="font-extrabold text-[#16324a]">“{q}”</span>
+              <span className="font-extrabold text-[var(--text)]">“{q}”</span>
             </p>
           </div>
         </div>
@@ -199,11 +199,11 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         <div className="grid gap-7">
           <section>
             <div className="mb-4 flex items-center justify-between gap-3">
-              <h2 className="text-[1.35rem] font-extrabold text-[#16324a] sm:text-2xl">
+              <h2 className="text-[1.35rem] font-extrabold text-[var(--text)] sm:text-2xl">
                 Coincidencias directas
               </h2>
 
-              <span className="rounded-full bg-white px-3 py-1 text-xs font-extrabold text-[#19b7c9] shadow-sm">
+              <span className="rounded-full bg-[var(--surface)] px-3 py-1 text-xs font-extrabold text-[var(--primary)] shadow-sm">
                 {formatCount(exactMatches.length)}
               </span>
             </div>
@@ -221,11 +221,11 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
           <section>
             <div className="mb-4 flex items-center justify-between gap-3">
-              <h2 className="text-[1.35rem] font-extrabold text-[#16324a] sm:text-2xl">
+              <h2 className="text-[1.35rem] font-extrabold text-[var(--text)] sm:text-2xl">
                 Relacionados
               </h2>
 
-              <span className="rounded-full bg-white px-3 py-1 text-xs font-extrabold text-[#19b7c9] shadow-sm">
+              <span className="rounded-full bg-[var(--surface)] px-3 py-1 text-xs font-extrabold text-[var(--primary)] shadow-sm">
                 {formatCount(relatedMatches.length)}
               </span>
             </div>

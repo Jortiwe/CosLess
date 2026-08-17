@@ -68,10 +68,10 @@ export default function BuyNowButton({ product }: Props) {
       type="button"
       onClick={handleBuyNow}
       disabled={loading}
-      className={`inline-flex h-13 flex-1 items-center justify-center gap-2 rounded-2xl px-5 py-4 text-sm font-extrabold text-white shadow-[0_12px_26px_rgba(22,50,74,0.16)] transition disabled:cursor-not-allowed disabled:opacity-70 ${
+      className={`inline-flex h-[52px] flex-1 items-center justify-center gap-2 rounded-2xl px-5 py-4 text-sm font-extrabold text-white shadow-[0_12px_26px_var(--shadow-strong)] transition disabled:cursor-not-allowed disabled:opacity-70 ${
         stockWarning
-          ? "animate-pulse bg-[#d86b88] shadow-[0_0_0_5px_rgba(216,107,136,0.18),0_12px_26px_rgba(216,107,136,0.20)]"
-          : "bg-[#16324a] hover:bg-[#0f2538]"
+          ? "animate-pulse bg-[var(--danger)] shadow-[0_0_0_5px_rgba(220,38,38,0.18),0_12px_26px_rgba(220,38,38,0.20)]"
+          : "bg-[var(--text)] hover:bg-[var(--cos-navy)]"
       }`}
     >
       <FiZap />

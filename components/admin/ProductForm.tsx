@@ -12,6 +12,7 @@ type ProductType = {
   categories?: string[];
   status?: string;
   price?: number;
+  costPrice?: number;
   oldPrice?: number;
   stock?: number;
   mainImage?: string;
@@ -71,6 +72,9 @@ export default function ProductForm({ mode, product }: Props) {
   );
   const [status, setStatus] = useState(product?.status || "stock");
   const [price, setPrice] = useState(String(product?.price ?? 0));
+  const [costPrice, setCostPrice] = useState(
+    String(product?.costPrice ?? 0)
+  );
   const [oldPrice, setOldPrice] = useState(String(product?.oldPrice ?? 0));
   const [stock, setStock] = useState(String(product?.stock ?? 0));
   const [mainImage, setMainImage] = useState(product?.mainImage || "");
@@ -135,6 +139,7 @@ export default function ProductForm({ mode, product }: Props) {
         categories: cleanCategories,
         status,
         price: Number(price),
+        costPrice: Number(costPrice),
         oldPrice: Number(oldPrice),
         stock: Number(stock),
         mainImage,
@@ -190,7 +195,7 @@ export default function ProductForm({ mode, product }: Props) {
   }
 
   return (
-    <section className="rounded-[32px] border border-[#cfeaf6] bg-[#f7fdff] p-5 shadow-[0_10px_30px_rgba(22,50,74,0.05)] sm:p-6">
+    <section className="rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[0_10px_30px_var(--shadow)] sm:p-6">
       <div className="grid gap-5 md:grid-cols-2">
         <div className="md:col-span-2">
           <label className="mb-2 block text-sm font-bold">Nombre</label>
@@ -203,7 +208,7 @@ export default function ProductForm({ mode, product }: Props) {
                 setSlug(makeSlug(e.target.value));
               }
             }}
-            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none"
+            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
           />
         </div>
 
@@ -212,7 +217,7 @@ export default function ProductForm({ mode, product }: Props) {
           <input
             value={slug}
             onChange={(e) => setSlug(e.target.value)}
-            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none"
+            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
           />
         </div>
 
@@ -221,7 +226,7 @@ export default function ProductForm({ mode, product }: Props) {
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none"
+            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
           >
             <option value="stock">Stock</option>
             <option value="preventa">Preventa</option>
@@ -232,8 +237,9 @@ export default function ProductForm({ mode, product }: Props) {
           <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <label className="block text-sm font-bold">Categoría</label>
-              <p className="mt-1 text-xs font-semibold text-[#4b6b80]">
-                El producto puede tener una categoría principal y categorías adicionales.
+              <p className="mt-1 text-xs font-semibold text-[var(--text-soft)]">
+                El producto puede tener una categoría principal y categorías
+                adicionales.
               </p>
             </div>
 
@@ -241,7 +247,7 @@ export default function ProductForm({ mode, product }: Props) {
               type="button"
               onClick={addCategoryField}
               disabled={categories.length >= CATEGORY_LIST.length}
-              className="inline-flex w-fit items-center justify-center rounded-full border border-[#19b7c9] bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[#19b7c9] transition hover:bg-[#e9fbff] disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex w-fit items-center justify-center rounded-full border border-[var(--primary)] bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--primary)] transition hover:bg-[var(--surface-soft)] disabled:cursor-not-allowed disabled:opacity-50"
             >
               + Agregar
             </button>
@@ -251,10 +257,10 @@ export default function ProductForm({ mode, product }: Props) {
             {categories.map((category, index) => (
               <div
                 key={`${category}-${index}`}
-                className="rounded-2xl border border-[#cfeaf6] bg-white p-3 sm:p-4"
+                className="rounded-2xl border border-[var(--border)] bg-white p-3 sm:p-4"
               >
                 <div className="mb-2 flex items-center justify-between gap-3">
-                  <span className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#19b7c9]">
+                  <span className="text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--primary)]">
                     {index === 0 ? "Principal" : `Extra ${index}`}
                   </span>
 
@@ -262,7 +268,7 @@ export default function ProductForm({ mode, product }: Props) {
                     <button
                       type="button"
                       onClick={() => removeCategoryField(index)}
-                      className="text-xs font-bold text-[#e14b4b] transition hover:opacity-75"
+                      className="text-xs font-bold text-[var(--danger)] transition hover:opacity-75"
                     >
                       Quitar
                     </button>
@@ -272,7 +278,7 @@ export default function ProductForm({ mode, product }: Props) {
                 <select
                   value={category}
                   onChange={(e) => updateCategory(index, e.target.value)}
-                  className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 text-[#16324a] outline-none"
+                  className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 text-[var(--text)] outline-none"
                 >
                   {CATEGORY_LIST.map((categoryOption) => (
                     <option
@@ -288,9 +294,9 @@ export default function ProductForm({ mode, product }: Props) {
           </div>
 
           {categories.length > 1 && (
-            <div className="mt-3 rounded-2xl bg-[#e9fbff] px-4 py-3 text-xs font-semibold text-[#4b6b80]">
+            <div className="mt-3 rounded-2xl bg-[var(--surface-soft)] px-4 py-3 text-xs font-semibold text-[var(--text-soft)]">
               Este producto aparecerá en:{" "}
-              <span className="font-extrabold text-[#16324a]">
+              <span className="font-extrabold text-[var(--text)]">
                 {categories.map(getCategoryTitle).join(", ")}
               </span>
             </div>
@@ -303,7 +309,20 @@ export default function ProductForm({ mode, product }: Props) {
             type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none"
+            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
+          />
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-bold">
+            Costo producto
+          </label>
+          <input
+            type="number"
+            value={costPrice}
+            onChange={(e) => setCostPrice(e.target.value)}
+            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
+            placeholder="Ej: 25"
           />
         </div>
 
@@ -315,7 +334,7 @@ export default function ProductForm({ mode, product }: Props) {
             type="number"
             value={oldPrice}
             onChange={(e) => setOldPrice(e.target.value)}
-            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none"
+            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
             placeholder="Opcional para ofertas"
           />
         </div>
@@ -326,7 +345,7 @@ export default function ProductForm({ mode, product }: Props) {
             type="number"
             value={stock}
             onChange={(e) => setStock(e.target.value)}
-            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none"
+            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
           />
         </div>
 
@@ -337,7 +356,7 @@ export default function ProductForm({ mode, product }: Props) {
           <input
             value={mainImage}
             onChange={(e) => setMainImage(e.target.value)}
-            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none"
+            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
           />
         </div>
 
@@ -350,7 +369,7 @@ export default function ProductForm({ mode, product }: Props) {
             value={images}
             onChange={(e) => setImages(e.target.value)}
             placeholder="Una URL por línea"
-            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none"
+            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
           />
         </div>
 
@@ -360,12 +379,12 @@ export default function ProductForm({ mode, product }: Props) {
             rows={7}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none"
+            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
           />
         </div>
 
         <div className="md:col-span-2">
-          <p className="mb-3 text-sm font-bold text-[#16324a]">
+          <p className="mb-3 text-sm font-bold text-[var(--text)]">
             Secciones de la tienda
           </p>
 
@@ -410,7 +429,7 @@ export default function ProductForm({ mode, product }: Props) {
       </div>
 
       {message && (
-        <div className="mt-5 rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 text-sm font-semibold">
+        <div className="mt-5 rounded-2xl border border-[var(--border)] bg-white px-4 py-4 text-sm font-semibold">
           {message}
         </div>
       )}
@@ -420,7 +439,7 @@ export default function ProductForm({ mode, product }: Props) {
           type="button"
           onClick={handleSubmit}
           disabled={loading}
-          className="rounded-2xl bg-[#19b7c9] px-6 py-3 text-sm font-bold text-white disabled:opacity-70"
+          className="rounded-2xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-white disabled:opacity-70"
         >
           {loading
             ? "Guardando..."

@@ -46,21 +46,21 @@ type FieldState = "neutral" | "valid" | "invalid";
 
 function getInputClass(state: FieldState) {
   const base =
-    "h-14 w-full rounded-2xl border bg-white px-4 text-[15px] text-[#16324a] outline-none transition placeholder:text-[#8ba4b3] focus:bg-white";
+    "h-14 w-full rounded-2xl border bg-[var(--surface)] px-4 text-[15px] text-[var(--text)] outline-none transition placeholder:text-[var(--text-muted)] focus:bg-[var(--surface)]";
 
   if (state === "valid") {
-    return `${base} border-emerald-300 focus:border-emerald-400 focus:shadow-[0_0_0_4px_rgba(16,185,129,0.12)]`;
+    return `${base} border-[var(--success)] focus:border-[var(--success)] focus:shadow-[0_0_0_4px_rgba(22,163,74,0.12)]`;
   }
 
   if (state === "invalid") {
-    return `${base} border-red-300 focus:border-red-400 focus:shadow-[0_0_0_4px_rgba(239,68,68,0.12)]`;
+    return `${base} border-[var(--danger)] focus:border-[var(--danger)] focus:shadow-[0_0_0_4px_rgba(220,38,38,0.12)]`;
   }
 
-  return `${base} border-[#cfeaf6] focus:border-[#19b7c9] focus:shadow-[0_0_0_4px_rgba(25,183,201,0.12)]`;
+  return `${base} border-[var(--border)] focus:border-[var(--primary)] focus:shadow-[0_0_0_4px_var(--shadow)]`;
 }
 
 function getTextareaClass() {
-  return "min-h-[120px] w-full resize-y rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 text-[15px] text-[#16324a] outline-none transition placeholder:text-[#8ba4b3] focus:border-[#19b7c9] focus:bg-white focus:shadow-[0_0_0_4px_rgba(25,183,201,0.12)]";
+  return "min-h-[120px] w-full resize-y rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-4 text-[15px] text-[var(--text)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--primary)] focus:bg-[var(--surface)] focus:shadow-[0_0_0_4px_var(--shadow)]";
 }
 
 function FloatingMessage({
@@ -76,14 +76,14 @@ function FloatingMessage({
 
   const classes =
     type === "valid"
-      ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+      ? "border-[var(--success)] bg-[var(--success-bg)] text-[var(--success)]"
       : type === "invalid"
-      ? "border-red-200 bg-red-50 text-red-600"
-      : "border-[#cfeaf6] bg-white text-[#7a96a7]";
+      ? "border-[var(--danger-bg-hover)] bg-[var(--danger-bg)] text-[var(--danger)]"
+      : "border-[var(--border)] bg-[var(--surface)] text-[var(--text-muted)]";
 
   return (
     <span
-      className={`pointer-events-none absolute right-3 top-full z-20 mt-1 rounded-full border px-3 py-1 text-[11px] font-extrabold shadow-[0_8px_20px_rgba(22,50,74,0.08)] ${classes}`}
+      className={`pointer-events-none absolute right-3 top-full z-20 mt-1 rounded-full border px-3 py-1 text-[11px] font-extrabold shadow-[0_8px_20px_var(--shadow)] ${classes}`}
     >
       {children}
     </span>
@@ -306,7 +306,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#eef9ff] text-[#16324a]">
+    <main className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
       <Header />
 
       <section className="mx-auto w-full max-w-[1500px] px-4 pb-10 pt-5 sm:px-6 lg:px-10">
@@ -314,35 +314,35 @@ export default function CheckoutPage() {
           <button
             type="button"
             onClick={() => router.back()}
-            className="group relative inline-flex items-center text-sm font-extrabold text-[#16324a] transition hover:text-[#19b7c9]"
+            className="group relative inline-flex items-center text-sm font-extrabold text-[var(--text)] transition hover:text-[var(--primary)]"
           >
             <span className="mr-1">←</span>
             Volver
-            <span className="absolute -bottom-1 left-0 h-[2px] w-0 rounded-full bg-[#19b7c9] transition-all duration-300 group-hover:w-full" />
+            <span className="absolute -bottom-1 left-0 h-[2px] w-0 rounded-full bg-[var(--primary)] transition-all duration-300 group-hover:w-full" />
           </button>
 
           {!isDirectCheckout && (
             <button
               type="button"
               onClick={() => router.push("/carrito")}
-              className="group relative inline-flex items-center text-sm font-extrabold text-[#16324a] transition hover:text-[#19b7c9]"
+              className="group relative inline-flex items-center text-sm font-extrabold text-[var(--text)] transition hover:text-[var(--primary)]"
             >
               Carrito
-              <span className="absolute -bottom-1 left-0 h-[2px] w-0 rounded-full bg-[#19b7c9] transition-all duration-300 group-hover:w-full" />
+              <span className="absolute -bottom-1 left-0 h-[2px] w-0 rounded-full bg-[var(--primary)] transition-all duration-300 group-hover:w-full" />
             </button>
           )}
         </div>
 
         <div className="mb-6">
-          <span className="inline-flex rounded-full bg-white px-5 py-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[#19b7c9] shadow-[0_8px_20px_rgba(22,50,74,0.04)]">
+          <span className="inline-flex rounded-full bg-[var(--surface)] px-5 py-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--primary)] shadow-[0_8px_20px_var(--shadow)]">
             Finalizar pedido
           </span>
 
-          <h1 className="mt-3 text-[2rem] font-extrabold leading-tight text-[#16324a] sm:text-[2.8rem]">
+          <h1 className="mt-3 text-[2rem] font-extrabold leading-tight text-[var(--text)] sm:text-[2.8rem]">
             Completa tus datos
           </h1>
 
-          <p className="mt-2 hidden max-w-2xl text-sm font-semibold leading-7 text-[#4b6b80] sm:block">
+          <p className="mt-2 hidden max-w-2xl text-sm font-semibold leading-7 text-[var(--text-soft)] sm:block">
             Luego se abrirá WhatsApp con el mensaje listo.
           </p>
         </div>
@@ -351,11 +351,11 @@ export default function CheckoutPage() {
           <div>
             <form
               onSubmit={handleSubmit}
-              className="rounded-[34px] border border-[#cfeaf6] bg-[#f7fdff] p-5 shadow-[0_10px_30px_rgba(22,50,74,0.05)] sm:p-7 lg:p-8"
+              className="rounded-[34px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[0_10px_30px_var(--shadow)] sm:p-7 lg:p-8"
             >
               <div className="grid gap-x-5 gap-y-7 md:grid-cols-2">
                 <div className="relative md:col-span-2">
-                  <label className="mb-2 block text-sm font-bold text-[#16324a]">
+                  <label className="mb-2 block text-sm font-bold text-[var(--text)]">
                     Nombre completo
                   </label>
 
@@ -387,11 +387,11 @@ export default function CheckoutPage() {
 
                 <div className="relative">
                   <div className="mb-2 flex items-center justify-between gap-3">
-                    <label className="block text-sm font-bold text-[#16324a]">
+                    <label className="block text-sm font-bold text-[var(--text)]">
                       Correo electrónico
                     </label>
 
-                    <span className="text-xs font-extrabold text-[#7a96a7]">
+                    <span className="text-xs font-extrabold text-[var(--text-muted)]">
                       Opcional
                     </span>
                   </div>
@@ -426,7 +426,7 @@ export default function CheckoutPage() {
                 </div>
 
                 <div className="relative">
-                  <label className="mb-2 block text-sm font-bold text-[#16324a]">
+                  <label className="mb-2 block text-sm font-bold text-[var(--text)]">
                     Teléfono
                   </label>
 
@@ -457,7 +457,7 @@ export default function CheckoutPage() {
                 </div>
 
                 <div className="relative">
-                  <label className="mb-2 block text-sm font-bold text-[#16324a]">
+                  <label className="mb-2 block text-sm font-bold text-[var(--text)]">
                     Departamento
                   </label>
 
@@ -488,7 +488,7 @@ export default function CheckoutPage() {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-bold text-[#16324a]">
+                  <label className="mb-2 block text-sm font-bold text-[var(--text)]">
                     Tipo de entrega
                   </label>
 
@@ -505,11 +505,11 @@ export default function CheckoutPage() {
 
                 <div>
                   <div className="mb-2 flex items-center justify-between gap-3">
-                    <label className="block text-sm font-bold text-[#16324a]">
+                    <label className="block text-sm font-bold text-[var(--text)]">
                       Ciudad
                     </label>
 
-                    <span className="text-xs font-extrabold text-[#7a96a7]">
+                    <span className="text-xs font-extrabold text-[var(--text-muted)]">
                       Opcional
                     </span>
                   </div>
@@ -525,11 +525,11 @@ export default function CheckoutPage() {
 
                 <div>
                   <div className="mb-2 flex items-center justify-between gap-3">
-                    <label className="block text-sm font-bold text-[#16324a]">
+                    <label className="block text-sm font-bold text-[var(--text)]">
                       Zona
                     </label>
 
-                    <span className="text-xs font-extrabold text-[#7a96a7]">
+                    <span className="text-xs font-extrabold text-[var(--text-muted)]">
                       Opcional
                     </span>
                   </div>
@@ -545,11 +545,11 @@ export default function CheckoutPage() {
 
                 <div className="md:col-span-2">
                   <div className="mb-2 flex items-center justify-between gap-3">
-                    <label className="block text-sm font-bold text-[#16324a]">
+                    <label className="block text-sm font-bold text-[var(--text)]">
                       Nota adicional
                     </label>
 
-                    <span className="text-xs font-extrabold text-[#7a96a7]">
+                    <span className="text-xs font-extrabold text-[var(--text-muted)]">
                       Opcional
                     </span>
                   </div>
@@ -565,13 +565,13 @@ export default function CheckoutPage() {
             </form>
 
             {errorText && (
-              <div className="fixed bottom-5 left-1/2 z-[9998] w-[calc(100%-2rem)] max-w-[520px] -translate-x-1/2 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-600 shadow-[0_16px_40px_rgba(22,50,74,0.18)]">
+              <div className="fixed bottom-5 left-1/2 z-[9998] w-[calc(100%-2rem)] max-w-[520px] -translate-x-1/2 rounded-2xl border border-[var(--danger-bg-hover)] bg-[var(--danger-bg)] px-4 py-3 text-sm font-bold text-[var(--danger)] shadow-[0_16px_40px_var(--shadow-strong)]">
                 {errorText}
               </div>
             )}
 
             {successText && (
-              <div className="fixed bottom-5 left-1/2 z-[9998] w-[calc(100%-2rem)] max-w-[520px] -translate-x-1/2 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-700 shadow-[0_16px_40px_rgba(22,50,74,0.18)]">
+              <div className="fixed bottom-5 left-1/2 z-[9998] w-[calc(100%-2rem)] max-w-[520px] -translate-x-1/2 rounded-2xl border border-[var(--success)] bg-[var(--success-bg)] px-4 py-3 text-sm font-bold text-[var(--success)] shadow-[0_16px_40px_var(--shadow-strong)]">
                 {successText}
               </div>
             )}
@@ -580,18 +580,18 @@ export default function CheckoutPage() {
               type="button"
               onClick={handleSubmit}
               disabled={loading || !mounted || !hasProducts}
-              className="mt-5 flex h-14 w-full items-center justify-center rounded-[22px] bg-[#19b7c9] px-8 text-base font-extrabold text-white shadow-[0_12px_28px_rgba(25,183,201,0.2)] transition hover:-translate-y-0.5 hover:bg-[#0ea5b7] disabled:cursor-not-allowed disabled:opacity-60 sm:h-16"
+              className="mt-5 flex h-14 w-full items-center justify-center rounded-[22px] bg-[var(--primary)] px-8 text-base font-extrabold text-white shadow-[0_12px_28px_var(--shadow-strong)] transition hover:-translate-y-0.5 hover:bg-[var(--primary-dark)] disabled:cursor-not-allowed disabled:opacity-60 sm:h-16"
             >
               {loading ? "Creando pedido..." : "Crear pedido y abrir WhatsApp"}
             </button>
           </div>
 
-          <aside className="rounded-[34px] border border-[#cfeaf6] bg-[#f7fdff] p-5 shadow-[0_10px_30px_rgba(22,50,74,0.05)] sm:p-7 xl:sticky xl:top-6 xl:h-fit">
-            <h2 className="text-2xl font-extrabold text-[#16324a]">
+          <aside className="rounded-[34px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[0_10px_30px_var(--shadow)] sm:p-7 xl:sticky xl:top-6 xl:h-fit">
+            <h2 className="text-2xl font-extrabold text-[var(--text)]">
               Resumen del pedido
             </h2>
 
-            <p className="mt-2 text-sm leading-6 text-[#4b6b80]">
+            <p className="mt-2 text-sm leading-6 text-[var(--text-soft)]">
               Revisa tus productos antes de enviarlos por WhatsApp.
             </p>
 
@@ -600,7 +600,7 @@ export default function CheckoutPage() {
                 cartItems.map((item) => (
                   <article
                     key={item.productId}
-                    className="flex gap-4 rounded-3xl border border-[#d9eef7] bg-white p-4"
+                    className="flex gap-4 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-4"
                   >
                     <Image
                       src={item.mainImage}
@@ -611,41 +611,41 @@ export default function CheckoutPage() {
                     />
 
                     <div className="min-w-0 flex-1">
-                      <h3 className="line-clamp-2 text-base font-bold leading-6 text-[#16324a]">
+                      <h3 className="line-clamp-2 text-base font-bold leading-6 text-[var(--text)]">
                         {item.title}
                       </h3>
 
-                      <p className="mt-2 text-sm text-[#4b6b80]">
+                      <p className="mt-2 text-sm text-[var(--text-soft)]">
                         Cantidad: {item.quantity}
                       </p>
 
-                      <p className="mt-2 text-base font-extrabold text-[#19b7c9]">
+                      <p className="mt-2 text-base font-extrabold text-[var(--primary)]">
                         {formatBs(item.price * item.quantity)}
                       </p>
                     </div>
                   </article>
                 ))
               ) : (
-                <div className="rounded-2xl border border-[#d9eef7] bg-white px-4 py-5 text-sm text-[#4b6b80]">
+                <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-5 text-sm text-[var(--text-soft)]">
                   No hay productos para finalizar el pedido.
                 </div>
               )}
             </div>
 
-            <div className="mt-7 space-y-3 rounded-3xl border border-[#d9eef7] bg-white p-5">
-              <div className="flex items-center justify-between text-sm text-[#4b6b80]">
+            <div className="mt-7 space-y-3 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5">
+              <div className="flex items-center justify-between text-sm text-[var(--text-soft)]">
                 <span>Subtotal</span>
                 <span>{formatBs(subtotal)}</span>
               </div>
 
-              <div className="flex items-center justify-between text-sm text-[#4b6b80]">
+              <div className="flex items-center justify-between text-sm text-[var(--text-soft)]">
                 <span>Envío</span>
                 <span>{formatBs(shippingCost)}</span>
               </div>
 
-              <div className="h-px bg-[#e4f1f7]" />
+              <div className="h-px bg-[var(--border-soft)]" />
 
-              <div className="flex items-center justify-between text-lg font-extrabold text-[#16324a]">
+              <div className="flex items-center justify-between text-lg font-extrabold text-[var(--text)]">
                 <span>Total</span>
                 <span>{formatBs(total)}</span>
               </div>

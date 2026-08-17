@@ -176,7 +176,7 @@ export default function AddToCartButton({ product }: Props) {
       <button
         type="button"
         disabled
-        className={`w-full ${baseHeight} inline-flex items-center justify-center border border-[#e8a8b8] bg-[#d86b88] px-6 text-sm font-extrabold uppercase tracking-[0.08em] text-white/90 shadow-[0_8px_22px_rgba(216,107,136,0.16)]`}
+        className={`w-full ${baseHeight} inline-flex items-center justify-center border border-[var(--danger-bg-hover)] bg-[var(--danger)] px-6 text-sm font-extrabold uppercase tracking-[0.08em] text-white/90 shadow-[0_8px_22px_rgba(220,38,38,0.16)]`}
       >
         No stock
       </button>
@@ -189,7 +189,7 @@ export default function AddToCartButton({ product }: Props) {
         type="button"
         onClick={handleAddFirst}
         disabled={loading}
-        className={`w-full ${baseHeight} inline-flex items-center justify-center bg-[#19b7c9] px-6 text-sm font-bold text-white shadow-[0_10px_24px_rgba(25,183,201,0.18)] transition hover:bg-[#0ea5b7] disabled:opacity-80`}
+        className={`w-full ${baseHeight} inline-flex items-center justify-center bg-[var(--primary)] px-6 text-sm font-bold text-white shadow-[0_10px_24px_var(--shadow-strong)] transition hover:bg-[var(--primary-dark)] disabled:opacity-80`}
       >
         {loading ? "Añadiendo..." : "Añadir al carrito"}
       </button>
@@ -202,9 +202,9 @@ export default function AddToCartButton({ product }: Props) {
         type="button"
         onClick={handleDecrease}
         disabled={loading}
-        className={`relative w-full ${baseHeight} overflow-hidden border border-[#e8a8b8] bg-[#d86b88] shadow-[0_8px_22px_rgba(216,107,136,0.16)] transition hover:bg-[#cf5f7e] disabled:opacity-80`}
+        className={`relative w-full ${baseHeight} overflow-hidden border border-[var(--danger-bg-hover)] bg-[var(--danger)] shadow-[0_8px_22px_rgba(220,38,38,0.16)] transition hover:bg-red-700 disabled:opacity-80`}
       >
-        <span className="absolute inset-0 flex items-center justify-center text-[0.95rem] font-extrabold uppercase tracking-[0.08em] text-white/78">
+        <span className="absolute inset-0 flex items-center justify-center text-[0.95rem] font-extrabold uppercase tracking-[0.08em] text-white/80">
           No stock
         </span>
 
@@ -217,23 +217,23 @@ export default function AddToCartButton({ product }: Props) {
 
   return (
     <div
-      className={`relative w-full ${baseHeight} overflow-hidden border border-[#b9ddea] bg-white shadow-[0_8px_22px_rgba(22,50,74,0.08)]`}
+      className={`relative w-full ${baseHeight} overflow-hidden border border-[var(--border)] bg-[var(--surface)] shadow-[0_8px_22px_var(--shadow)]`}
     >
       <div
-        className="absolute inset-0 bg-[#edbfd0]"
+        className="absolute inset-0 bg-[var(--danger-bg)]"
         style={{
           clipPath: "polygon(0 0, 57% 0, 43% 100%, 0 100%)",
         }}
       />
 
       <div
-        className="absolute inset-0 bg-[#addfe8]"
+        className="absolute inset-0 bg-[var(--surface-soft)]"
         style={{
           clipPath: "polygon(57% 0, 100% 0, 100% 100%, 43% 100%)",
         }}
       />
 
-      <div className="pointer-events-none absolute left-1/2 top-1/2 z-20 h-[170%] w-[3px] -translate-x-1/2 -translate-y-1/2 rotate-[21deg] bg-[#c5dde5]" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 z-20 h-[170%] w-[3px] -translate-x-1/2 -translate-y-1/2 rotate-[21deg] bg-[var(--border)]" />
 
       <button
         type="button"
@@ -245,7 +245,7 @@ export default function AddToCartButton({ product }: Props) {
           clipPath: "polygon(0 0, 57% 0, 43% 100%, 0 100%)",
         }}
       >
-        <span className="absolute left-[26%] top-1/2 -translate-x-1/2 -translate-y-1/2 text-[#c45576]">
+        <span className="absolute left-[26%] top-1/2 -translate-x-1/2 -translate-y-1/2 text-[var(--danger)]">
           <FiMinus className="text-[1.5rem] stroke-[3]" />
         </span>
       </button>
@@ -260,7 +260,7 @@ export default function AddToCartButton({ product }: Props) {
           clipPath: "polygon(57% 0, 100% 0, 100% 100%, 43% 100%)",
         }}
       >
-        <span className="absolute left-[74%] top-1/2 -translate-x-1/2 -translate-y-1/2 text-[#10a9bf]">
+        <span className="absolute left-[74%] top-1/2 -translate-x-1/2 -translate-y-1/2 text-[var(--primary-dark)]">
           <FiPlus className="text-[1.5rem] stroke-[3]" />
         </span>
       </button>

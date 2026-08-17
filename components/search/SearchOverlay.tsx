@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
@@ -152,24 +152,24 @@ export default function SearchOverlay({
       />
 
       <div className="relative z-[10000] mx-auto mt-4 w-[94%] max-w-[1420px] sm:mt-6 md:mt-10">
-        <div className="rounded-[10px] bg-[#f7fdff] px-4 pb-5 pt-4 shadow-2xl sm:px-5 sm:pb-6 sm:pt-5 md:px-6 md:pb-7 md:pt-6">
+        <div className="rounded-[18px] border border-[var(--border)] bg-[var(--surface)] px-4 pb-5 pt-4 shadow-2xl sm:px-5 sm:pb-6 sm:pt-5 md:px-6 md:pb-7 md:pt-6">
           <div className="flex items-center gap-3">
             <div className="flex-1">
-              <div className="flex h-[58px] w-full items-center border-[2px] border-[#262626] bg-white px-4 sm:h-[62px] sm:px-5 md:h-[66px]">
+              <div className="flex h-[58px] w-full items-center rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] px-4 sm:h-[62px] sm:px-5 md:h-[66px]">
                 <input
                   autoFocus
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Buscar"
-                  className="w-full bg-transparent text-[1rem] text-[#1f1f1f] outline-none placeholder:text-[#707070] sm:text-[1.05rem] md:text-[1.1rem]"
+                  className="w-full bg-transparent text-[1rem] text-[var(--text)] outline-none placeholder:text-[var(--text-muted)] sm:text-[1.05rem] md:text-[1.1rem]"
                 />
 
                 <button
                   type="button"
                   aria-label="Buscar"
                   onClick={handleGoToResults}
-                  className="ml-2 flex h-9 w-9 items-center justify-center text-[#3a3a3a] transition duration-200 hover:scale-110 sm:h-10 sm:w-10"
+                  className="ml-2 flex h-9 w-9 items-center justify-center text-[var(--text)] transition duration-200 hover:scale-110 hover:text-[var(--primary)] sm:h-10 sm:w-10"
                 >
                   <FiSearch className="text-[1.5rem] sm:text-[1.6rem]" />
                 </button>
@@ -180,53 +180,54 @@ export default function SearchOverlay({
               type="button"
               aria-label="Cerrar buscador"
               onClick={onClose}
-              className="flex h-10 w-10 shrink-0 items-center justify-center text-[#2b2b2b] transition duration-200 hover:scale-110"
+              className="flex h-10 w-10 shrink-0 items-center justify-center text-[var(--text)] transition duration-200 hover:scale-110 hover:text-[var(--primary)]"
             >
               <FiX className="text-[1.8rem]" />
             </button>
           </div>
 
-          <div className="mt-5 max-h-[calc(100vh-150px)] overflow-y-auto overscroll-contain rounded-[6px] bg-white [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:max-h-[calc(100vh-170px)] md:max-h-[calc(100vh-190px)]">
+          <div className="mt-5 max-h-[calc(100vh-150px)] overflow-y-auto overscroll-contain rounded-[14px] bg-[var(--surface)] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:max-h-[calc(100vh-170px)] md:max-h-[calc(100vh-190px)]">
             {!normalizedQuery ? (
-              <div className="px-6 py-8 text-[1rem] text-[#5e7381]">
+              <div className="px-6 py-8 text-[1rem] text-[var(--text-soft)]">
                 Busca por nombre, categoría o descripción.
               </div>
             ) : loading ? (
-              <div className="px-6 py-8 text-[1rem] text-[#5e7381]">
+              <div className="px-6 py-8 text-[1rem] text-[var(--text-soft)]">
                 Buscando...
               </div>
             ) : (
               <div>
                 {exactMatches.length > 0 && (
                   <div>
-                    <div className="border-b border-[#e5eef3] px-6 py-4 text-[0.82rem] uppercase tracking-[0.24em] text-[#6d7e89]">
+                    <div className="border-b border-[var(--border-soft)] px-6 py-4 text-[0.82rem] uppercase tracking-[0.24em] text-[var(--text-muted)]">
                       Coincidencias directas
                     </div>
 
-                    <div className="divide-y divide-[#edf3f7]">
+                    <div className="divide-y divide-[var(--border-soft)]">
                       {exactMatches.map((product) => (
                         <Link
                           key={product._id}
                           href={`/producto/${product.slug}`}
                           onClick={onClose}
-                          className="flex w-full items-start gap-4 px-6 py-5 text-left transition duration-200 hover:bg-[#f4fbff]"
+                          className="flex w-full items-start gap-4 px-6 py-5 text-left transition duration-200 hover:bg-[var(--surface-soft)]"
                         >
-                          <Image
-                            src={product.mainImage}
-                            alt={product.title}
-                            width={70}
-                            height={70}
-                            className="h-[70px] w-[70px] shrink-0 rounded-xl object-cover"
-                          />
+                          <img
+  src={product.mainImage || "/placeholder-product.png"}
+  alt={product.title}
+  className="h-[70px] w-[70px] shrink-0 rounded-xl object-cover"
+  onError={(event) => {
+    event.currentTarget.src = "/placeholder-product.png";
+  }}
+/>
 
                           <div className="min-w-0 flex-1">
-                            <p className="text-[1.05rem] leading-7 text-[#243c50]">
+                            <p className="text-[1.05rem] leading-7 text-[var(--text)]">
                               {product.title}
                             </p>
-                            <p className="mt-1 text-sm text-[#6b7f8d]">
+                            <p className="mt-1 text-sm text-[var(--text-soft)]">
                               {product.category}
                             </p>
-                            <p className="mt-2 text-[0.97rem] font-bold text-[#19b7c9]">
+                            <p className="mt-2 text-[0.97rem] font-bold text-[var(--primary)]">
                               {formatBs(product.price)}
                             </p>
                           </div>
@@ -238,34 +239,35 @@ export default function SearchOverlay({
 
                 {relatedMatches.length > 0 && (
                   <div>
-                    <div className="border-b border-t border-[#e5eef3] px-6 py-4 text-[0.82rem] uppercase tracking-[0.24em] text-[#6d7e89]">
+                    <div className="border-b border-t border-[var(--border-soft)] px-6 py-4 text-[0.82rem] uppercase tracking-[0.24em] text-[var(--text-muted)]">
                       Relacionados
                     </div>
 
-                    <div className="divide-y divide-[#edf3f7]">
+                    <div className="divide-y divide-[var(--border-soft)]">
                       {relatedMatches.map((product) => (
                         <Link
                           key={product._id}
                           href={`/producto/${product.slug}`}
                           onClick={onClose}
-                          className="flex w-full items-start gap-4 px-6 py-5 text-left transition duration-200 hover:bg-[#f4fbff]"
+                          className="flex w-full items-start gap-4 px-6 py-5 text-left transition duration-200 hover:bg-[var(--surface-soft)]"
                         >
-                          <Image
-                            src={product.mainImage}
-                            alt={product.title}
-                            width={70}
-                            height={70}
-                            className="h-[70px] w-[70px] shrink-0 rounded-xl object-cover"
-                          />
+                          <img
+  src={product.mainImage || "/placeholder-product.png"}
+  alt={product.title}
+  className="h-[70px] w-[70px] shrink-0 rounded-xl object-cover"
+  onError={(event) => {
+    event.currentTarget.src = "/placeholder-product.png";
+  }}
+/>
 
                           <div className="min-w-0 flex-1">
-                            <p className="text-[1.05rem] leading-7 text-[#243c50]">
+                            <p className="text-[1.05rem] leading-7 text-[var(--text)]">
                               {product.title}
                             </p>
-                            <p className="mt-1 text-sm text-[#6b7f8d]">
+                            <p className="mt-1 text-sm text-[var(--text-soft)]">
                               {product.category}
                             </p>
-                            <p className="mt-2 text-[0.97rem] font-bold text-[#19b7c9]">
+                            <p className="mt-2 text-[0.97rem] font-bold text-[var(--primary)]">
                               {formatBs(product.price)}
                             </p>
                           </div>
@@ -276,7 +278,7 @@ export default function SearchOverlay({
                 )}
 
                 {exactMatches.length === 0 && relatedMatches.length === 0 && (
-                  <div className="px-6 py-8 text-[1rem] text-[#5e7381]">
+                  <div className="px-6 py-8 text-[1rem] text-[var(--text-soft)]">
                     No se encontraron resultados para “{query}”.
                   </div>
                 )}
@@ -284,10 +286,10 @@ export default function SearchOverlay({
                 <button
                   type="button"
                   onClick={handleGoToResults}
-                  className="flex w-full items-center justify-between border-t border-[#e5eef3] px-6 py-5 text-left text-[1rem] text-[#243c50] transition duration-200 hover:bg-[#f4fbff]"
+                  className="flex w-full items-center justify-between border-t border-[var(--border-soft)] px-6 py-5 text-left text-[1rem] text-[var(--text)] transition duration-200 hover:bg-[var(--surface-soft)]"
                 >
                   <span>Buscar “{query}”</span>
-                  <span className="text-[1.6rem] font-semibold leading-none text-[#19b7c9]">
+                  <span className="text-[1.6rem] font-semibold leading-none text-[var(--primary)]">
                     →
                   </span>
                 </button>

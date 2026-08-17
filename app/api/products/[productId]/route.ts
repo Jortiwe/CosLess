@@ -32,6 +32,16 @@ function cleanCategories(value: unknown, fallbackCategory: string) {
   return Array.from(new Set(categories));
 }
 
+function cleanNumber(value: unknown) {
+  const number = Number(value || 0);
+
+  if (Number.isNaN(number)) {
+    return 0;
+  }
+
+  return Math.max(0, number);
+}
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ productId: string }> }
@@ -94,9 +104,10 @@ export async function PATCH(
     product.category = category;
     product.categories = categories;
     product.status = body.status === "preventa" ? "preventa" : "stock";
-    product.price = Number(body.price || 0);
-    product.oldPrice = Number(body.oldPrice || 0);
-    product.stock = Number(body.stock || 0);
+    product.price = cleanNumber(body.price);
+    product.costPrice = cleanNumber(body.costPrice);
+    product.oldPrice = cleanNumber(body.oldPrice);
+    product.stock = cleanNumber(body.stock);
     product.mainImage = cleanImage(body.mainImage);
 
     product.images = Array.isArray(body.images)

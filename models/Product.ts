@@ -35,6 +35,11 @@ const ProductSchema = new Schema(
       required: true,
       min: 0,
     },
+    costPrice: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
     oldPrice: {
       type: Number,
       default: 0,

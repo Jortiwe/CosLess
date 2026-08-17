@@ -16,15 +16,17 @@ export default function AdminQuickStat({
   return (
     <Link
       href={href}
-      className="block rounded-[32px] border border-[#cfeaf6] bg-[#f7fdff] p-8 shadow-[0_10px_30px_rgba(22,50,74,0.05)] transition hover:-translate-y-1 hover:border-[#19b7c9]"
+      className="block rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-8 shadow-[0_10px_30px_var(--shadow)] transition hover:-translate-y-1 hover:border-[var(--primary)]"
     >
-      <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#6f8798]">
+      <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
         {title}
       </p>
 
-      <h3 className="mt-5 text-5xl font-extrabold text-[#16324a]">{value}</h3>
+      <h3 className="mt-5 text-5xl font-extrabold text-[var(--text)]">
+        {value}
+      </h3>
 
-      <p className="mt-4 text-[15px] text-[#4b6b80]">{subtitle}</p>
+      <p className="mt-4 text-[15px] text-[var(--text-soft)]">{subtitle}</p>
     </Link>
   );
 }

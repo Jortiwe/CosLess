@@ -6,66 +6,66 @@ const categories = [
     description: "Trajes completos para tus personajes favoritos.",
     href: "/buscar?q=cosplays",
     image: "/images/home/cat-cosplays.png",
-    panel: "linear-gradient(135deg, #ffeef5 0%, #ffd9ea 100%)",
-    chipBg: "#fff7fb",
-    chipText: "#b83280",
-    buttonBg: "#f06292",
-    buttonHover: "#ec407a",
+    panel: "linear-gradient(135deg, var(--surface-soft) 0%, var(--cos-soft) 100%)",
+    chipBg: "var(--surface)",
+    chipText: "var(--primary)",
+    buttonBg: "var(--primary)",
+    buttonHover: "var(--primary-dark)",
   },
   {
     title: "Pelucas",
     description: "Pelucas de distintos estilos, colores y cortes.",
     href: "/buscar?q=pelucas",
     image: "/images/home/cat-pelucas.png",
-    panel: "linear-gradient(135deg, #f5efff 0%, #e7dcff 100%)",
-    chipBg: "#faf7ff",
-    chipText: "#7c3aed",
-    buttonBg: "#8b5cf6",
-    buttonHover: "#7c3aed",
+    panel: "linear-gradient(135deg, var(--surface-soft) 0%, var(--cos-soft) 100%)",
+    chipBg: "var(--surface)",
+    chipText: "var(--featured)",
+    buttonBg: "var(--featured)",
+    buttonHover: "var(--primary-dark)",
   },
   {
     title: "Lentes",
     description: "Lentes para completar mejor tu personaje.",
     href: "/buscar?q=lentes",
     image: "/images/home/cat-lentes.png",
-    panel: "linear-gradient(135deg, #eef8ff 0%, #dff1ff 100%)",
-    chipBg: "#f8fdff",
-    chipText: "#0f766e",
-    buttonBg: "#19b7c9",
-    buttonHover: "#0ea5b7",
+    panel: "linear-gradient(135deg, var(--surface-soft) 0%, var(--cos-soft) 100%)",
+    chipBg: "var(--surface)",
+    chipText: "var(--primary)",
+    buttonBg: "var(--primary)",
+    buttonHover: "var(--primary-dark)",
   },
   {
     title: "Mallas",
     description: "Opciones básicas y especiales para cosplay.",
     href: "/buscar?q=mallas",
     image: "/images/home/cat-mallas.png",
-    panel: "linear-gradient(135deg, #fff5ec 0%, #ffe7d1 100%)",
-    chipBg: "#fffaf5",
-    chipText: "#c05621",
-    buttonBg: "#fb923c",
-    buttonHover: "#f97316",
+    panel: "linear-gradient(135deg, var(--warning-bg) 0%, var(--surface-soft) 100%)",
+    chipBg: "var(--surface)",
+    chipText: "var(--warning)",
+    buttonBg: "var(--warning)",
+    buttonHover: "var(--primary-dark)",
   },
   {
     title: "Accesorios",
     description: "Detalles y complementos para tu outfit.",
     href: "/buscar?q=accesorios",
     image: "/images/home/cat-accesorios.png",
-    panel: "linear-gradient(135deg, #effcf6 0%, #dcf8ea 100%)",
-    chipBg: "#f8fffb",
-    chipText: "#15803d",
-    buttonBg: "#34c759",
-    buttonHover: "#22c55e",
+    panel: "linear-gradient(135deg, var(--success-bg) 0%, var(--surface-soft) 100%)",
+    chipBg: "var(--surface)",
+    chipText: "var(--success)",
+    buttonBg: "var(--success)",
+    buttonHover: "var(--primary-dark)",
   },
   {
     title: "Preventa",
     description: "Reserva productos próximos a llegar.",
     href: "/buscar?q=preventa",
     image: "/images/home/cat-preventa.png",
-    panel: "linear-gradient(135deg, #fff3f6 0%, #ffdbe8 100%)",
-    chipBg: "#fff8fb",
-    chipText: "#be185d",
-    buttonBg: "#ec4899",
-    buttonHover: "#db2777",
+    panel: "linear-gradient(135deg, var(--danger-bg) 0%, var(--surface-soft) 100%)",
+    chipBg: "var(--surface)",
+    chipText: "var(--danger)",
+    buttonBg: "var(--danger)",
+    buttonHover: "var(--primary-dark)",
   },
 ];
 
@@ -73,10 +73,11 @@ export default function HomeCategoriesMain() {
   return (
     <section className="mx-auto w-full max-w-[1380px] px-4 pt-10 sm:px-6 lg:px-8">
       <div className="mb-5">
-        <h2 className="text-[2rem] font-extrabold text-[#16324a] sm:text-[2.2rem]">
+        <h2 className="text-[2rem] font-extrabold text-[var(--text)] sm:text-[2.2rem]">
           Categorías
         </h2>
-        <p className="mt-2 text-[1rem] text-[#4b6b80]">
+
+        <p className="mt-2 text-[1rem] text-[var(--text-soft)]">
           Explora nuestras categorías principales y encuentra lo que buscas.
         </p>
       </div>
@@ -85,7 +86,7 @@ export default function HomeCategoriesMain() {
         {categories.map((category) => (
           <div
             key={category.title}
-            className="overflow-hidden rounded-[28px] border border-[#cfeaf6] bg-white shadow-[0_12px_30px_rgba(20,50,80,0.08)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(20,50,80,0.12)]"
+            className="overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--surface)] shadow-[0_12px_30px_var(--shadow)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_16px_36px_var(--shadow-strong)]"
           >
             <div className="p-4">
               <div
@@ -107,17 +108,17 @@ export default function HomeCategoriesMain() {
                   className="absolute inset-0 bg-cover bg-center opacity-90"
                   style={{ backgroundImage: `url(${category.image})` }}
                 />
-                <div className="absolute inset-0 bg-white/20" />
+                <div className="absolute inset-0 bg-[var(--surface)]/20" />
                 */}
               </div>
             </div>
 
             <div className="px-5 pb-6">
-              <h3 className="text-[1.85rem] font-extrabold text-[#16324a]">
+              <h3 className="text-[1.85rem] font-extrabold text-[var(--text)]">
                 {category.title}
               </h3>
 
-              <p className="mt-2 min-h-[56px] text-[1rem] leading-7 text-[#4b6b80]">
+              <p className="mt-2 min-h-[56px] text-[1rem] leading-7 text-[var(--text-soft)]">
                 {category.description}
               </p>
 

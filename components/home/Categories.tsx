@@ -5,24 +5,24 @@ export default function Categories() {
   return (
     <section className="mt-10 sm:mt-12">
       <div className="mb-5 sm:mb-6">
-        <span className="inline-flex rounded-full bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-[#19b7c9] shadow-sm">
+        <span className="inline-flex rounded-full bg-[var(--surface)] px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-[var(--primary)] shadow-sm">
           Explora
         </span>
 
         <div className="mt-3 flex items-center justify-between gap-4">
-          <h2 className="text-[1.9rem] font-extrabold leading-tight text-[#16324a] sm:text-[2.35rem]">
+          <h2 className="text-[1.9rem] font-extrabold leading-tight text-[var(--text)] sm:text-[2.35rem]">
             Categorías
           </h2>
 
           <Link
             href="/productos"
-            className="inline-flex shrink-0 rounded-2xl border border-[#bfefff] bg-white px-5 py-3 text-sm font-bold text-[#16324a] shadow-sm transition hover:border-[#19b7c9] hover:text-[#19b7c9] active:scale-95"
+            className="inline-flex shrink-0 rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-5 py-3 text-sm font-bold text-[var(--text)] shadow-sm transition hover:border-[var(--primary)] hover:text-[var(--primary)] active:scale-95"
           >
             Ver todo
           </Link>
         </div>
 
-        <p className="mt-2 hidden max-w-xl text-sm leading-6 text-[#4b6b80] sm:block sm:text-base">
+        <p className="mt-2 hidden max-w-xl text-sm leading-6 text-[var(--text-soft)] sm:block sm:text-base">
           Encuentra rápido lo que necesitas para armar tu cosplay.
         </p>
       </div>
@@ -32,7 +32,7 @@ export default function Categories() {
           <Link
             key={category.slug}
             href={`/categoria/${category.slug}`}
-            className="group overflow-hidden rounded-[24px] border border-[#cfeaf6] bg-white shadow-[0_10px_24px_rgba(22,50,74,0.05)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(22,50,74,0.10)]"
+            className="group overflow-hidden rounded-[24px] border border-[var(--border)] bg-[var(--surface)] shadow-[0_10px_24px_var(--shadow)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_16px_34px_var(--shadow-strong)]"
           >
             <div className="relative h-[145px] overflow-hidden sm:h-[170px] xl:h-[190px]">
               <div
@@ -40,9 +40,9 @@ export default function Categories() {
                 style={{ backgroundImage: `url(${category.image})` }}
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-[#102d44]/65 via-[#102d44]/10 to-white/5" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[rgba(16,38,90,0.72)] via-[rgba(16,38,90,0.14)] to-white/5" />
 
-              <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1.5 text-[11px] font-extrabold text-[#16324a] shadow-sm backdrop-blur sm:text-xs">
+              <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1.5 text-[11px] font-extrabold text-[var(--text)] shadow-sm backdrop-blur sm:text-xs">
                 {category.title}
               </span>
 
@@ -58,11 +58,11 @@ export default function Categories() {
             </div>
 
             <div className="flex items-center justify-between px-3 py-3 sm:px-4">
-              <span className="text-[12px] font-bold text-[#4b6b80] sm:text-sm">
+              <span className="text-[12px] font-bold text-[var(--text-soft)] sm:text-sm">
                 Ver categoría
               </span>
 
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#eaf8ff] text-sm font-extrabold text-[#19b7c9] transition group-hover:bg-[#19b7c9] group-hover:text-white">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--surface-soft)] text-sm font-extrabold text-[var(--primary)] transition group-hover:bg-[var(--primary)] group-hover:text-white">
                 →
               </span>
             </div>

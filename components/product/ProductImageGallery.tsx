@@ -40,8 +40,8 @@ export default function ProductImageGallery({
   }, [safeImages]);
 
   return (
-    <div className="bg-[#eaf8ff] p-3 sm:p-4 lg:p-5">
-      <div className="overflow-hidden rounded-[26px] bg-white">
+    <div className="bg-[var(--surface-soft)] p-3 sm:p-4 lg:p-5">
+      <div className="overflow-hidden rounded-[26px] bg-[var(--surface)]">
         <img
           src={selectedImage}
           alt={title}
@@ -64,10 +64,10 @@ export default function ProductImageGallery({
                 onClick={() => setSelectedImage(image)}
                 onMouseEnter={() => setSelectedImage(image)}
                 onFocus={() => setSelectedImage(image)}
-                className={`h-[58px] overflow-hidden rounded-[16px] border bg-white transition sm:h-[76px] sm:rounded-[18px] ${
+                className={`h-[58px] overflow-hidden rounded-[16px] border bg-[var(--surface)] transition sm:h-[76px] sm:rounded-[18px] ${
                   isSelected
-                    ? "border-[#19b7c9] ring-2 ring-[#19b7c9]/25"
-                    : "border-[#d7edf7] hover:border-[#19b7c9]"
+                    ? "border-[var(--primary)] ring-2 ring-[var(--primary)]/25"
+                    : "border-[var(--border-soft)] hover:border-[var(--primary)]"
                 }`}
               >
                 <img

@@ -18,7 +18,7 @@ export default function SearchBox({
   autoFocus = false,
 }: SearchBoxProps) {
   return (
-    <div className="flex h-[58px] w-full items-center border-[2px] border-[#262626] bg-white px-4 sm:h-[62px] sm:px-5 md:h-[66px]">
+    <div className="flex h-[58px] w-full items-center rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 shadow-[0_8px_20px_var(--shadow)] sm:h-[62px] sm:px-5 md:h-[66px]">
       <input
         autoFocus={autoFocus}
         type="text"
@@ -30,14 +30,14 @@ export default function SearchBox({
           }
         }}
         placeholder={placeholder}
-        className="w-full bg-transparent text-[1rem] text-[#1f1f1f] outline-none placeholder:text-[#707070] sm:text-[1.05rem] md:text-[1.1rem]"
+        className="w-full bg-transparent text-[1rem] text-[var(--text)] outline-none placeholder:text-[var(--text-muted)] sm:text-[1.05rem] md:text-[1.1rem]"
       />
 
       <button
         type="button"
         aria-label="Buscar"
         onClick={onSubmit}
-        className="ml-2 flex h-9 w-9 items-center justify-center text-[#3a3a3a] transition duration-200 hover:scale-110 sm:h-10 sm:w-10"
+        className="ml-2 flex h-9 w-9 items-center justify-center text-[var(--text)] transition duration-200 hover:scale-110 hover:text-[var(--primary)] sm:h-10 sm:w-10"
       >
         <FiSearch className="text-[1.5rem] sm:text-[1.6rem]" />
       </button>

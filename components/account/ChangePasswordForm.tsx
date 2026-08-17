@@ -32,9 +32,9 @@ function getStrengthText(score: number) {
 }
 
 function getStrengthColor(score: number) {
-  if (score <= 1) return "bg-red-400";
-  if (score <= 3) return "bg-amber-400";
-  return "bg-emerald-500";
+  if (score <= 1) return "bg-[var(--danger)]";
+  if (score <= 3) return "bg-[var(--warning)]";
+  return "bg-[var(--success)]";
 }
 
 export default function ChangePasswordForm() {
@@ -155,29 +155,29 @@ export default function ChangePasswordForm() {
   }
 
   return (
-    <section className="overflow-hidden rounded-[30px] border border-[#cfeaf6] bg-white shadow-[0_10px_26px_rgba(22,50,74,0.05)]">
+    <section className="overflow-hidden rounded-[30px] border border-[var(--border)] bg-[var(--surface)] shadow-[0_10px_26px_var(--shadow)]">
       <button
         type="button"
         onClick={() => setIsOpen((value) => !value)}
-        className="flex min-h-[126px] w-full items-center justify-between gap-4 px-5 py-5 text-left transition hover:bg-[#f7fdff] sm:px-6"
+        className="flex min-h-[126px] w-full items-center justify-between gap-4 px-5 py-5 text-left transition hover:bg-[var(--surface-soft)] sm:px-6"
       >
         <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[var(--surface-soft)] text-[var(--primary)]">
             <FiShield className="text-[1.35rem]" />
           </div>
 
           <div>
-            <h2 className="text-xl font-extrabold text-[#16324a]">
+            <h2 className="text-xl font-extrabold text-[var(--text)]">
               Cambiar contraseña
             </h2>
 
-            <p className="mt-1 text-sm text-[#4b6b80]">
+            <p className="mt-1 text-sm text-[var(--text-soft)]">
               Actualiza tu contraseña de acceso.
             </p>
           </div>
         </div>
 
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#f7fdff] text-[#16324a] shadow-sm transition">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--surface-soft)] text-[var(--text)] shadow-sm transition">
           {isOpen ? <FiChevronUp /> : <FiChevronDown />}
         </div>
       </button>
@@ -192,16 +192,16 @@ export default function ChangePasswordForm() {
         <div className="overflow-hidden">
           <form
             onSubmit={handleSubmit}
-            className="grid gap-5 border-t border-[#e5f3fa] px-5 py-6 sm:px-6"
+            className="grid gap-5 border-t border-[var(--border-soft)] px-5 py-6 sm:px-6"
           >
             <div className="grid gap-5 lg:grid-cols-3">
               <div>
-                <label className="mb-2 block text-sm font-bold text-[#16324a]">
+                <label className="mb-2 block text-sm font-bold text-[var(--text)]">
                   Contraseña actual
                 </label>
 
                 <div className="relative">
-                  <FiLock className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#7a98aa]" />
+                  <FiLock className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
 
                   <input
                     type={showCurrent ? "text" : "password"}
@@ -209,14 +209,14 @@ export default function ChangePasswordForm() {
                     onChange={(event) =>
                       setCurrentPassword(event.target.value)
                     }
-                    className="h-14 w-full rounded-2xl border border-[#cfeaf6] bg-[#f9fdff] pl-11 pr-12 text-[#16324a] outline-none transition focus:border-[#19b7c9] focus:bg-white focus:shadow-[0_0_0_4px_rgba(25,183,201,0.12)]"
+                    className="h-14 w-full rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] pl-11 pr-12 text-[var(--text)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--primary)] focus:bg-[var(--surface)] focus:shadow-[0_0_0_4px_var(--shadow)]"
                     placeholder="Tu contraseña actual"
                   />
 
                   <button
                     type="button"
                     onClick={() => setShowCurrent((value) => !value)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#7a98aa] transition hover:text-[#19b7c9]"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] transition hover:text-[var(--primary)]"
                   >
                     {showCurrent ? <FiEyeOff /> : <FiEye />}
                   </button>
@@ -224,25 +224,25 @@ export default function ChangePasswordForm() {
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-bold text-[#16324a]">
+                <label className="mb-2 block text-sm font-bold text-[var(--text)]">
                   Nueva contraseña
                 </label>
 
                 <div className="relative">
-                  <FiKey className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#7a98aa]" />
+                  <FiKey className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
 
                   <input
                     type={showNew ? "text" : "password"}
                     value={newPassword}
                     onChange={(event) => setNewPassword(event.target.value)}
-                    className="h-14 w-full rounded-2xl border border-[#cfeaf6] bg-[#f9fdff] pl-11 pr-12 text-[#16324a] outline-none transition focus:border-[#19b7c9] focus:bg-white focus:shadow-[0_0_0_4px_rgba(25,183,201,0.12)]"
+                    className="h-14 w-full rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] pl-11 pr-12 text-[var(--text)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--primary)] focus:bg-[var(--surface)] focus:shadow-[0_0_0_4px_var(--shadow)]"
                     placeholder="Nueva contraseña"
                   />
 
                   <button
                     type="button"
                     onClick={() => setShowNew((value) => !value)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#7a98aa] transition hover:text-[#19b7c9]"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] transition hover:text-[var(--primary)]"
                   >
                     {showNew ? <FiEyeOff /> : <FiEye />}
                   </button>
@@ -250,12 +250,12 @@ export default function ChangePasswordForm() {
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-bold text-[#16324a]">
+                <label className="mb-2 block text-sm font-bold text-[var(--text)]">
                   Confirmar contraseña
                 </label>
 
                 <div className="relative">
-                  <FiCheckCircle className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#7a98aa]" />
+                  <FiCheckCircle className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
 
                   <input
                     type={showConfirm ? "text" : "password"}
@@ -263,14 +263,14 @@ export default function ChangePasswordForm() {
                     onChange={(event) =>
                       setConfirmPassword(event.target.value)
                     }
-                    className="h-14 w-full rounded-2xl border border-[#cfeaf6] bg-[#f9fdff] pl-11 pr-12 text-[#16324a] outline-none transition focus:border-[#19b7c9] focus:bg-white focus:shadow-[0_0_0_4px_rgba(25,183,201,0.12)]"
+                    className="h-14 w-full rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] pl-11 pr-12 text-[var(--text)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--primary)] focus:bg-[var(--surface)] focus:shadow-[0_0_0_4px_var(--shadow)]"
                     placeholder="Repite la nueva contraseña"
                   />
 
                   <button
                     type="button"
                     onClick={() => setShowConfirm((value) => !value)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#7a98aa] transition hover:text-[#19b7c9]"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] transition hover:text-[var(--primary)]"
                   >
                     {showConfirm ? <FiEyeOff /> : <FiEye />}
                   </button>
@@ -278,18 +278,18 @@ export default function ChangePasswordForm() {
               </div>
             </div>
 
-            <div className="rounded-[24px] border border-[#e5f3fa] bg-[#f9fdff] p-4">
+            <div className="rounded-[24px] border border-[var(--border-soft)] bg-[var(--surface-soft)] p-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="text-sm font-extrabold text-[#16324a]">
+                <p className="text-sm font-extrabold text-[var(--text)]">
                   Seguridad: {getStrengthText(passwordScore)}
                 </p>
 
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#6f8798]">
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--text-muted)]">
                   Validación en tiempo real
                 </p>
               </div>
 
-              <div className="mt-3 h-2 overflow-hidden rounded-full bg-[#e5f3fa]">
+              <div className="mt-3 h-2 overflow-hidden rounded-full bg-[var(--border-soft)]">
                 <div
                   className={`h-full rounded-full transition-all duration-500 ${getStrengthColor(
                     passwordScore
@@ -304,8 +304,8 @@ export default function ChangePasswordForm() {
                     key={rule.label}
                     className={`flex items-center gap-2 rounded-2xl px-3 py-2 text-xs font-bold transition-all duration-300 ${
                       rule.valid
-                        ? "bg-emerald-50 text-emerald-700"
-                        : "bg-white text-[#6f8798]"
+                        ? "bg-[var(--success-bg)] text-[var(--success)]"
+                        : "bg-[var(--surface)] text-[var(--text-muted)]"
                     }`}
                   >
                     {rule.valid ? (
@@ -324,8 +324,8 @@ export default function ChangePasswordForm() {
               <div
                 className={`rounded-2xl px-4 py-3 text-sm font-bold ${
                   messageType === "success"
-                    ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
-                    : "border border-red-200 bg-red-50 text-red-600"
+                    ? "border border-[var(--success)] bg-[var(--success-bg)] text-[var(--success)]"
+                    : "border border-[var(--danger-bg-hover)] bg-[var(--danger-bg)] text-[var(--danger)]"
                 }`}
               >
                 {message}
@@ -335,7 +335,7 @@ export default function ChangePasswordForm() {
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex h-14 w-full items-center justify-center rounded-2xl bg-[#19b7c9] px-7 text-sm font-extrabold text-white shadow-[0_12px_28px_rgba(25,183,201,0.2)] transition hover:-translate-y-0.5 hover:bg-[#0ea5b7] disabled:cursor-not-allowed disabled:opacity-70 sm:w-fit"
+              className="inline-flex h-14 w-full items-center justify-center rounded-2xl bg-[var(--primary)] px-7 text-sm font-extrabold text-white shadow-[0_12px_28px_var(--shadow-strong)] transition hover:-translate-y-0.5 hover:bg-[var(--primary-dark)] disabled:cursor-not-allowed disabled:opacity-70 sm:w-fit"
             >
               {loading ? "Actualizando..." : "Actualizar contraseña"}
             </button>

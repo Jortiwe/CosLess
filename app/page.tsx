@@ -32,15 +32,9 @@ function formatProduct(product: RawProduct, fallbackBadge: string) {
       typeof product.oldPrice === "number" && product.oldPrice > 0
         ? formatBs(product.oldPrice)
         : undefined,
-    image:
-      product.mainImage ||
-      product.images?.[0] ||
-      "/placeholder-product.png",
+    image: product.mainImage || product.images?.[0] || "/placeholder-product.png",
     href: product.slug ? `/producto/${product.slug}` : "/productos",
-    badge:
-      product.status === "preventa"
-        ? "Preventa"
-        : fallbackBadge,
+    badge: product.status === "preventa" ? "Preventa" : fallbackBadge,
   };
 }
 
@@ -74,7 +68,7 @@ export default async function HomePage() {
   );
 
   return (
-    <main className="min-h-screen bg-[#eef9ff] text-[#16324a]">
+    <main className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
       <Header />
 
       <div className="mx-auto max-w-[1380px] px-4 pb-6 pt-3 sm:px-6 sm:pt-4 lg:px-8">

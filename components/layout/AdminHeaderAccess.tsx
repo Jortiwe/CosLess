@@ -48,7 +48,7 @@ export default function AdminHeaderAccess() {
   return (
     <Link
       href="/admin"
-      className="hidden rounded-2xl border border-[#bfefff] bg-[#eaf8ff] px-4 py-2 text-sm font-bold text-[#19b7c9] transition hover:border-[#19b7c9] hover:bg-white lg:inline-flex"
+      className="hidden rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] px-4 py-2 text-sm font-bold text-[var(--primary)] transition hover:border-[var(--primary)] hover:bg-[var(--surface)] lg:inline-flex"
     >
       Panel admin
     </Link>

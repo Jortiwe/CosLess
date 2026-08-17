@@ -99,13 +99,13 @@ export default function AddToFavoritesButton({ product }: Props) {
       onClick={handleToggleFavorite}
       className={`inline-flex min-w-[220px] items-center justify-center gap-2 rounded-2xl border px-6 py-4 text-sm font-bold transition duration-200 ${
         isFavorite
-          ? "border-[#19b7c9] bg-[#eaf8ff] text-[#19b7c9] hover:bg-white"
-          : "border-[#cfeaf6] bg-white text-[#16324a] hover:border-[#19b7c9] hover:text-[#19b7c9]"
+          ? "border-[var(--primary)] bg-[var(--surface-soft)] text-[var(--primary)] hover:bg-[var(--surface)]"
+          : "border-[var(--border)] bg-[var(--surface)] text-[var(--text)] hover:border-[var(--primary)] hover:text-[var(--primary)]"
       }`}
     >
       <FiHeart
         className={`text-[1.05rem] transition-all duration-300 ${
-          isFavorite ? "fill-[#19b7c9] text-[#19b7c9]" : ""
+          isFavorite ? "fill-[var(--primary)] text-[var(--primary)]" : ""
         } ${animate ? "scale-125" : ""}`}
       />
 

@@ -67,18 +67,20 @@ export default function OrderEditForm({ order }: { order: OrderType }) {
   }
 
   return (
-    <section className="rounded-[32px] border border-[#cfeaf6] bg-[#f7fdff] p-6 shadow-[0_10px_30px_rgba(22,50,74,0.05)]">
-      <h2 className="text-2xl font-extrabold">Editar pedido</h2>
+    <section className="rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_10px_30px_var(--shadow)]">
+      <h2 className="text-2xl font-extrabold text-[var(--text)]">
+        Editar pedido
+      </h2>
 
       <div className="mt-6 space-y-5">
         <div>
-          <label className="mb-2 block text-sm font-bold text-[#16324a]">
+          <label className="mb-2 block text-sm font-bold text-[var(--text)]">
             Estado
           </label>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none"
+            className="w-full rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-4 text-[var(--text)] outline-none transition focus:border-[var(--primary)]"
           >
             {statusOptions.map((item) => (
               <option key={item.value} value={item.value}>
@@ -89,20 +91,20 @@ export default function OrderEditForm({ order }: { order: OrderType }) {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-bold text-[#16324a]">
+          <label className="mb-2 block text-sm font-bold text-[var(--text)]">
             Nota interna
           </label>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={8}
-            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none"
+            className="w-full rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-4 py-4 text-[var(--text)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--primary)]"
             placeholder="Escribe aquí una nota interna del pedido"
           />
         </div>
 
         {message && (
-          <div className="rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 text-sm font-semibold text-[#16324a]">
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] px-4 py-4 text-sm font-semibold text-[var(--text)]">
             {message}
           </div>
         )}
@@ -112,7 +114,7 @@ export default function OrderEditForm({ order }: { order: OrderType }) {
             type="button"
             onClick={handleSave}
             disabled={loading}
-            className="rounded-2xl bg-[#19b7c9] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#0ea5b7] disabled:cursor-not-allowed disabled:opacity-70"
+            className="rounded-2xl bg-[var(--primary)] px-5 py-3 text-sm font-bold text-[var(--cos-white)] transition hover:bg-[var(--primary-dark)] disabled:cursor-not-allowed disabled:opacity-70"
           >
             {loading ? "Guardando..." : "Guardar cambios"}
           </button>
@@ -121,7 +123,7 @@ export default function OrderEditForm({ order }: { order: OrderType }) {
             href={whatsappUrl}
             target="_blank"
             rel="noreferrer"
-            className="rounded-2xl border border-[#19b7c9] bg-white px-5 py-3 text-sm font-bold text-[#19b7c9] transition hover:bg-[#eaf8ff]"
+            className="rounded-2xl border border-[var(--primary)] bg-[var(--surface)] px-5 py-3 text-sm font-bold text-[var(--primary)] transition hover:bg-[var(--surface-soft)]"
           >
             Abrir WhatsApp
           </a>

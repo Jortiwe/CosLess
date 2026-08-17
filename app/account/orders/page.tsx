@@ -80,21 +80,21 @@ function getStatusLabel(status?: string) {
 function getStatusClasses(status?: string) {
   switch (status) {
     case "pending":
-      return "border-amber-200 bg-amber-50 text-amber-700";
+      return "border-[var(--warning)] bg-[var(--warning-bg)] text-[var(--warning)]";
     case "contacted":
-      return "border-sky-200 bg-sky-50 text-sky-700";
+      return "border-[var(--border)] bg-[var(--surface-soft)] text-[var(--primary)]";
     case "paid":
-      return "border-emerald-200 bg-emerald-50 text-emerald-700";
+      return "border-[var(--success)] bg-[var(--success-bg)] text-[var(--success)]";
     case "preparing":
-      return "border-violet-200 bg-violet-50 text-violet-700";
+      return "border-[var(--featured)] bg-[var(--featured-bg)] text-[var(--featured)]";
     case "shipped":
-      return "border-indigo-200 bg-indigo-50 text-indigo-700";
+      return "border-[var(--primary)] bg-[var(--surface-soft)] text-[var(--primary)]";
     case "delivered":
-      return "border-teal-200 bg-teal-50 text-teal-700";
+      return "border-[var(--success)] bg-[var(--success-bg)] text-[var(--success)]";
     case "cancelled":
-      return "border-red-200 bg-red-50 text-red-700";
+      return "border-[var(--danger-bg-hover)] bg-[var(--danger-bg)] text-[var(--danger)]";
     default:
-      return "border-gray-200 bg-gray-50 text-gray-700";
+      return "border-[var(--border)] bg-[var(--surface-soft)] text-[var(--text-muted)]";
   }
 }
 
@@ -131,12 +131,12 @@ function OrderCard({ order }: { order: OrderType }) {
   const steps = getProgressSteps(order.status);
 
   return (
-    <article className="overflow-hidden rounded-[30px] border border-[#cfeaf6] bg-white shadow-[0_12px_32px_rgba(22,50,74,0.06)] sm:rounded-[34px]">
-      <div className="border-b border-[#e5f3fa] bg-[#f8fdff] p-4 sm:p-6">
+    <article className="overflow-hidden rounded-[30px] border border-[var(--border)] bg-[var(--surface)] shadow-[0_12px_32px_var(--shadow)] sm:rounded-[34px]">
+      <div className="border-b border-[var(--border-soft)] bg-[var(--surface-soft)] p-4 sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-[#dff4ff] px-3 py-2 text-[0.7rem] font-extrabold uppercase tracking-[0.14em] text-[#19b7c9] sm:px-4 sm:text-xs">
+              <span className="rounded-full bg-[var(--surface-soft)] px-3 py-2 text-[0.7rem] font-extrabold uppercase tracking-[0.14em] text-[var(--primary)] sm:px-4 sm:text-xs">
                 {order.orderCode || "Sin código"}
               </span>
 
@@ -149,18 +149,18 @@ function OrderCard({ order }: { order: OrderType }) {
               </span>
             </div>
 
-            <p className="mt-3 flex items-center gap-2 text-xs font-semibold text-[#4b6b80] sm:text-sm">
-              <FiCalendar className="shrink-0 text-[#19b7c9]" />
+            <p className="mt-3 flex items-center gap-2 text-xs font-semibold text-[var(--text-soft)] sm:text-sm">
+              <FiCalendar className="shrink-0 text-[var(--primary)]" />
               {formatDate(order.createdAt)}
             </p>
           </div>
 
-          <div className="rounded-[22px] bg-white px-4 py-3 shadow-[0_8px_20px_rgba(22,50,74,0.04)] sm:text-right">
-            <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#6f8798]">
+          <div className="rounded-[22px] bg-[var(--surface)] px-4 py-3 shadow-[0_8px_20px_var(--shadow)] sm:text-right">
+            <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[var(--text-muted)]">
               Total
             </p>
 
-            <p className="mt-1 text-[1.45rem] font-black leading-none text-[#19b7c9] sm:text-2xl">
+            <p className="mt-1 text-[1.45rem] font-black leading-none text-[var(--primary)] sm:text-2xl">
               {formatBs(order.total)}
             </p>
           </div>
@@ -172,8 +172,8 @@ function OrderCard({ order }: { order: OrderType }) {
               key={step.label}
               className={`shrink-0 rounded-full px-3 py-2 text-[0.7rem] font-extrabold sm:text-xs ${
                 step.active
-                  ? "bg-[#19b7c9] text-white"
-                  : "bg-[#eef7fb] text-[#6a8798]"
+                  ? "bg-[var(--primary)] text-white"
+                  : "bg-[var(--surface)] text-[var(--text-muted)]"
               }`}
             >
               {step.label}
@@ -184,8 +184,8 @@ function OrderCard({ order }: { order: OrderType }) {
 
       <div className="grid gap-4 p-4 sm:p-6 lg:grid-cols-[1.2fr_0.8fr]">
         <div>
-          <h2 className="mb-3 flex items-center gap-2 text-base font-extrabold text-[#16324a] sm:text-lg">
-            <FiPackage className="text-[#19b7c9]" />
+          <h2 className="mb-3 flex items-center gap-2 text-base font-extrabold text-[var(--text)] sm:text-lg">
+            <FiPackage className="text-[var(--primary)]" />
             Productos
           </h2>
 
@@ -193,9 +193,9 @@ function OrderCard({ order }: { order: OrderType }) {
             {(order.items || []).map((item, index) => (
               <div
                 key={`${item.productId || item.title}-${index}`}
-                className="flex gap-3 rounded-[22px] border border-[#e5f3fa] bg-[#f9fdff] p-3"
+                className="flex gap-3 rounded-[22px] border border-[var(--border-soft)] bg-[var(--surface-soft)] p-3"
               >
-                <div className="h-20 w-16 shrink-0 overflow-hidden rounded-2xl bg-[#eaf8ff] sm:h-24 sm:w-20">
+                <div className="h-20 w-16 shrink-0 overflow-hidden rounded-2xl bg-[var(--surface-soft)] sm:h-24 sm:w-20">
                   <img
                     src={getSafeImage(item.mainImage)}
                     alt={item.title || "Producto"}
@@ -204,16 +204,16 @@ function OrderCard({ order }: { order: OrderType }) {
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <h3 className="line-clamp-2 text-sm font-extrabold leading-5 text-[#16324a] sm:text-base sm:leading-6">
+                  <h3 className="line-clamp-2 text-sm font-extrabold leading-5 text-[var(--text)] sm:text-base sm:leading-6">
                     {item.title || "Producto"}
                   </h3>
 
-                  <p className="mt-1 text-xs text-[#4b6b80] sm:text-sm">
+                  <p className="mt-1 text-xs text-[var(--text-soft)] sm:text-sm">
                     Cantidad:{" "}
                     <span className="font-bold">{item.quantity || 1}</span>
                   </p>
 
-                  <p className="mt-1 text-sm font-extrabold text-[#19b7c9]">
+                  <p className="mt-1 text-sm font-extrabold text-[var(--primary)]">
                     {formatBs(item.price)} c/u
                   </p>
                 </div>
@@ -222,36 +222,38 @@ function OrderCard({ order }: { order: OrderType }) {
           </div>
         </div>
 
-        <aside className="rounded-[26px] border border-[#e5f3fa] bg-[#f9fdff] p-4 sm:p-5">
-          <h2 className="text-lg font-extrabold text-[#16324a]">Resumen</h2>
+        <aside className="rounded-[26px] border border-[var(--border-soft)] bg-[var(--surface-soft)] p-4 sm:p-5">
+          <h2 className="text-lg font-extrabold text-[var(--text)]">Resumen</h2>
 
-          <div className="mt-4 space-y-3 text-sm text-[#4b6b80]">
+          <div className="mt-4 space-y-3 text-sm text-[var(--text-soft)]">
             <div className="flex justify-between gap-4">
               <span>Cliente</span>
-              <span className="text-right font-extrabold text-[#16324a]">
+              <span className="text-right font-extrabold text-[var(--text)]">
                 {order.customerName || "Sin nombre"}
               </span>
             </div>
 
             <div className="flex justify-between gap-4">
               <span>Subtotal</span>
-              <span className="font-extrabold text-[#16324a]">
+              <span className="font-extrabold text-[var(--text)]">
                 {formatBs(order.subtotal)}
               </span>
             </div>
 
             <div className="flex justify-between gap-4">
               <span>Envío</span>
-              <span className="font-extrabold text-[#16324a]">
+              <span className="font-extrabold text-[var(--text)]">
                 {formatBs(order.shippingCost)}
               </span>
             </div>
 
-            <div className="h-px bg-[#d9eef7]" />
+            <div className="h-px bg-[var(--border-soft)]" />
 
-            <div className="flex justify-between gap-4 text-lg font-black text-[#16324a]">
+            <div className="flex justify-between gap-4 text-lg font-black text-[var(--text)]">
               <span>Total</span>
-              <span className="text-[#19b7c9]">{formatBs(order.total)}</span>
+              <span className="text-[var(--primary)]">
+                {formatBs(order.total)}
+              </span>
             </div>
           </div>
         </aside>
@@ -317,10 +319,10 @@ export default function AccountOrdersPage() {
   const content = useMemo(() => {
     if (loading) {
       return (
-        <div className="rounded-[30px] border border-[#cfeaf6] bg-white px-6 py-12 text-center shadow-[0_12px_32px_rgba(22,50,74,0.06)]">
-          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-[#dff4ff] border-t-[#19b7c9]" />
+        <div className="rounded-[30px] border border-[var(--border)] bg-[var(--surface)] px-6 py-12 text-center shadow-[0_12px_32px_var(--shadow)]">
+          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-[var(--surface-soft)] border-t-[var(--primary)]" />
 
-          <p className="mt-4 text-sm font-semibold text-[#4b6b80]">
+          <p className="mt-4 text-sm font-semibold text-[var(--text-soft)]">
             Cargando pedidos...
           </p>
         </div>
@@ -329,31 +331,31 @@ export default function AccountOrdersPage() {
 
     if (error) {
       return (
-        <div className="rounded-[30px] border border-red-200 bg-red-50 px-6 py-8 text-center">
-          <p className="text-sm font-bold text-red-600">{error}</p>
+        <div className="rounded-[30px] border border-[var(--danger-bg-hover)] bg-[var(--danger-bg)] px-6 py-8 text-center">
+          <p className="text-sm font-bold text-[var(--danger)]">{error}</p>
         </div>
       );
     }
 
     if (orders.length === 0) {
       return (
-        <div className="rounded-[30px] border border-[#cfeaf6] bg-white px-6 py-10 text-center shadow-[0_12px_32px_rgba(22,50,74,0.06)]">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#eaf8ff] text-[#19b7c9]">
+        <div className="rounded-[30px] border border-[var(--border)] bg-[var(--surface)] px-6 py-10 text-center shadow-[0_12px_32px_var(--shadow)]">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--surface-soft)] text-[var(--primary)]">
             <FiClipboard className="text-[1.7rem]" />
           </div>
 
-          <h2 className="mt-5 text-2xl font-extrabold text-[#16324a]">
+          <h2 className="mt-5 text-2xl font-extrabold text-[var(--text)]">
             Todavía no tienes pedidos
           </h2>
 
-          <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-[#4b6b80]">
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-[var(--text-soft)]">
             Cuando hagas un pedido desde el carrito o compra directa, aparecerá
             aquí.
           </p>
 
           <Link
             href="/productos"
-            className="mt-6 inline-flex rounded-2xl bg-[#19b7c9] px-6 py-3 text-sm font-extrabold text-white transition hover:bg-[#0ea5b7]"
+            className="mt-6 inline-flex rounded-2xl bg-[var(--primary)] px-6 py-3 text-sm font-extrabold text-white transition hover:bg-[var(--primary-dark)]"
           >
             Ver productos
           </Link>
@@ -371,34 +373,34 @@ export default function AccountOrdersPage() {
   }, [orders, loading, error]);
 
   return (
-    <main className="min-h-screen bg-[#eef9ff] text-[#16324a]">
+    <main className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
       <Header />
 
       <section className="mx-auto w-full max-w-[1180px] px-4 pb-10 pt-5 sm:px-6 lg:px-8">
         <div className="mb-4 flex justify-start">
           <Link
             href="/perfil"
-            className="group relative inline-flex items-center text-sm font-extrabold text-[#16324a] transition hover:text-[#19b7c9]"
+            className="group relative inline-flex items-center text-sm font-extrabold text-[var(--text)] transition hover:text-[var(--primary)]"
           >
             <span className="mr-1">←</span>
             Perfil
-            <span className="absolute -bottom-1 left-0 h-[2px] w-0 rounded-full bg-[#19b7c9] transition-all duration-300 group-hover:w-full" />
+            <span className="absolute -bottom-1 left-0 h-[2px] w-0 rounded-full bg-[var(--primary)] transition-all duration-300 group-hover:w-full" />
           </Link>
         </div>
 
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-[2rem] font-extrabold leading-tight text-[#16324a] sm:text-[2.6rem]">
+            <h1 className="text-[2rem] font-extrabold leading-tight text-[var(--text)] sm:text-[2.6rem]">
               Mis pedidos
             </h1>
 
-            <p className="mt-1 hidden text-sm font-semibold text-[#4b6b80] sm:block">
+            <p className="mt-1 hidden text-sm font-semibold text-[var(--text-soft)] sm:block">
               Historial de pedidos de tu cuenta.
             </p>
           </div>
 
           {lastUpdate && (
-            <span className="rounded-full bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.14em] text-[#7a96a7] shadow-sm">
+            <span className="rounded-full bg-[var(--surface)] px-4 py-2 text-xs font-extrabold uppercase tracking-[0.14em] text-[var(--text-muted)] shadow-sm">
               {lastUpdate}
             </span>
           )}

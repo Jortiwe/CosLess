@@ -63,21 +63,21 @@ function statusLabel(status?: string) {
 function statusClass(status?: string) {
   switch (status) {
     case "paid":
-      return "bg-emerald-50 text-emerald-700 border-emerald-200";
+      return "bg-[var(--success-bg)] text-[var(--success)] border-[var(--success-bg)]";
     case "pending":
-      return "bg-amber-50 text-amber-700 border-amber-200";
+      return "bg-[var(--warning-bg)] text-[var(--warning)] border-[var(--warning-bg)]";
     case "contacted":
-      return "bg-sky-50 text-sky-700 border-sky-200";
+      return "bg-[var(--surface-soft)] text-[var(--primary)] border-[var(--border)]";
     case "preparing":
-      return "bg-violet-50 text-violet-700 border-violet-200";
+      return "bg-[var(--featured-bg)] text-[var(--featured)] border-[var(--featured-bg)]";
     case "shipped":
-      return "bg-indigo-50 text-indigo-700 border-indigo-200";
+      return "bg-[var(--surface-soft)] text-[var(--primary-dark)] border-[var(--border)]";
     case "delivered":
-      return "bg-teal-50 text-teal-700 border-teal-200";
+      return "bg-[var(--success-bg)] text-[var(--success)] border-[var(--success-bg)]";
     case "cancelled":
-      return "bg-red-50 text-red-700 border-red-200";
+      return "bg-[var(--danger-bg)] text-[var(--danger)] border-[var(--danger-bg-hover)]";
     default:
-      return "bg-gray-50 text-gray-700 border-gray-200";
+      return "bg-[var(--surface-soft)] text-[var(--text-muted)] border-[var(--border-soft)]";
   }
 }
 
@@ -106,28 +106,28 @@ export default function AdminOrdersClient({ orders }: AdminOrdersClientProps) {
   }, [orders, search]);
 
   return (
-    <main className="min-h-screen bg-[#eef9ff] px-4 py-6 text-[#16324a] sm:px-8 sm:py-8 lg:px-12">
+    <main className="min-h-screen bg-[var(--bg)] px-4 py-6 text-[var(--text)] sm:px-8 sm:py-8 lg:px-12">
       <div className="mx-auto max-w-[1600px]">
         <div className="mb-5">
-          <h1 className="text-[2.15rem] font-extrabold leading-[1.05] tracking-[-0.045em] text-[#16324a] sm:text-4xl">
+          <h1 className="text-[2.15rem] font-extrabold leading-[1.05] tracking-[-0.045em] text-[var(--text)] sm:text-4xl">
             Gestión de pedidos
           </h1>
 
-          <p className="mt-2 hidden text-[#4b6b80] sm:block">
+          <p className="mt-2 hidden text-[var(--text-soft)] sm:block">
             Revisa todos los pedidos creados en la tienda.
           </p>
 
           <div className="mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
             <Link
               href="/admin"
-              className="inline-flex h-11 items-center justify-center rounded-2xl border border-[#cfeaf6] bg-white px-3 text-xs font-extrabold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9] sm:h-12 sm:px-5 sm:text-sm"
+              className="inline-flex h-11 items-center justify-center rounded-2xl border border-[var(--border)] bg-white px-3 text-xs font-extrabold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)] sm:h-12 sm:px-5 sm:text-sm"
             >
               ← Panel admin
             </Link>
 
             <Link
               href="/admin/pedidos/reporte"
-              className="inline-flex h-11 items-center justify-center rounded-2xl border border-[#cfeaf6] bg-white px-3 text-xs font-extrabold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9] sm:h-12 sm:px-5 sm:text-sm"
+              className="inline-flex h-11 items-center justify-center rounded-2xl border border-[var(--border)] bg-white px-3 text-xs font-extrabold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)] sm:h-12 sm:px-5 sm:text-sm"
             >
               <span className="sm:hidden">Reporte</span>
               <span className="hidden sm:inline">Reporte PDF</span>
@@ -135,20 +135,20 @@ export default function AdminOrdersClient({ orders }: AdminOrdersClientProps) {
           </div>
         </div>
 
-        <div className="mb-5 rounded-[26px] border border-[#cfeaf6] bg-white p-3 shadow-[0_10px_26px_rgba(22,50,74,0.05)] sm:rounded-[30px] sm:p-4">
+        <div className="mb-5 rounded-[26px] border border-[var(--border)] bg-white p-3 shadow-[0_10px_26px_var(--shadow)] sm:rounded-[30px] sm:p-4">
           <div className="relative">
-            <FiSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#7a98aa]" />
+            <FiSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
 
             <input
               type="search"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Buscar pedido..."
-              className="h-12 w-full rounded-[20px] border border-[#cfeaf6] bg-[#f7fdff] pl-11 pr-4 text-sm font-semibold text-[#16324a] outline-none transition placeholder:text-[#8ba4b3] focus:border-[#19b7c9] focus:bg-white focus:shadow-[0_0_0_4px_rgba(25,183,201,0.12)] sm:h-14 sm:placeholder:text-sm"
+              className="h-12 w-full rounded-[20px] border border-[var(--border)] bg-[var(--surface)] pl-11 pr-4 text-sm font-semibold text-[var(--text)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--primary)] focus:bg-white focus:shadow-[0_0_0_4px_var(--shadow)] sm:h-14 sm:placeholder:text-sm"
             />
           </div>
 
-          <div className="mt-3 flex items-center justify-between px-1 text-xs font-extrabold text-[#7a96a7]">
+          <div className="mt-3 flex items-center justify-between px-1 text-xs font-extrabold text-[var(--text-muted)]">
             <span>
               {filteredOrders.length} de {orders.length} pedidos
             </span>
@@ -157,7 +157,7 @@ export default function AdminOrdersClient({ orders }: AdminOrdersClientProps) {
               <button
                 type="button"
                 onClick={() => setSearch("")}
-                className="text-[#19b7c9] transition hover:text-[#0ea5b7]"
+                className="text-[var(--primary)] transition hover:text-[var(--primary-dark)]"
               >
                 Limpiar
               </button>
@@ -165,11 +165,11 @@ export default function AdminOrdersClient({ orders }: AdminOrdersClientProps) {
           </div>
         </div>
 
-        <section className="rounded-[30px] border border-[#cfeaf6] bg-[#f7fdff] p-4 shadow-[0_10px_30px_rgba(22,50,74,0.05)] sm:rounded-[32px] sm:p-6">
+        <section className="rounded-[30px] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[0_10px_30px_var(--shadow)] sm:rounded-[32px] sm:p-6">
           <div className="hidden overflow-x-auto lg:block">
             <table className="min-w-full border-separate border-spacing-y-3">
               <thead>
-                <tr className="text-left text-sm text-[#6f8798]">
+                <tr className="text-left text-sm text-[var(--text-muted)]">
                   <th className="px-3 py-2">Código</th>
                   <th className="px-3 py-2">Cliente</th>
                   <th className="px-3 py-2">Teléfono</th>
@@ -186,7 +186,7 @@ export default function AdminOrdersClient({ orders }: AdminOrdersClientProps) {
                   <tr>
                     <td
                       colSpan={8}
-                      className="rounded-2xl bg-white px-4 py-6 text-sm text-[#4b6b80]"
+                      className="rounded-2xl bg-white px-4 py-6 text-sm text-[var(--text-soft)]"
                     >
                       No hay pedidos que coincidan con la búsqueda.
                     </td>
@@ -222,17 +222,17 @@ export default function AdminOrdersClient({ orders }: AdminOrdersClientProps) {
 
                       <td className="px-3 py-4">
                         {order.inventoryDeducted ? (
-                          <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
+                          <span className="inline-flex rounded-full border border-[var(--success-bg)] bg-[var(--success-bg)] px-3 py-1 text-xs font-bold text-[var(--success)]">
                             Descontado
                           </span>
                         ) : (
-                          <span className="inline-flex rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-bold text-gray-600">
+                          <span className="inline-flex rounded-full border border-[var(--border-soft)] bg-[var(--surface-soft)] px-3 py-1 text-xs font-bold text-[var(--text-muted)]">
                             Sin descontar
                           </span>
                         )}
                       </td>
 
-                      <td className="px-3 py-4 text-sm text-[#4b6b80]">
+                      <td className="px-3 py-4 text-sm text-[var(--text-soft)]">
                         {formatDate(order.createdAt)}
                       </td>
 
@@ -240,7 +240,7 @@ export default function AdminOrdersClient({ orders }: AdminOrdersClientProps) {
                         <div className="flex flex-wrap gap-2">
                           <Link
                             href={`/admin/pedidos/${order._id}`}
-                            className="inline-flex rounded-xl bg-[#19b7c9] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#0ea5b7]"
+                            className="inline-flex rounded-xl bg-[var(--primary)] px-4 py-2 text-sm font-bold text-white transition hover:bg-[var(--primary-dark)]"
                           >
                             Ver / editar
                           </Link>
@@ -260,31 +260,31 @@ export default function AdminOrdersClient({ orders }: AdminOrdersClientProps) {
 
           <div className="space-y-3 lg:hidden">
             {filteredOrders.length === 0 ? (
-              <div className="rounded-[24px] bg-white px-4 py-6 text-sm font-semibold text-[#4b6b80]">
+              <div className="rounded-[24px] bg-white px-4 py-6 text-sm font-semibold text-[var(--text-soft)]">
                 No hay pedidos que coincidan con la búsqueda.
               </div>
             ) : (
               filteredOrders.map((order) => (
                 <article
                   key={order._id}
-                  className="rounded-[24px] border border-transparent bg-white p-4 shadow-[0_8px_22px_rgba(22,50,74,0.04)] transition hover:-translate-y-0.5 hover:border-[#19b7c9]"
+                  className="rounded-[24px] border border-transparent bg-white p-4 shadow-[0_8px_22px_var(--shadow)] transition hover:-translate-y-0.5 hover:border-[var(--primary)]"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="font-extrabold text-[#16324a]">
+                      <p className="font-extrabold text-[var(--text)]">
                         {order.orderCode || "Sin código"}
                       </p>
 
-                      <p className="mt-1 line-clamp-1 text-sm text-[#4b6b80]">
+                      <p className="mt-1 line-clamp-1 text-sm text-[var(--text-soft)]">
                         {order.customerName || "Sin cliente"}
                       </p>
 
-                      <p className="mt-1 text-sm text-[#4b6b80]">
+                      <p className="mt-1 text-sm text-[var(--text-soft)]">
                         {order.customerPhone || "Sin teléfono"}
                       </p>
                     </div>
 
-                    <p className="shrink-0 text-base font-black text-[#19b7c9]">
+                    <p className="shrink-0 text-base font-black text-[var(--primary)]">
                       {formatBs(order.total)}
                     </p>
                   </div>
@@ -299,24 +299,24 @@ export default function AdminOrdersClient({ orders }: AdminOrdersClientProps) {
                     </span>
 
                     {order.inventoryDeducted ? (
-                      <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
+                      <span className="inline-flex rounded-full border border-[var(--success-bg)] bg-[var(--success-bg)] px-3 py-1 text-xs font-bold text-[var(--success)]">
                         Descontado
                       </span>
                     ) : (
-                      <span className="inline-flex rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-bold text-gray-600">
+                      <span className="inline-flex rounded-full border border-[var(--border-soft)] bg-[var(--surface-soft)] px-3 py-1 text-xs font-bold text-[var(--text-muted)]">
                         Sin descontar
                       </span>
                     )}
                   </div>
 
-                  <p className="mt-3 text-xs font-semibold text-[#6f8798]">
+                  <p className="mt-3 text-xs font-semibold text-[var(--text-muted)]">
                     {formatDate(order.createdAt)}
                   </p>
 
                   <div className="mt-4 grid grid-cols-2 gap-2">
                     <Link
                       href={`/admin/pedidos/${order._id}`}
-                      className="inline-flex h-11 items-center justify-center rounded-2xl bg-[#19b7c9] px-4 text-xs font-extrabold text-white transition hover:bg-[#0ea5b7]"
+                      className="inline-flex h-11 items-center justify-center rounded-2xl bg-[var(--primary)] px-4 text-xs font-extrabold text-white transition hover:bg-[var(--primary-dark)]"
                     >
                       Ver / editar
                     </Link>

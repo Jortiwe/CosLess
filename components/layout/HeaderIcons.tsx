@@ -37,19 +37,23 @@ export default function HeaderIcons({
     };
   }, []);
 
-  const cartBadge = useMemo(() => (cartCount > 99 ? "99+" : cartCount), [cartCount]);
+  const cartBadge = useMemo(
+    () => (cartCount > 99 ? "99+" : cartCount),
+    [cartCount]
+  );
+
   const favoritesBadge = useMemo(
     () => (favoritesCount > 99 ? "99+" : favoritesCount),
     [favoritesCount]
   );
 
   return (
-    <div className="flex items-center gap-5 text-[#16324a]">
+    <div className="flex items-center gap-5 text-[var(--text)]">
       <button
         type="button"
         onClick={onOpenSearch}
         aria-label="Abrir búsqueda"
-        className="transition hover:scale-110"
+        className="transition hover:scale-110 hover:text-[var(--primary)]"
       >
         <FiSearch className="text-[1.75rem]" />
       </button>
@@ -57,7 +61,7 @@ export default function HeaderIcons({
       <Link
         href="/account"
         aria-label="Cuenta"
-        className="transition hover:scale-110"
+        className="transition hover:scale-110 hover:text-[var(--primary)]"
       >
         <FiUser className="text-[1.75rem]" />
       </Link>
@@ -65,11 +69,11 @@ export default function HeaderIcons({
       <Link
         href="/favoritos"
         aria-label="Favoritos"
-        className="relative transition hover:scale-110"
+        className="relative transition hover:scale-110 hover:text-[var(--primary)]"
       >
         <FiHeart className="text-[1.75rem]" />
         {favoritesCount > 0 && (
-          <span className="absolute -right-2 -top-2 inline-flex min-h-[22px] min-w-[22px] items-center justify-center rounded-full bg-[#19b7c9] px-1 text-[11px] font-extrabold text-white">
+          <span className="absolute -right-2 -top-2 inline-flex min-h-[22px] min-w-[22px] items-center justify-center rounded-full bg-[var(--primary)] px-1 text-[11px] font-extrabold text-white">
             {favoritesBadge}
           </span>
         )}
@@ -78,11 +82,11 @@ export default function HeaderIcons({
       <Link
         href="/carrito"
         aria-label="Carrito"
-        className="relative transition hover:scale-110"
+        className="relative transition hover:scale-110 hover:text-[var(--primary)]"
       >
         <FiShoppingBag className="text-[1.75rem]" />
         {cartCount > 0 && (
-          <span className="absolute -right-2 -top-2 inline-flex min-h-[24px] min-w-[24px] items-center justify-center rounded-full bg-[#19b7c9] px-1 text-[11px] font-extrabold text-white">
+          <span className="absolute -right-2 -top-2 inline-flex min-h-[24px] min-w-[24px] items-center justify-center rounded-full bg-[var(--primary)] px-1 text-[11px] font-extrabold text-white">
             {cartBadge}
           </span>
         )}

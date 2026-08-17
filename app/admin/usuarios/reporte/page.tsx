@@ -51,12 +51,12 @@ export default async function UsersReportPage() {
   });
 
   return (
-    <main className="min-h-screen bg-[#eef9ff] px-5 py-8 text-[#16324a] print:bg-white print:px-0 print:py-0">
+    <main className="min-h-screen bg-[var(--bg)] px-5 py-8 text-[var(--text)] print:bg-[var(--cos-white)] print:px-0 print:py-0">
       <div className="mx-auto max-w-[1200px] print:max-w-none">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3 print:hidden">
           <Link
             href="/admin/usuarios"
-            className="rounded-2xl border border-[#cfeaf6] bg-white px-5 py-3 text-sm font-bold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9]"
+            className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-5 py-3 text-sm font-bold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)]"
           >
             ← Volver a usuarios
           </Link>
@@ -64,34 +64,34 @@ export default async function UsersReportPage() {
           <PrintReportButton />
         </div>
 
-        <section className="overflow-hidden rounded-[32px] border border-[#cfeaf6] bg-white shadow-[0_14px_40px_rgba(22,50,74,0.08)] print:rounded-none print:border-0 print:shadow-none">
-          <header className="border-b border-[#d9eef7] bg-[#f7fdff] px-8 py-7 print:bg-white">
+        <section className="overflow-hidden rounded-[32px] border border-[var(--border)] bg-[var(--surface)] shadow-[0_14px_40px_var(--shadow)] print:rounded-none print:border-0 print:shadow-none">
+          <header className="border-b border-[var(--border-soft)] bg-[var(--surface-soft)] px-8 py-7 print:bg-[var(--cos-white)]">
             <div className="flex flex-wrap items-start justify-between gap-5">
               <div>
-                <div className="text-[2.3rem] font-black leading-none tracking-wide text-[#19b7c9]">
+                <div className="text-[2.3rem] font-black leading-none tracking-wide text-[var(--primary)]">
                   CosLess
                 </div>
 
-                <p className="mt-1 text-xs font-bold uppercase tracking-[0.28em] text-[#4b6b80]">
+                <p className="mt-1 text-xs font-bold uppercase tracking-[0.28em] text-[var(--text-soft)]">
                   Cosplay Store
                 </p>
 
-                <h1 className="mt-7 text-3xl font-black text-[#16324a]">
+                <h1 className="mt-7 text-3xl font-black text-[var(--text)]">
                   Reporte de usuarios
                 </h1>
 
-                <p className="mt-2 text-sm font-semibold text-[#4b6b80]">
+                <p className="mt-2 text-sm font-semibold text-[var(--text-soft)]">
                   Listado general de clientes y administradores registrados en
                   el sistema.
                 </p>
               </div>
 
-              <div className="rounded-[24px] border border-[#cfeaf6] bg-white px-5 py-4 text-right">
-                <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-[#6f8798]">
+              <div className="rounded-[24px] border border-[var(--border)] bg-[var(--surface)] px-5 py-4 text-right">
+                <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-[var(--text-muted)]">
                   Fecha
                 </p>
 
-                <p className="mt-1 text-sm font-black text-[#16324a]">
+                <p className="mt-1 text-sm font-black text-[var(--text)]">
                   {today}
                 </p>
               </div>
@@ -99,55 +99,67 @@ export default async function UsersReportPage() {
           </header>
 
           <section className="grid gap-4 px-8 py-6 sm:grid-cols-2 lg:grid-cols-3 print:grid-cols-3">
-            <div className="rounded-[22px] bg-[#eaf8ff] px-4 py-4">
-              <p className="text-xs font-bold text-[#4b6b80]">Usuarios</p>
-              <p className="mt-1 text-2xl font-black text-[#19b7c9]">
+            <div className="rounded-[22px] bg-[var(--surface-soft)] px-4 py-4">
+              <p className="text-xs font-bold text-[var(--text-soft)]">
+                Usuarios
+              </p>
+              <p className="mt-1 text-2xl font-black text-[var(--primary)]">
                 {totalUsers}
               </p>
             </div>
 
-            <div className="rounded-[22px] bg-[#e6f6ed] px-4 py-4">
-              <p className="text-xs font-bold text-[#326b4d]">Activos</p>
-              <p className="mt-1 text-2xl font-black text-[#16824c]">
+            <div className="rounded-[22px] bg-[var(--success-bg)] px-4 py-4">
+              <p className="text-xs font-bold text-[var(--success)]">
+                Activos
+              </p>
+              <p className="mt-1 text-2xl font-black text-[var(--success)]">
                 {activeUsers}
               </p>
             </div>
 
-            <div className="rounded-[22px] bg-[#fff0f2] px-4 py-4">
-              <p className="text-xs font-bold text-[#9d3040]">Inactivos</p>
-              <p className="mt-1 text-2xl font-black text-[#d62839]">
+            <div className="rounded-[22px] bg-[var(--danger-bg)] px-4 py-4">
+              <p className="text-xs font-bold text-[var(--danger)]">
+                Inactivos
+              </p>
+              <p className="mt-1 text-2xl font-black text-[var(--danger)]">
                 {inactiveUsers}
               </p>
             </div>
           </section>
 
           <section className="grid gap-4 px-8 pb-6 sm:grid-cols-3 print:grid-cols-3">
-            <div className="rounded-[22px] bg-[#f8fdff] px-4 py-4">
-              <p className="text-xs font-bold text-[#4b6b80]">Clientes</p>
-              <p className="mt-1 text-2xl font-black text-[#6f8798]">
+            <div className="rounded-[22px] bg-[var(--surface-soft)] px-4 py-4">
+              <p className="text-xs font-bold text-[var(--text-soft)]">
+                Clientes
+              </p>
+              <p className="mt-1 text-2xl font-black text-[var(--text-muted)]">
                 {customers}
               </p>
             </div>
 
-            <div className="rounded-[22px] bg-[#eaf8ff] px-4 py-4">
-              <p className="text-xs font-bold text-[#4b6b80]">Admins</p>
-              <p className="mt-1 text-2xl font-black text-[#19b7c9]">
+            <div className="rounded-[22px] bg-[var(--surface-soft)] px-4 py-4">
+              <p className="text-xs font-bold text-[var(--text-soft)]">
+                Admins
+              </p>
+              <p className="mt-1 text-2xl font-black text-[var(--primary)]">
                 {admins}
               </p>
             </div>
 
-            <div className="rounded-[22px] bg-[#f2eaff] px-4 py-4">
-              <p className="text-xs font-bold text-[#5d36a5]">Superadmins</p>
-              <p className="mt-1 text-2xl font-black text-[#7c3aed]">
+            <div className="rounded-[22px] bg-[var(--featured-bg)] px-4 py-4">
+              <p className="text-xs font-bold text-[var(--featured)]">
+                Superadmins
+              </p>
+              <p className="mt-1 text-2xl font-black text-[var(--featured)]">
                 {superadmins}
               </p>
             </div>
           </section>
 
           <section className="px-8 pb-8">
-            <div className="overflow-hidden rounded-[24px] border border-[#d9eef7]">
+            <div className="overflow-hidden rounded-[24px] border border-[var(--border-soft)]">
               <table className="w-full border-collapse text-left text-sm">
-                <thead className="bg-[#eaf8ff] text-[#16324a]">
+                <thead className="bg-[var(--surface-soft)] text-[var(--text)]">
                   <tr>
                     <th className="px-4 py-3 font-black">Nombre</th>
                     <th className="px-4 py-3 font-black">Correo</th>
@@ -163,7 +175,7 @@ export default async function UsersReportPage() {
                     <tr>
                       <td
                         colSpan={6}
-                        className="px-4 py-6 text-center font-bold text-[#4b6b80]"
+                        className="px-4 py-6 text-center font-bold text-[var(--text-soft)]"
                       >
                         No hay usuarios registrados.
                       </td>
@@ -172,29 +184,29 @@ export default async function UsersReportPage() {
                     users.map((user) => (
                       <tr
                         key={user._id}
-                        className="border-t border-[#e5f3fa]"
+                        className="border-t border-[var(--border-soft)]"
                       >
-                        <td className="px-4 py-3 font-bold text-[#16324a]">
+                        <td className="px-4 py-3 font-bold text-[var(--text)]">
                           {user.fullName || "Sin nombre"}
                         </td>
 
-                        <td className="px-4 py-3 text-[#4b6b80]">
+                        <td className="px-4 py-3 text-[var(--text-soft)]">
                           {user.email || "Sin correo"}
                         </td>
 
-                        <td className="px-4 py-3 text-[#4b6b80]">
+                        <td className="px-4 py-3 text-[var(--text-soft)]">
                           {user.nickname || "Sin nickname"}
                         </td>
 
-                        <td className="px-4 py-3 font-bold text-[#19b7c9]">
+                        <td className="px-4 py-3 font-bold text-[var(--primary)]">
                           {roleLabel(user.role)}
                         </td>
 
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-3 text-[var(--text-soft)]">
                           {user.isActive ? "Activo" : "Inactivo"}
                         </td>
 
-                        <td className="px-4 py-3 text-[#4b6b80]">
+                        <td className="px-4 py-3 text-[var(--text-soft)]">
                           {formatDate(user.createdAt)}
                         </td>
                       </tr>
@@ -205,8 +217,8 @@ export default async function UsersReportPage() {
             </div>
           </section>
 
-          <footer className="border-t border-[#d9eef7] bg-[#f7fdff] px-8 py-5 text-center print:bg-white">
-            <p className="text-xs font-semibold text-[#6f8798]">
+          <footer className="border-t border-[var(--border-soft)] bg-[var(--surface-soft)] px-8 py-5 text-center print:bg-[var(--cos-white)]">
+            <p className="text-xs font-semibold text-[var(--text-muted)]">
               Reporte generado por CosLess · Sistema interno de administración
             </p>
           </footer>

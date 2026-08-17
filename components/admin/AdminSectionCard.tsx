@@ -14,18 +14,18 @@ export default function AdminSectionCard({
   buttonLabel = "Entrar",
 }: Props) {
   return (
-    <article className="rounded-[32px] border border-[#cfeaf6] bg-[#f7fdff] p-7 shadow-[0_10px_30px_rgba(22,50,74,0.05)]">
-      <h3 className="text-[1.1rem] font-extrabold uppercase tracking-[0.12em] text-[#6f8798]">
+    <article className="rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-7 shadow-[0_10px_30px_var(--shadow)]">
+      <h3 className="text-[1.1rem] font-extrabold uppercase tracking-[0.12em] text-[var(--text-muted)]">
         {title}
       </h3>
 
-      <p className="mt-6 min-h-[72px] text-[15px] leading-8 text-[#4b6b80]">
+      <p className="mt-6 min-h-[72px] text-[15px] leading-8 text-[var(--text-soft)]">
         {description}
       </p>
 
       <Link
         href={href}
-        className="mt-6 inline-flex rounded-2xl bg-[#19b7c9] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#0ea5b7]"
+        className="mt-6 inline-flex rounded-2xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-white transition hover:bg-[var(--primary-dark)]"
       >
         {buttonLabel}
       </Link>

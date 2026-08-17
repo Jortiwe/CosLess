@@ -354,17 +354,17 @@ function HeaderContent() {
   return (
     <>
       {sessionToast && (
-        <div className="fixed left-1/2 top-[92px] z-[120] w-[calc(100%-32px)] max-w-[420px] -translate-x-1/2 rounded-[22px] border border-[#bfefff] bg-white px-5 py-4 text-center shadow-[0_14px_40px_rgba(22,50,74,0.16)]">
-          <p className="text-sm font-extrabold text-[#19b7c9]">
+        <div className="fixed left-1/2 top-[92px] z-[120] w-[calc(100%-32px)] max-w-[420px] -translate-x-1/2 rounded-[22px] border border-[color:var(--border-soft)] bg-[color:var(--surface)] px-5 py-4 text-center shadow-[0_14px_40px_var(--shadow-strong)]">
+          <p className="text-sm font-extrabold text-[color:var(--primary)]">
             {sessionToast}
           </p>
-          <p className="mt-1 text-xs font-medium text-[#4b6b80]">
+          <p className="mt-1 text-xs font-medium text-[color:var(--text-soft)]">
             Bienvenido a CosLess.
           </p>
         </div>
       )}
 
-      <header className="sticky top-0 z-[110] select-none border-b border-[#cfeaf6] bg-[#f7fdff]/95 backdrop-blur">
+      <header className="sticky top-0 z-[110] select-none border-b border-[color:var(--border)] bg-[color:var(--surface)]/95 backdrop-blur">
         <div className="mx-auto w-full max-w-[1700px] px-3 sm:px-5 md:px-10 lg:px-14 xl:px-20 2xl:px-24">
           <div className="grid min-h-[72px] grid-cols-[54px_1fr_auto] items-center gap-1 sm:min-h-[84px] sm:grid-cols-[72px_1fr_auto] sm:gap-2 md:grid-cols-[120px_1fr_120px] md:min-h-[92px] lg:grid-cols-[220px_1fr_220px] lg:min-h-[100px]">
             <div className="flex items-center justify-start">
@@ -372,9 +372,9 @@ function HeaderContent() {
                 type="button"
                 aria-label="Abrir menú"
                 onClick={() => setIsMenuOpen(true)}
-                className="group flex h-10 w-10 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-11 sm:w-11 md:h-12 md:w-12"
+                className="group flex h-10 w-10 items-center justify-center rounded-2xl text-[color:var(--text)] transition duration-200 hover:scale-110 sm:h-11 sm:w-11 md:h-12 md:w-12"
               >
-                <FiMenu className="text-[1.7rem] transition duration-200 group-hover:text-[#19b7c9] sm:text-[1.85rem] md:text-[2rem]" />
+                <FiMenu className="text-[1.7rem] transition duration-200 group-hover:text-[color:var(--primary)] sm:text-[1.85rem] md:text-[2rem]" />
               </button>
             </div>
 
@@ -383,10 +383,10 @@ function HeaderContent() {
               className="flex min-w-0 flex-col items-center justify-center text-center transition duration-200 hover:scale-[1.02]"
               aria-label="Ir a la página principal"
             >
-              <div className="truncate text-[1.55rem] font-extrabold leading-none tracking-wide text-[#19b7c9] sm:text-[1.9rem] md:text-[2.25rem] lg:text-[2.7rem]">
+              <div className="truncate text-[1.55rem] font-extrabold leading-none tracking-wide text-[color:var(--primary)] sm:text-[1.9rem] md:text-[2.25rem] lg:text-[2.7rem]">
                 CosLess
               </div>
-              <p className="mt-1 text-[8px] font-medium uppercase tracking-[0.26em] text-[#4b6b80] sm:mt-1.5 sm:text-[9px] md:mt-2 md:text-[11px] lg:text-[12px]">
+              <p className="mt-1 text-[8px] font-medium uppercase tracking-[0.26em] text-[color:var(--text-soft)] sm:mt-1.5 sm:text-[9px] md:mt-2 md:text-[11px] lg:text-[12px]">
                 Cosplay Store
               </p>
             </Link>
@@ -395,7 +395,7 @@ function HeaderContent() {
               {sessionReady && isAdmin && (
                 <Link
                   href="/admin"
-                  className="absolute right-[210px] hidden rounded-2xl border border-[#bfefff] bg-[#eaf8ff] px-4 py-2 text-sm font-bold text-[#19b7c9] transition hover:border-[#19b7c9] hover:bg-white xl:inline-flex"
+                  className="absolute right-[210px] hidden rounded-2xl border border-[color:var(--border-soft)] bg-[color:var(--surface-soft)] px-4 py-2 text-sm font-bold text-[color:var(--primary)] transition hover:border-[color:var(--primary)] hover:bg-[color:var(--surface)] xl:inline-flex"
                 >
                   Panel admin
                 </Link>
@@ -404,41 +404,41 @@ function HeaderContent() {
               <div className="flex items-center justify-end gap-0 sm:gap-0.5 md:gap-1.5">
                 <div className="relative">
                   {isSearchPage && (
-                    <span className="absolute -top-2 left-1/2 h-[3px] w-6 -translate-x-1/2 rounded-full bg-red-500" />
+                    <span className="absolute -top-2 left-1/2 h-[3px] w-6 -translate-x-1/2 rounded-full bg-[color:var(--primary)]" />
                   )}
-                  <SearchTrigger className="group flex h-8 w-8 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11" />
+                  <SearchTrigger className="group flex h-8 w-8 items-center justify-center rounded-2xl text-[color:var(--text)] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11" />
                 </div>
 
                 <div className="relative">
                   {isAccountPage && (
-                    <span className="absolute -top-2 left-1/2 h-[3px] w-6 -translate-x-1/2 rounded-full bg-red-500" />
+                    <span className="absolute -top-2 left-1/2 h-[3px] w-6 -translate-x-1/2 rounded-full bg-[color:var(--primary)]" />
                   )}
                   <Link
                     href={profileHref}
                     aria-label={isLoggedIn ? "Mi perfil" : "Mi cuenta"}
-                    className="group flex h-8 w-8 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
+                    className="group flex h-8 w-8 items-center justify-center rounded-2xl text-[color:var(--text)] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
                   >
-                    <FiUser className="text-[1.12rem] transition duration-200 group-hover:text-[#19b7c9] sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem]" />
+                    <FiUser className="text-[1.12rem] transition duration-200 group-hover:text-[color:var(--primary)] sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem]" />
                   </Link>
                 </div>
 
                 <div className="relative">
                   {isFavoritesPage && (
-                    <span className="absolute -top-2 left-1/2 z-10 h-[3px] w-6 -translate-x-1/2 rounded-full bg-red-500" />
+                    <span className="absolute -top-2 left-1/2 z-10 h-[3px] w-6 -translate-x-1/2 rounded-full bg-[color:var(--primary)]" />
                   )}
                   <Link
                     href="/favoritos"
                     aria-label="Favoritos"
-                    className="group relative flex h-8 w-8 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
+                    className="group relative flex h-8 w-8 items-center justify-center rounded-2xl text-[color:var(--text)] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
                   >
                     <FiHeart
-                      className={`text-[1.12rem] transition duration-200 group-hover:text-[#19b7c9] sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem] ${
-                        favoritesPulse ? "scale-125 text-[#19b7c9]" : ""
+                      className={`text-[1.12rem] transition duration-200 group-hover:text-[color:var(--primary)] sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem] ${
+                        favoritesPulse ? "scale-125 text-[color:var(--primary)]" : ""
                       }`}
                     />
                     {favoritesCount > 0 && (
                       <span
-                        className={`absolute right-[-1px] top-[-2px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-[#19b7c9] px-1 text-[9px] font-bold text-white sm:h-[17px] sm:min-w-[17px] md:h-[18px] md:min-w-[18px] md:text-[10px] lg:h-5 lg:min-w-5 ${
+                        className={`absolute right-[-1px] top-[-2px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-[color:var(--primary)] px-1 text-[9px] font-bold text-[color:var(--cos-white)] sm:h-[17px] sm:min-w-[17px] md:h-[18px] md:min-w-[18px] md:text-[10px] lg:h-5 lg:min-w-5 ${
                           favoritesPulse ? "scale-125" : ""
                         }`}
                       >
@@ -450,21 +450,21 @@ function HeaderContent() {
 
                 <div className="relative">
                   {isCartPage && (
-                    <span className="absolute -top-2 left-1/2 z-10 h-[3px] w-6 -translate-x-1/2 rounded-full bg-red-500" />
+                    <span className="absolute -top-2 left-1/2 z-10 h-[3px] w-6 -translate-x-1/2 rounded-full bg-[color:var(--primary)]" />
                   )}
                   <Link
                     href="/carrito"
                     aria-label="Carrito"
-                    className="group relative flex h-8 w-8 items-center justify-center rounded-2xl text-[#16324a] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
+                    className="group relative flex h-8 w-8 items-center justify-center rounded-2xl text-[color:var(--text)] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
                   >
                     <FiShoppingBag
-                      className={`text-[1.12rem] transition duration-200 group-hover:text-[#19b7c9] sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem] ${
-                        cartPulse ? "scale-125 text-[#19b7c9]" : ""
+                      className={`text-[1.12rem] transition duration-200 group-hover:text-[color:var(--primary)] sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem] ${
+                        cartPulse ? "scale-125 text-[color:var(--primary)]" : ""
                       }`}
                     />
                     {cartCount > 0 && (
                       <span
-                        className={`absolute right-[-1px] top-[-2px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-[#19b7c9] px-1 text-[9px] font-bold text-white sm:h-[17px] sm:min-w-[17px] md:h-[18px] md:min-w-[18px] md:text-[10px] lg:h-5 lg:min-w-5 ${
+                        className={`absolute right-[-1px] top-[-2px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-[color:var(--primary)] px-1 text-[9px] font-bold text-[color:var(--cos-white)] sm:h-[17px] sm:min-w-[17px] md:h-[18px] md:min-w-[18px] md:text-[10px] lg:h-5 lg:min-w-5 ${
                           cartPulse ? "scale-125" : ""
                         }`}
                       >
@@ -481,12 +481,12 @@ function HeaderContent() {
             <div
               className={`overflow-hidden border-t transition-[max-height,opacity,border-color] duration-300 ease-out ${
                 showSocialBar
-                  ? "max-h-12 border-[#d9eef7] opacity-100"
+                  ? "max-h-12 border-[color:var(--border-soft)] opacity-100"
                   : "max-h-0 border-transparent opacity-0"
               }`}
             >
               <div className="flex items-center justify-center py-[6px] sm:py-[7px]">
-                <div className="flex flex-wrap items-center justify-center gap-2 text-center text-[0.74rem] font-semibold text-[#19b7c9] sm:text-[0.82rem] md:text-[0.86rem]">
+                <div className="flex flex-wrap items-center justify-center gap-2 text-center text-[0.74rem] font-semibold text-[color:var(--primary)] sm:text-[0.82rem] md:text-[0.86rem]">
                   <a
                     href={WHATSAPP_URL}
                     target="_blank"
@@ -494,13 +494,13 @@ function HeaderContent() {
                     aria-label="WhatsApp"
                     className="group flex items-center gap-1.5 rounded-lg px-2 py-[2px] transition duration-200 hover:scale-110"
                   >
-                    <FaWhatsapp className="text-[0.78rem] transition duration-200 group-hover:text-[#0ea5b7] sm:text-[0.82rem]" />
+                    <FaWhatsapp className="text-[0.78rem] transition duration-200 group-hover:text-[color:var(--primary-dark)] sm:text-[0.82rem]" />
                     <span className="underline underline-offset-4">
                       WhatsApp
                     </span>
                   </a>
 
-                  <span className="px-1 text-[#7fb8c8]">|</span>
+                  <span className="px-1 text-[color:var(--primary-light)]">|</span>
 
                   <a
                     href={FACEBOOK_URL}
@@ -509,7 +509,7 @@ function HeaderContent() {
                     aria-label="Messenger"
                     className="group flex items-center gap-1.5 rounded-lg px-2 py-[2px] transition duration-200 hover:scale-110"
                   >
-                    <FaFacebookMessenger className="text-[0.76rem] transition duration-200 group-hover:text-[#0ea5b7] sm:text-[0.8rem]" />
+                    <FaFacebookMessenger className="text-[0.76rem] transition duration-200 group-hover:text-[color:var(--primary-dark)] sm:text-[0.8rem]" />
                     <span className="underline underline-offset-4">
                       Messenger
                     </span>
@@ -531,17 +531,17 @@ function HeaderContent() {
       />
 
       <aside
-        className={`fixed left-2 top-2 z-[130] h-[calc(100dvh-16px)] w-[92%] max-w-[420px] overflow-hidden rounded-[32px] border border-[#d7eef7] bg-[#f8fcff] shadow-[0_24px_70px_rgba(20,50,80,0.18)] transition duration-300 select-none sm:left-3 sm:top-3 sm:h-[calc(100dvh-24px)] sm:w-[88%] sm:rounded-[34px] ${
+        className={`fixed left-2 top-2 z-[130] h-[calc(100dvh-16px)] w-[92%] max-w-[420px] overflow-hidden rounded-[32px] border border-[color:var(--border)] bg-[color:var(--surface)] shadow-[0_24px_70px_var(--shadow-strong)] transition duration-300 select-none sm:left-3 sm:top-3 sm:h-[calc(100dvh-24px)] sm:w-[88%] sm:rounded-[34px] ${
           isMenuOpen ? "translate-x-0" : "-translate-x-[110%]"
         }`}
       >
         <div className="flex h-full flex-col">
-          <div className="flex shrink-0 items-center justify-between border-b border-[#e2f1f7] px-5 py-4 sm:px-6 sm:py-4">
+          <div className="flex shrink-0 items-center justify-between border-b border-[color:var(--border-soft)] px-5 py-4 sm:px-6 sm:py-4">
             <div>
-              <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#8aa5b4]">
+              <p className="text-sm font-bold uppercase tracking-[0.22em] text-[color:var(--text-muted)]">
                 Menú
               </p>
-              <h2 className="mt-1 text-[1.9rem] font-extrabold leading-none text-[#16324a] sm:text-[2rem]">
+              <h2 className="mt-1 text-[1.9rem] font-extrabold leading-none text-[color:var(--text)] sm:text-[2rem]">
                 CosLess
               </h2>
             </div>
@@ -550,7 +550,7 @@ function HeaderContent() {
               type="button"
               onClick={() => setIsMenuOpen(false)}
               aria-label="Cerrar menú"
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#16324a] shadow-[0_6px_18px_rgba(22,50,74,0.08)] transition hover:scale-110 hover:bg-[#eaf8ff] hover:text-[#19b7c9]"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-[color:var(--surface)] text-[color:var(--text)] shadow-[0_6px_18px_var(--shadow)] transition hover:scale-110 hover:bg-[color:var(--surface-soft)] hover:text-[color:var(--primary)]"
             >
               <FiX className="text-[1.9rem]" />
             </button>
@@ -563,12 +563,12 @@ function HeaderContent() {
                   key={item.label}
                   href={item.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className="group flex min-h-[38px] items-center justify-between rounded-[16px] px-4 py-1 text-[1rem] font-extrabold text-[#16324a] transition duration-200 hover:bg-[#dff6ff] hover:text-[#149db0] active:scale-[0.99] sm:min-h-[40px] sm:py-1.5 sm:text-[1.05rem]"
+                  className="group flex min-h-[38px] items-center justify-between rounded-[16px] px-4 py-1 text-[1rem] font-extrabold text-[color:var(--text)] transition duration-200 hover:bg-[color:var(--surface-soft)] hover:text-[color:var(--primary-dark)] active:scale-[0.99] sm:min-h-[40px] sm:py-1.5 sm:text-[1.05rem]"
                   style={{ WebkitUserSelect: "none", userSelect: "none" }}
                 >
                   <span className="leading-none">{item.label}</span>
 
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#eefaff] text-[#19b7c9] transition duration-200 group-hover:bg-white group-hover:translate-x-1 group-hover:shadow-[0_6px_16px_rgba(25,183,201,0.18)]">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[color:var(--surface-soft)] text-[color:var(--primary)] transition duration-200 group-hover:bg-[color:var(--surface)] group-hover:translate-x-1 group-hover:shadow-[0_6px_16px_var(--shadow-strong)]">
                     <span className="text-[0.92rem] font-extrabold">→</span>
                   </span>
                 </Link>
@@ -576,13 +576,13 @@ function HeaderContent() {
             </div>
           </nav>
 
-          <div className="shrink-0 border-t border-[#e2f1f7] bg-[#f2fbff] px-5 py-3 sm:px-6">
+          <div className="shrink-0 border-t border-[color:var(--border-soft)] bg-[color:var(--surface-soft)] px-5 py-3 sm:px-6">
             {isLoggedIn ? (
               <div className="space-y-3">
                 <Link
                   href="/perfil"
                   onClick={() => setIsMenuOpen(false)}
-                  className="inline-flex max-w-full items-center gap-3 rounded-2xl px-2 py-1 text-[1rem] font-bold text-[#16324a] transition hover:text-[#19b7c9]"
+                  className="inline-flex max-w-full items-center gap-3 rounded-2xl px-2 py-1 text-[1rem] font-bold text-[color:var(--text)] transition hover:text-[color:var(--primary)]"
                 >
                   <FiUser className="shrink-0 text-[1.2rem]" />
                   <span className="truncate">{displayName}</span>
@@ -590,18 +590,18 @@ function HeaderContent() {
 
                 <a
                   href="/api/auth/logout"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#ffe9eb] px-4 py-3 text-sm font-bold text-[#d62839] transition hover:bg-[#ffd9dd]"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[color:var(--danger-bg)] px-4 py-3 text-sm font-bold text-[color:var(--danger)] transition hover:bg-[color:var(--danger-bg-hover)]"
                 >
                   <FiLogOut />
                   Cerrar sesión
                 </a>
 
-                <div className="flex items-center gap-3 pt-1 text-[#16324a]">
+                <div className="flex items-center gap-3 pt-1 text-[color:var(--text)]">
                   <a
                     href={WHATSAPP_URL}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[1.2rem] shadow-[0_6px_18px_rgba(22,50,74,0.08)] transition hover:scale-110 hover:text-[#19b7c9]"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--surface)] text-[1.2rem] shadow-[0_6px_18px_var(--shadow)] transition hover:scale-110 hover:text-[color:var(--primary)]"
                     aria-label="WhatsApp"
                   >
                     <FaWhatsapp />
@@ -611,7 +611,7 @@ function HeaderContent() {
                     href={FACEBOOK_URL}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[1.2rem] shadow-[0_6px_18px_rgba(22,50,74,0.08)] transition hover:scale-110 hover:text-[#19b7c9]"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--surface)] text-[1.2rem] shadow-[0_6px_18px_var(--shadow)] transition hover:scale-110 hover:text-[color:var(--primary)]"
                     aria-label="Messenger"
                   >
                     <FaFacebookMessenger />
@@ -623,18 +623,18 @@ function HeaderContent() {
                 <Link
                   href="/account"
                   onClick={() => setIsMenuOpen(false)}
-                  className="inline-flex items-center gap-3 rounded-2xl px-2 py-1 text-[1rem] font-bold text-[#16324a] transition hover:text-[#19b7c9]"
+                  className="inline-flex items-center gap-3 rounded-2xl px-2 py-1 text-[1rem] font-bold text-[color:var(--text)] transition hover:text-[color:var(--primary)]"
                 >
                   <FiUser className="text-[1.2rem]" />
                   Acceso
                 </Link>
 
-                <div className="mt-3 flex items-center gap-3 text-[#16324a]">
+                <div className="mt-3 flex items-center gap-3 text-[color:var(--text)]">
                   <a
                     href={WHATSAPP_URL}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[1.2rem] shadow-[0_6px_18px_rgba(22,50,74,0.08)] transition hover:scale-110 hover:text-[#19b7c9]"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--surface)] text-[1.2rem] shadow-[0_6px_18px_var(--shadow)] transition hover:scale-110 hover:text-[color:var(--primary)]"
                     aria-label="WhatsApp"
                   >
                     <FaWhatsapp />
@@ -644,7 +644,7 @@ function HeaderContent() {
                     href={FACEBOOK_URL}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[1.2rem] shadow-[0_6px_18px_rgba(22,50,74,0.08)] transition hover:scale-110 hover:text-[#19b7c9]"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--surface)] text-[1.2rem] shadow-[0_6px_18px_var(--shadow)] transition hover:scale-110 hover:text-[color:var(--primary)]"
                     aria-label="Messenger"
                   >
                     <FaFacebookMessenger />

@@ -89,28 +89,28 @@ export default function AdminFavoritesClient({
   }, [productStats, search]);
 
   return (
-    <main className="min-h-screen bg-[#eef9ff] px-4 py-6 text-[#16324a] sm:px-8 sm:py-8 lg:px-12">
+    <main className="min-h-screen bg-[var(--bg)] px-4 py-6 text-[var(--text)] sm:px-8 sm:py-8 lg:px-12">
       <div className="mx-auto max-w-[1600px]">
         <div className="mb-5">
-          <h1 className="text-[2.05rem] font-extrabold leading-[1.05] tracking-[-0.045em] text-[#16324a] sm:text-4xl">
+          <h1 className="text-[2.05rem] font-extrabold leading-[1.05] tracking-[-0.045em] text-[var(--text)] sm:text-4xl">
             Gestión de favoritos
           </h1>
 
-          <p className="mt-2 hidden max-w-3xl text-[#4b6b80] sm:block">
+          <p className="mt-2 hidden max-w-3xl text-[var(--text-soft)] sm:block">
             Ranking de productos guardados por los usuarios.
           </p>
 
           <div className="mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
             <Link
               href="/admin"
-              className="inline-flex h-11 items-center justify-center rounded-2xl border border-[#cfeaf6] bg-white px-3 text-xs font-extrabold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9] sm:h-12 sm:px-5 sm:text-sm"
+              className="inline-flex h-11 items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-3 text-xs font-extrabold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)] sm:h-12 sm:px-5 sm:text-sm"
             >
               ← Panel admin
             </Link>
 
             <Link
               href="/favoritos"
-              className="inline-flex h-11 items-center justify-center rounded-2xl border border-[#cfeaf6] bg-white px-3 text-xs font-extrabold text-[#16324a] transition hover:border-[#19b7c9] hover:text-[#19b7c9] sm:h-12 sm:px-5 sm:text-sm"
+              className="inline-flex h-11 items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-3 text-xs font-extrabold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)] sm:h-12 sm:px-5 sm:text-sm"
             >
               Ver tienda
             </Link>
@@ -118,75 +118,75 @@ export default function AdminFavoritesClient({
         </div>
 
         <section className="mb-5 grid grid-cols-3 gap-3 sm:gap-4">
-          <div className="rounded-[24px] border border-[#cfeaf6] bg-white p-4 shadow-[0_8px_22px_rgba(22,50,74,0.04)] sm:rounded-[28px] sm:p-5">
-            <p className="text-[0.62rem] font-extrabold uppercase tracking-[0.14em] text-[#6f8798] sm:text-sm sm:normal-case sm:tracking-normal">
+          <div className="rounded-[24px] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[0_8px_22px_var(--shadow)] sm:rounded-[28px] sm:p-5">
+            <p className="text-[0.62rem] font-extrabold uppercase tracking-[0.14em] text-[var(--text-muted)] sm:text-sm sm:normal-case sm:tracking-normal">
               Favoritos
             </p>
 
-            <p className="mt-3 text-2xl font-black text-[#19b7c9] sm:text-3xl">
+            <p className="mt-3 text-2xl font-black text-[var(--primary)] sm:text-3xl">
               {totalFavorites}
             </p>
           </div>
 
-          <div className="rounded-[24px] border border-[#cfeaf6] bg-white p-4 shadow-[0_8px_22px_rgba(22,50,74,0.04)] sm:rounded-[28px] sm:p-5">
-            <p className="text-[0.62rem] font-extrabold uppercase tracking-[0.14em] text-[#6f8798] sm:text-sm sm:normal-case sm:tracking-normal">
+          <div className="rounded-[24px] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[0_8px_22px_var(--shadow)] sm:rounded-[28px] sm:p-5">
+            <p className="text-[0.62rem] font-extrabold uppercase tracking-[0.14em] text-[var(--text-muted)] sm:text-sm sm:normal-case sm:tracking-normal">
               Productos
             </p>
 
-            <p className="mt-3 text-2xl font-black text-[#19b7c9] sm:text-3xl">
+            <p className="mt-3 text-2xl font-black text-[var(--primary)] sm:text-3xl">
               {totalProducts}
             </p>
           </div>
 
-          <div className="rounded-[24px] border border-[#cfeaf6] bg-white p-4 shadow-[0_8px_22px_rgba(22,50,74,0.04)] sm:rounded-[28px] sm:p-5">
-            <p className="text-[0.62rem] font-extrabold uppercase tracking-[0.14em] text-[#6f8798] sm:text-sm sm:normal-case sm:tracking-normal">
+          <div className="rounded-[24px] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[0_8px_22px_var(--shadow)] sm:rounded-[28px] sm:p-5">
+            <p className="text-[0.62rem] font-extrabold uppercase tracking-[0.14em] text-[var(--text-muted)] sm:text-sm sm:normal-case sm:tracking-normal">
               Top
             </p>
 
-            <p className="mt-3 text-2xl font-black text-[#19b7c9] sm:text-3xl">
+            <p className="mt-3 text-2xl font-black text-[var(--primary)] sm:text-3xl">
               {mostPopular?.count || 0}
             </p>
           </div>
         </section>
 
         {mostPopular && (
-          <section className="mb-5 rounded-[28px] border border-[#cfeaf6] bg-white p-4 shadow-[0_10px_26px_rgba(22,50,74,0.05)] sm:p-5">
-            <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#6f8798]">
+          <section className="mb-5 rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[0_10px_26px_var(--shadow)] sm:p-5">
+            <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--text-muted)]">
               Producto más popular
             </p>
 
             <div className="mt-3 flex items-center justify-between gap-4">
               <div className="min-w-0">
-                <h2 className="line-clamp-1 text-xl font-black text-[#16324a]">
+                <h2 className="line-clamp-1 text-xl font-black text-[var(--text)]">
                   {mostPopular.title}
                 </h2>
 
-                <p className="mt-1 text-sm font-bold text-[#19b7c9]">
+                <p className="mt-1 text-sm font-bold text-[var(--primary)]">
                   {mostPopular.count} favorito(s)
                 </p>
               </div>
 
-              <span className="shrink-0 rounded-full bg-[#eaf8ff] px-4 py-2 text-sm font-extrabold text-[#19b7c9]">
+              <span className="shrink-0 rounded-full bg-[var(--surface-soft)] px-4 py-2 text-sm font-extrabold text-[var(--primary)]">
                 #1
               </span>
             </div>
           </section>
         )}
 
-        <div className="mb-5 rounded-[26px] border border-[#cfeaf6] bg-white p-3 shadow-[0_10px_26px_rgba(22,50,74,0.05)] sm:rounded-[30px] sm:p-4">
+        <div className="mb-5 rounded-[26px] border border-[var(--border)] bg-[var(--surface)] p-3 shadow-[0_10px_26px_var(--shadow)] sm:rounded-[30px] sm:p-4">
           <div className="relative">
-            <FiSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#7a98aa]" />
+            <FiSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
 
             <input
               type="search"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Buscar producto..."
-              className="h-12 w-full rounded-[20px] border border-[#cfeaf6] bg-[#f7fdff] pl-11 pr-4 text-sm font-semibold text-[#16324a] outline-none transition placeholder:text-[#8ba4b3] focus:border-[#19b7c9] focus:bg-white focus:shadow-[0_0_0_4px_rgba(25,183,201,0.12)] sm:h-14"
+              className="h-12 w-full rounded-[20px] border border-[var(--border)] bg-[var(--surface-soft)] pl-11 pr-4 text-sm font-semibold text-[var(--text)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--primary)] focus:bg-[var(--surface)] focus:shadow-[0_0_0_4px_var(--shadow)] sm:h-14"
             />
           </div>
 
-          <div className="mt-3 flex items-center justify-between px-1 text-xs font-extrabold text-[#7a96a7]">
+          <div className="mt-3 flex items-center justify-between px-1 text-xs font-extrabold text-[var(--text-muted)]">
             <span>
               {filteredProducts.length} de {productStats.length} productos
             </span>
@@ -195,7 +195,7 @@ export default function AdminFavoritesClient({
               <button
                 type="button"
                 onClick={() => setSearch("")}
-                className="text-[#19b7c9] transition hover:text-[#0ea5b7]"
+                className="text-[var(--primary)] transition hover:text-[var(--primary-dark)]"
               >
                 Limpiar
               </button>
@@ -203,18 +203,18 @@ export default function AdminFavoritesClient({
           </div>
         </div>
 
-        <section className="rounded-[30px] border border-[#cfeaf6] bg-[#f7fdff] p-4 shadow-[0_10px_30px_rgba(22,50,74,0.05)] sm:rounded-[32px] sm:p-6">
+        <section className="rounded-[30px] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[0_10px_30px_var(--shadow)] sm:rounded-[32px] sm:p-6">
           {filteredProducts.length === 0 ? (
-            <div className="rounded-[24px] bg-white px-4 py-10 text-center shadow-[0_8px_22px_rgba(22,50,74,0.04)]">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[22px] bg-[#eaf8ff] text-2xl text-[#19b7c9]">
+            <div className="rounded-[24px] bg-[var(--surface)] px-4 py-10 text-center shadow-[0_8px_22px_var(--shadow)]">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[22px] bg-[var(--surface-soft)] text-2xl text-[var(--primary)]">
                 ♥
               </div>
 
-              <h2 className="mt-5 text-2xl font-extrabold text-[#16324a]">
+              <h2 className="mt-5 text-2xl font-extrabold text-[var(--text)]">
                 No hay favoritos todavía
               </h2>
 
-              <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-[#4b6b80]">
+              <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-[var(--text-soft)]">
                 Cuando los usuarios guarden productos como favoritos, aquí
                 aparecerá el ranking.
               </p>
@@ -230,10 +230,10 @@ export default function AdminFavoritesClient({
                 return (
                   <article
                     key={product.productId}
-                    className="rounded-[24px] border border-transparent bg-white p-4 shadow-[0_8px_22px_rgba(22,50,74,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-[#19b7c9] hover:shadow-[0_12px_26px_rgba(22,50,74,0.08)] sm:rounded-[28px] sm:p-5"
+                    className="rounded-[24px] border border-transparent bg-[var(--surface)] p-4 shadow-[0_8px_22px_var(--shadow)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--primary)] hover:shadow-[0_12px_26px_var(--shadow-strong)] sm:rounded-[28px] sm:p-5"
                   >
                     <div className="flex gap-3 sm:gap-4">
-                      <div className="h-20 w-20 shrink-0 overflow-hidden rounded-[20px] bg-[#eaf8ff] sm:h-28 sm:w-24">
+                      <div className="h-20 w-20 shrink-0 overflow-hidden rounded-[20px] bg-[var(--surface-soft)] sm:h-28 sm:w-24">
                         <img
                           src={getSafeImage(product.mainImage)}
                           alt={product.title}
@@ -247,35 +247,35 @@ export default function AdminFavoritesClient({
 
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="rounded-full bg-[#eaf8ff] px-3 py-1 text-[0.65rem] font-black text-[#19b7c9] sm:text-xs">
+                          <span className="rounded-full bg-[var(--surface-soft)] px-3 py-1 text-[0.65rem] font-black text-[var(--primary)] sm:text-xs">
                             #{index + 1}
                           </span>
 
-                          <span className="rounded-full bg-[#f2f8fb] px-3 py-1 text-[0.65rem] font-extrabold uppercase tracking-[0.12em] text-[#6f8798] sm:text-xs">
+                          <span className="rounded-full bg-[var(--surface-soft)] px-3 py-1 text-[0.65rem] font-extrabold uppercase tracking-[0.12em] text-[var(--text-muted)] sm:text-xs">
                             {categoryLabel(product.category)}
                           </span>
 
                           <span
                             className={`rounded-full px-3 py-1 text-[0.65rem] font-extrabold uppercase tracking-[0.12em] sm:text-xs ${
                               product.status === "preventa"
-                                ? "bg-[#fff3dc] text-[#b87d00]"
-                                : "bg-[#e6f6ed] text-[#16824c]"
+                                ? "bg-[var(--warning-bg)] text-[var(--warning)]"
+                                : "bg-[var(--success-bg)] text-[var(--success)]"
                             }`}
                           >
                             {statusLabel(product.status)}
                           </span>
                         </div>
 
-                        <h2 className="mt-3 line-clamp-2 text-[1rem] font-extrabold leading-5 text-[#16324a] sm:text-xl sm:leading-7">
+                        <h2 className="mt-3 line-clamp-2 text-[1rem] font-extrabold leading-5 text-[var(--text)] sm:text-xl sm:leading-7">
                           {product.title}
                         </h2>
 
                         <div className="mt-2 flex items-center justify-between gap-3">
-                          <p className="text-base font-black text-[#19b7c9] sm:text-lg">
+                          <p className="text-base font-black text-[var(--primary)] sm:text-lg">
                             {formatBs(product.price)}
                           </p>
 
-                          <p className="shrink-0 rounded-full bg-[#eaf8ff] px-3 py-1 text-xs font-extrabold text-[#19b7c9]">
+                          <p className="shrink-0 rounded-full bg-[var(--surface-soft)] px-3 py-1 text-xs font-extrabold text-[var(--primary)]">
                             ♥ {product.count}
                           </p>
                         </div>
@@ -283,9 +283,9 @@ export default function AdminFavoritesClient({
                     </div>
 
                     <div className="mt-4">
-                      <div className="h-3 overflow-hidden rounded-full bg-[#eaf8ff]">
+                      <div className="h-3 overflow-hidden rounded-full bg-[var(--surface-soft)]">
                         <div
-                          className="h-full rounded-full bg-[#19b7c9]"
+                          className="h-full rounded-full bg-[var(--primary)]"
                           style={{ width: `${percentage}%` }}
                         />
                       </div>
