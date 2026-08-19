@@ -20,7 +20,7 @@ export default function AuthPage() {
         <section className="relative min-h-[calc(100vh-86px)] overflow-hidden bg-[var(--surface-soft)]">
           <AuthMobileHero />
 
-          <div className="relative z-10 mx-auto w-full max-w-[430px] px-4 pt-[180px] pb-10">
+          <div className="relative z-10 mx-auto w-full max-w-[430px] px-4 pb-10 pt-[180px]">
             <AuthCard mode={mode} onModeChange={setMode} />
           </div>
 
@@ -28,13 +28,11 @@ export default function AuthPage() {
         </section>
       </div>
 
-      <section className="mx-auto hidden w-full max-w-[1500px] px-5 py-6 lg:block xl:px-8">
-        <div className="grid items-start gap-8 xl:grid-cols-[760px_minmax(0,1fr)]">
-          <div className="min-w-0">
-            <AuthHero mode={mode} />
-          </div>
+      <section className="relative hidden min-h-[calc(100vh-104px)] overflow-hidden lg:block">
+        <AuthHero mode={mode} />
 
-          <div className="min-w-0">
+        <div className="relative z-10 mx-auto flex min-h-[calc(100vh-104px)] w-full max-w-[1840px] items-center justify-end px-5 py-5 xl:px-8 2xl:px-10">
+          <div className="w-full max-w-[590px] xl:max-w-[620px] 2xl:max-w-[650px]">
             <AuthCard mode={mode} onModeChange={setMode} />
           </div>
         </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -85,13 +86,16 @@ export default function Footer() {
   return (
     <footer
       ref={footerRef}
-      className={`mt-14 overflow-hidden border-t border-[var(--border)] bg-[var(--surface)] transition-all duration-700 ease-out sm:mt-16 xl:mt-20 ${
+      className={`relative mt-14 overflow-hidden border-t border-[var(--border)] bg-[var(--surface)] transition-all duration-700 ease-out sm:mt-16 xl:mt-20 ${
         isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
       }`}
     >
       <div className="h-2 w-full bg-gradient-to-r from-[var(--cos-soft)] via-[var(--bg)] to-[var(--primary-light)] sm:h-3" />
 
-      <div className="mx-auto w-full max-w-[1700px] px-5 py-8 sm:px-6 sm:py-10 md:px-8 md:py-11 lg:px-12 xl:px-20 xl:py-12 2xl:px-24">
+      <div className="pointer-events-none absolute right-0 top-0 z-0 h-72 w-72 rounded-full bg-[var(--primary-light)]/10 blur-3xl" />
+      <div className="pointer-events-none absolute -left-20 bottom-0 z-0 h-60 w-60 rounded-full bg-[var(--cos-soft)]/10 blur-3xl" />
+
+      <div className="relative z-10 mx-auto w-full max-w-[1700px] px-5 py-8 sm:px-6 sm:py-10 md:px-8 md:py-11 lg:px-12 xl:px-20 xl:py-12 2xl:px-24">
         {/* MOBILE / TABLET */}
         <div className="xl:hidden">
           <div className="mb-6 flex items-start justify-between gap-3">
@@ -222,10 +226,21 @@ export default function Footer() {
               </div>
             </div>
           </div>
+
+          <div className="pointer-events-none mt-5 flex justify-center sm:mt-6">
+            <Image
+              src="/images/characters/cosless-bot.png"
+              alt=""
+              aria-hidden="true"
+              width={130}
+              height={130}
+              className="w-[82px] select-none object-contain opacity-90 drop-shadow-[0_14px_22px_rgba(16,38,90,0.14)] sm:w-[96px]"
+            />
+          </div>
         </div>
 
         {/* DESKTOP */}
-        <div className="hidden gap-12 xl:grid xl:grid-cols-4">
+        <div className="hidden gap-12 xl:grid xl:grid-cols-[1fr_0.85fr_1fr_1.15fr]">
           <div>
             <h3 className="text-[2rem] font-extrabold tracking-wide text-[var(--primary)]">
               CosLess
@@ -303,7 +318,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
+          <div className="relative min-h-[270px] pr-[120px]">
             <h4 className="text-[1.05rem] font-semibold uppercase tracking-[0.14em] text-[var(--text)]">
               Contacto
             </h4>
@@ -352,14 +367,24 @@ export default function Footer() {
             >
               Escribir al WhatsApp
             </a>
+
+            <Image
+              src="/images/characters/cosless-bot.png"
+              alt=""
+              aria-hidden="true"
+              width={150}
+              height={150}
+              className="pointer-events-none absolute bottom-0 right-0 w-[112px] select-none object-contain opacity-90 drop-shadow-[0_18px_28px_rgba(16,38,90,0.16)] 2xl:w-[126px]"
+            />
           </div>
         </div>
 
-        <div className="mt-10 border-t border-[var(--border)] pt-5 sm:mt-12 sm:pt-6 md:mt-14">
+        <div className="mt-8 border-t border-[var(--border)] pt-5 sm:mt-10 sm:pt-6 md:mt-12">
           <div className="flex flex-col items-center justify-between gap-2 text-center text-[13px] text-[var(--text-muted)] sm:text-[14px] md:flex-row md:text-left">
             <p className="transition duration-200 hover:text-[var(--primary)]">
               © 2026 CosLess.
             </p>
+
             <p className="transition duration-200 hover:text-[var(--primary)]">
               Tienda cosplay en desarrollo.
             </p>

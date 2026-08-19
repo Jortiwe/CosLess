@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { FaFacebookF, FaGoogle, FaInstagram } from "react-icons/fa";
 import { FiEye, FiEyeOff } from "react-icons/fi";
@@ -40,7 +40,7 @@ function FloatingMessage({
 }: {
   show: boolean;
   type: "valid" | "invalid" | "info";
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   if (!show) return null;
 
@@ -92,12 +92,15 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
     nicknameValid,
     touched.nickname
   );
+
   const fullNameState = getFieldState(
     fullName,
     fullNameValid,
     touched.fullName
   );
+
   const emailState = getFieldState(email, emailValid, touched.email);
+
   const passwordState = getFieldState(
     password,
     passwordValid,
@@ -107,6 +110,9 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
   const socialBase =
     "flex items-center justify-center gap-2 rounded-[18px] border border-[var(--border)] bg-[var(--surface)] text-[var(--text)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--primary)] hover:text-[var(--primary)]";
 
+  const cardTitle =
+    mode === "login" ? "Bienvenido de nuevo" : "Completa tus datos";
+
   function markTouched(field: keyof typeof touched) {
     setTouched((current) => ({
       ...current,
@@ -114,7 +120,7 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
     }));
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setErrorText("");
     setSuccessText("");
@@ -216,9 +222,11 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
       <div className={isMobile ? "pt-2" : "pt-1"}>
         <div className="mb-3 flex items-center gap-3">
           <div className="h-px flex-1 bg-[var(--border-soft)]" />
+
           <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--text-muted)]">
             O continúa con redes
           </span>
+
           <div className="h-px flex-1 bg-[var(--border-soft)]" />
         </div>
 
@@ -291,6 +299,7 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
               <p className="text-sm font-bold text-[var(--text)]">
                 Login rápido
               </p>
+
               <p className="mt-1 text-sm text-[var(--text-soft)]">
                 Esta opción está en desarrollo por ahora.
               </p>
@@ -310,14 +319,20 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
           className={
             isMobile
               ? "text-[25px] font-extrabold leading-none tracking-[-0.045em] text-[var(--text)]"
-              : "text-[58px] font-extrabold leading-[0.98] tracking-[-0.045em] text-[var(--text)]"
+              : "text-[42px] font-extrabold leading-[0.98] tracking-[-0.045em] text-[var(--text)] xl:text-[46px] 2xl:text-[50px]"
           }
         >
-          {mode === "login" ? "Bienvenido de nuevo" : "Crea tu cuenta"}
+          {cardTitle}
         </h1>
 
         <form
-          className={isMobile ? "mt-5 space-y-4" : "mt-6 space-y-4"}
+          className={
+            isMobile
+              ? "mt-5 space-y-4"
+              : mode === "register"
+              ? "mt-4 space-y-2.5"
+              : "mt-5 space-y-3"
+          }
           onSubmit={handleSubmit}
         >
           {mode === "register" && (
@@ -437,10 +452,7 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
               {mode === "login" ? "Lista" : "Contraseña válida"}
             </FloatingMessage>
 
-            <FloatingMessage
-              show={passwordState === "invalid"}
-              type="invalid"
-            >
+            <FloatingMessage show={passwordState === "invalid"} type="invalid">
               {mode === "login" ? "Requerida" : "Mínimo 8 caracteres"}
             </FloatingMessage>
           </div>
@@ -543,13 +555,13 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
 
       {/* PC */}
       <div className="hidden lg:block">
-        <div className="w-full rounded-[34px] border border-[var(--border)] bg-[var(--surface)] p-8">
-          <div className="rounded-full bg-[var(--surface-soft)] p-2">
+        <div className="w-full rounded-[34px] border border-[var(--border)] bg-[var(--surface)]/96 p-6 shadow-[0_18px_46px_var(--shadow)] backdrop-blur-md xl:p-7 2xl:p-8">
+          <div className="rounded-full bg-[var(--surface-soft)] p-1.5">
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => onModeChange("login")}
-                className={`h-[58px] rounded-full text-[16px] font-semibold transition-all xl:h-[60px] xl:text-[17px] ${
+                className={`h-[50px] rounded-full text-[15px] font-semibold transition-all xl:h-[52px] xl:text-[16px] ${
                   mode === "login"
                     ? "bg-[var(--primary)] text-white shadow-[0_8px_20px_var(--shadow-strong)]"
                     : "bg-transparent text-[var(--text-muted)]"
@@ -561,7 +573,7 @@ export default function AuthCard({ mode, onModeChange }: AuthCardProps) {
               <button
                 type="button"
                 onClick={() => onModeChange("register")}
-                className={`h-[58px] rounded-full text-[16px] font-semibold transition-all xl:h-[60px] xl:text-[17px] ${
+                className={`h-[50px] rounded-full text-[15px] font-semibold transition-all xl:h-[52px] xl:text-[16px] ${
                   mode === "register"
                     ? "bg-[var(--primary)] text-white shadow-[0_8px_20px_var(--shadow-strong)]"
                     : "bg-transparent text-[var(--text-muted)]"

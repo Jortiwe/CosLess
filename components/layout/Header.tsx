@@ -54,6 +54,11 @@ const FACEBOOK_URL =
   "https://m.me/jorge.alvarez.742658?ref=" +
   encodeURIComponent("Hola, quiero consultar sobre la tienda CosLess.");
 
+const HEADER_IMAGES = {
+  logo: "/images/header/cosless-logo.png",
+  cart: "/images/header/cart-icon.png",
+};
+
 const menuCategories = [
   { label: "Ver todo", href: "/productos" },
   { label: "Cosplays", href: "/categoria/cosplays" },
@@ -366,30 +371,32 @@ function HeaderContent() {
 
       <header className="sticky top-0 z-[110] select-none border-b border-[color:var(--border)] bg-[color:var(--surface)]/95 backdrop-blur">
         <div className="mx-auto w-full max-w-[1700px] px-3 sm:px-5 md:px-10 lg:px-14 xl:px-20 2xl:px-24">
-          <div className="grid min-h-[72px] grid-cols-[54px_1fr_auto] items-center gap-1 sm:min-h-[84px] sm:grid-cols-[72px_1fr_auto] sm:gap-2 md:grid-cols-[120px_1fr_120px] md:min-h-[92px] lg:grid-cols-[220px_1fr_220px] lg:min-h-[100px]">
+          <div className="grid min-h-[78px] grid-cols-[54px_1fr_auto] items-center gap-1 sm:min-h-[86px] sm:grid-cols-[72px_1fr_auto] sm:gap-2 md:grid-cols-[120px_1fr_120px] md:min-h-[94px] lg:grid-cols-[220px_1fr_220px] lg:min-h-[104px]">
             <div className="flex items-center justify-start">
               <button
                 type="button"
                 aria-label="Abrir menú"
                 onClick={() => setIsMenuOpen(true)}
-                className="group flex h-10 w-10 items-center justify-center rounded-2xl text-[color:var(--text)] transition duration-200 hover:scale-110 sm:h-11 sm:w-11 md:h-12 md:w-12"
+                className="group flex h-10 w-10 items-center justify-center rounded-2xl text-[color:var(--text)] transition duration-200 hover:scale-110 hover:text-[color:var(--primary)] sm:h-11 sm:w-11 md:h-12 md:w-12"
               >
-                <FiMenu className="text-[1.7rem] transition duration-200 group-hover:text-[color:var(--primary)] sm:text-[1.85rem] md:text-[2rem]" />
+                <FiMenu className="text-[1.7rem] transition duration-200 sm:text-[1.85rem] md:text-[2rem]" />
               </button>
             </div>
 
-            <Link
-              href="/"
-              className="flex min-w-0 flex-col items-center justify-center text-center transition duration-200 hover:scale-[1.02]"
-              aria-label="Ir a la página principal"
-            >
-              <div className="truncate text-[1.55rem] font-extrabold leading-none tracking-wide text-[color:var(--primary)] sm:text-[1.9rem] md:text-[2.25rem] lg:text-[2.7rem]">
-                CosLess
-              </div>
-              <p className="mt-1 text-[8px] font-medium uppercase tracking-[0.26em] text-[color:var(--text-soft)] sm:mt-1.5 sm:text-[9px] md:mt-2 md:text-[11px] lg:text-[12px]">
-                Cosplay Store
-              </p>
-            </Link>
+            <div className="flex min-w-0 items-center justify-center">
+              <Link
+                href="/"
+                className="inline-flex w-fit items-center justify-center text-center transition duration-200 hover:scale-[1.02]"
+                aria-label="Ir a la página principal"
+              >
+                <img
+                  src={HEADER_IMAGES.logo}
+                  alt="CosLess Cosplay Store"
+                  draggable={false}
+                  className="pointer-events-auto h-[58px] w-auto max-w-[230px] object-contain sm:h-[66px] sm:max-w-[280px] md:h-[74px] md:max-w-[340px] lg:h-[82px] lg:max-w-[390px]"
+                />
+              </Link>
+            </div>
 
             <div className="relative flex items-center justify-end">
               {sessionReady && isAdmin && (
@@ -406,19 +413,21 @@ function HeaderContent() {
                   {isSearchPage && (
                     <span className="absolute -top-2 left-1/2 h-[3px] w-6 -translate-x-1/2 rounded-full bg-[color:var(--primary)]" />
                   )}
-                  <SearchTrigger className="group flex h-8 w-8 items-center justify-center rounded-2xl text-[color:var(--text)] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11" />
+
+                  <SearchTrigger className="group flex h-8 w-8 items-center justify-center rounded-2xl text-[color:var(--text)] transition duration-200 hover:scale-110 hover:text-[color:var(--primary)] sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11 [&_svg]:text-[1.12rem] sm:[&_svg]:text-[1.18rem] md:[&_svg]:text-[1.28rem] lg:[&_svg]:text-[1.38rem]" />
                 </div>
 
                 <div className="relative">
                   {isAccountPage && (
                     <span className="absolute -top-2 left-1/2 h-[3px] w-6 -translate-x-1/2 rounded-full bg-[color:var(--primary)]" />
                   )}
+
                   <Link
                     href={profileHref}
                     aria-label={isLoggedIn ? "Mi perfil" : "Mi cuenta"}
-                    className="group flex h-8 w-8 items-center justify-center rounded-2xl text-[color:var(--text)] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
+                    className="group flex h-8 w-8 items-center justify-center rounded-2xl text-[color:var(--text)] transition duration-200 hover:scale-110 hover:text-[color:var(--primary)] sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
                   >
-                    <FiUser className="text-[1.12rem] transition duration-200 group-hover:text-[color:var(--primary)] sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem]" />
+                    <FiUser className="text-[1.12rem] transition duration-200 sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem]" />
                   </Link>
                 </div>
 
@@ -426,19 +435,23 @@ function HeaderContent() {
                   {isFavoritesPage && (
                     <span className="absolute -top-2 left-1/2 z-10 h-[3px] w-6 -translate-x-1/2 rounded-full bg-[color:var(--primary)]" />
                   )}
+
                   <Link
                     href="/favoritos"
                     aria-label="Favoritos"
-                    className="group relative flex h-8 w-8 items-center justify-center rounded-2xl text-[color:var(--text)] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
+                    className="group relative flex h-8 w-8 items-center justify-center rounded-2xl text-[color:var(--text)] transition duration-200 hover:scale-110 hover:text-[color:var(--primary)] sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
                   >
                     <FiHeart
-                      className={`text-[1.12rem] transition duration-200 group-hover:text-[color:var(--primary)] sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem] ${
-                        favoritesPulse ? "scale-125 text-[color:var(--primary)]" : ""
+                      className={`text-[1.12rem] transition duration-200 sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem] ${
+                        favoritesPulse
+                          ? "scale-125 text-[color:var(--primary)]"
+                          : ""
                       }`}
                     />
+
                     {favoritesCount > 0 && (
                       <span
-                        className={`absolute right-[-1px] top-[-2px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-[color:var(--primary)] px-1 text-[9px] font-bold text-[color:var(--cos-white)] sm:h-[17px] sm:min-w-[17px] md:h-[18px] md:min-w-[18px] md:text-[10px] lg:h-5 lg:min-w-5 ${
+                        className={`absolute right-[-1px] top-[-2px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-[color:var(--primary)] px-1 text-[9px] font-bold text-[color:var(--cos-white)] transition sm:h-[17px] sm:min-w-[17px] md:h-[18px] md:min-w-[18px] md:text-[10px] lg:h-5 lg:min-w-5 ${
                           favoritesPulse ? "scale-125" : ""
                         }`}
                       >
@@ -452,19 +465,29 @@ function HeaderContent() {
                   {isCartPage && (
                     <span className="absolute -top-2 left-1/2 z-10 h-[3px] w-6 -translate-x-1/2 rounded-full bg-[color:var(--primary)]" />
                   )}
+
                   <Link
                     href="/carrito"
                     aria-label="Carrito"
-                    className="group relative flex h-8 w-8 items-center justify-center rounded-2xl text-[color:var(--text)] transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
+                    className="group relative flex h-8 w-8 items-center justify-center rounded-2xl transition duration-200 hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10 lg:h-11 lg:w-11"
                   >
-                    <FiShoppingBag
-                      className={`text-[1.12rem] transition duration-200 group-hover:text-[color:var(--primary)] sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem] ${
-                        cartPulse ? "scale-125 text-[color:var(--primary)]" : ""
+                    <img
+                      src={HEADER_IMAGES.cart}
+                      alt="Carrito"
+                      draggable={false}
+                      className={`h-[1.52rem] w-[1.52rem] object-contain transition duration-200 group-hover:-translate-y-0.5 group-hover:scale-110 sm:h-[1.62rem] sm:w-[1.62rem] md:h-[1.78rem] md:w-[1.78rem] lg:h-[1.95rem] lg:w-[1.95rem] ${
+                        cartPulse ? "scale-125" : ""
                       }`}
+                      onError={(event) => {
+                        event.currentTarget.style.display = "none";
+                      }}
                     />
+
+                    <FiShoppingBag className="absolute text-[1.12rem] text-[color:var(--text)] opacity-0 transition duration-200 sm:text-[1.18rem] md:text-[1.28rem] lg:text-[1.38rem]" />
+
                     {cartCount > 0 && (
                       <span
-                        className={`absolute right-[-1px] top-[-2px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-[color:var(--primary)] px-1 text-[9px] font-bold text-[color:var(--cos-white)] sm:h-[17px] sm:min-w-[17px] md:h-[18px] md:min-w-[18px] md:text-[10px] lg:h-5 lg:min-w-5 ${
+                        className={`absolute right-[-1px] top-[-2px] flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-[color:var(--primary)] px-1 text-[9px] font-bold text-[color:var(--cos-white)] transition sm:h-[17px] sm:min-w-[17px] md:h-[18px] md:min-w-[18px] md:text-[10px] lg:h-5 lg:min-w-5 ${
                           cartPulse ? "scale-125" : ""
                         }`}
                       >
@@ -500,7 +523,9 @@ function HeaderContent() {
                     </span>
                   </a>
 
-                  <span className="px-1 text-[color:var(--primary-light)]">|</span>
+                  <span className="px-1 text-[color:var(--primary-light)]">
+                    |
+                  </span>
 
                   <a
                     href={FACEBOOK_URL}
@@ -537,14 +562,18 @@ function HeaderContent() {
       >
         <div className="flex h-full flex-col">
           <div className="flex shrink-0 items-center justify-between border-b border-[color:var(--border-soft)] px-5 py-4 sm:px-6 sm:py-4">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-[0.22em] text-[color:var(--text-muted)]">
-                Menú
-              </p>
-              <h2 className="mt-1 text-[1.9rem] font-extrabold leading-none text-[color:var(--text)] sm:text-[2rem]">
-                CosLess
-              </h2>
-            </div>
+            <Link
+              href="/"
+              onClick={() => setIsMenuOpen(false)}
+              className="inline-flex min-w-0 items-center"
+            >
+              <img
+                src={HEADER_IMAGES.logo}
+                alt="CosLess Cosplay Store"
+                draggable={false}
+                className="h-14 w-auto max-w-[230px] object-contain sm:h-16"
+              />
+            </Link>
 
             <button
               type="button"
@@ -568,7 +597,7 @@ function HeaderContent() {
                 >
                   <span className="leading-none">{item.label}</span>
 
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[color:var(--surface-soft)] text-[color:var(--primary)] transition duration-200 group-hover:bg-[color:var(--surface)] group-hover:translate-x-1 group-hover:shadow-[0_6px_16px_var(--shadow-strong)]">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[color:var(--surface-soft)] text-[color:var(--primary)] transition duration-200 group-hover:translate-x-1 group-hover:bg-[color:var(--surface)] group-hover:shadow-[0_6px_16px_var(--shadow-strong)]">
                     <span className="text-[0.92rem] font-extrabold">→</span>
                   </span>
                 </Link>

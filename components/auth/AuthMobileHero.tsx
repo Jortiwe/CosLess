@@ -4,11 +4,11 @@ export default function AuthMobileHero() {
   return (
     <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[560px] overflow-hidden lg:hidden">
       <Image
-        src="/images/auth/cosless-login-movil.png"
+        src="/images/auth/cosless-login-mobile-v4.png"
         alt="CosLess hero móvil"
         fill
         priority
-        sizes="100vw"
+        sizes="430px"
         className="object-cover object-top"
       />
 
