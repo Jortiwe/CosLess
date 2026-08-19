@@ -11,6 +11,7 @@ import {
   FaYoutube,
 } from "react-icons/fa";
 import { FiMail, FiHelpCircle, FiBell } from "react-icons/fi";
+import { COSLESS_IMAGES } from "../../lib/coslessImages";
 
 const PHONE_NUMBER = "59160769356";
 const EMAIL = "horuhe3421310@gmail.com";
@@ -229,7 +230,7 @@ export default function Footer() {
 
           <div className="pointer-events-none mt-5 flex justify-center sm:mt-6">
             <Image
-              src="/images/characters/cosless-bot.png"
+              src={COSLESS_IMAGES.characters.bot}
               alt=""
               aria-hidden="true"
               width={130}
@@ -369,7 +370,7 @@ export default function Footer() {
             </a>
 
             <Image
-              src="/images/characters/cosless-bot.png"
+              src={COSLESS_IMAGES.characters.bot}
               alt=""
               aria-hidden="true"
               width={150}

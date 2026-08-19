@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { MouseEvent, TouchEvent, useEffect, useRef, useState } from "react";
 import { FiArrowUpRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { COSLESS_IMAGES } from "../../lib/coslessImages";
 
 const AUTO_SLIDE_DELAY = 8000;
 const MANUAL_PAUSE_DELAY = 15000;
@@ -11,28 +12,28 @@ const SWIPE_THRESHOLD = 45;
 const slides = [
   {
     id: 1,
-    image: "/images/home/hero-1.png",
+    image: COSLESS_IMAGES.home.hero1,
     tag: "Cosplay",
     title: "CosLess",
     href: "/productos",
   },
   {
     id: 2,
-    image: "/images/home/hero-2.png",
+    image: COSLESS_IMAGES.home.hero2,
     tag: "Lentillas",
     title: "Lentes",
     href: "/categoria/lentes",
   },
   {
     id: 3,
-    image: "/images/home/hero-3.png",
+    image: COSLESS_IMAGES.home.hero3,
     tag: "Accesorios",
     title: "Detalles",
     href: "/categoria/accesorios",
   },
   {
     id: 4,
-    image: "/images/home/hero-4.png",
+    image: COSLESS_IMAGES.home.hero4,
     tag: "Renta",
     title: "Cosplays",
     href: "/categoria/cosplays",

@@ -5,6 +5,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/pscxanak/image/upload/**",
+      },
+      {
+        protocol: "https",
         hostname: "static.vecteezy.com",
       },
       {

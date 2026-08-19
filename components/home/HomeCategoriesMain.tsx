@@ -1,12 +1,14 @@
 import Link from "next/link";
+import { COSLESS_IMAGES } from "../../lib/coslessImages";
 
 const categories = [
   {
     title: "Cosplays",
     description: "Trajes completos para tus personajes favoritos.",
     href: "/buscar?q=cosplays",
-    image: "/images/home/cat-cosplays.png",
-    panel: "linear-gradient(135deg, var(--surface-soft) 0%, var(--cos-soft) 100%)",
+    image: COSLESS_IMAGES.home.catCosplays,
+    panel:
+      "linear-gradient(135deg, var(--surface-soft) 0%, var(--cos-soft) 100%)",
     chipBg: "var(--surface)",
     chipText: "var(--primary)",
     buttonBg: "var(--primary)",
@@ -16,8 +18,9 @@ const categories = [
     title: "Pelucas",
     description: "Pelucas de distintos estilos, colores y cortes.",
     href: "/buscar?q=pelucas",
-    image: "/images/home/cat-pelucas.png",
-    panel: "linear-gradient(135deg, var(--surface-soft) 0%, var(--cos-soft) 100%)",
+    image: COSLESS_IMAGES.home.catPelucas,
+    panel:
+      "linear-gradient(135deg, var(--surface-soft) 0%, var(--cos-soft) 100%)",
     chipBg: "var(--surface)",
     chipText: "var(--featured)",
     buttonBg: "var(--featured)",
@@ -27,8 +30,9 @@ const categories = [
     title: "Lentes",
     description: "Lentes para completar mejor tu personaje.",
     href: "/buscar?q=lentes",
-    image: "/images/home/cat-lentes.png",
-    panel: "linear-gradient(135deg, var(--surface-soft) 0%, var(--cos-soft) 100%)",
+    image: COSLESS_IMAGES.home.catLentes,
+    panel:
+      "linear-gradient(135deg, var(--surface-soft) 0%, var(--cos-soft) 100%)",
     chipBg: "var(--surface)",
     chipText: "var(--primary)",
     buttonBg: "var(--primary)",
@@ -38,8 +42,9 @@ const categories = [
     title: "Mallas",
     description: "Opciones básicas y especiales para cosplay.",
     href: "/buscar?q=mallas",
-    image: "/images/home/cat-mallas.png",
-    panel: "linear-gradient(135deg, var(--warning-bg) 0%, var(--surface-soft) 100%)",
+    image: COSLESS_IMAGES.home.catMallas,
+    panel:
+      "linear-gradient(135deg, var(--warning-bg) 0%, var(--surface-soft) 100%)",
     chipBg: "var(--surface)",
     chipText: "var(--warning)",
     buttonBg: "var(--warning)",
@@ -49,8 +54,9 @@ const categories = [
     title: "Accesorios",
     description: "Detalles y complementos para tu outfit.",
     href: "/buscar?q=accesorios",
-    image: "/images/home/cat-accesorios.png",
-    panel: "linear-gradient(135deg, var(--success-bg) 0%, var(--surface-soft) 100%)",
+    image: COSLESS_IMAGES.home.catAccesorios,
+    panel:
+      "linear-gradient(135deg, var(--success-bg) 0%, var(--surface-soft) 100%)",
     chipBg: "var(--surface)",
     chipText: "var(--success)",
     buttonBg: "var(--success)",
@@ -60,8 +66,9 @@ const categories = [
     title: "Preventa",
     description: "Reserva productos próximos a llegar.",
     href: "/buscar?q=preventa",
-    image: "/images/home/cat-preventa.png",
-    panel: "linear-gradient(135deg, var(--danger-bg) 0%, var(--surface-soft) 100%)",
+    image: COSLESS_IMAGES.home.catPreventa,
+    panel:
+      "linear-gradient(135deg, var(--danger-bg) 0%, var(--surface-soft) 100%)",
     chipBg: "var(--surface)",
     chipText: "var(--danger)",
     buttonBg: "var(--danger)",
@@ -93,8 +100,15 @@ export default function HomeCategoriesMain() {
                 className="relative flex h-[170px] items-center justify-center overflow-hidden rounded-[24px] sm:h-[190px]"
                 style={{ background: category.panel }}
               >
+                <div
+                  className="absolute inset-0 bg-cover bg-center opacity-95 transition duration-500 hover:scale-[1.04]"
+                  style={{ backgroundImage: `url(${category.image})` }}
+                />
+
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(16,38,90,0.18)_100%)]" />
+
                 <span
-                  className="rounded-full px-6 py-3 text-[1.05rem] font-extrabold shadow-sm"
+                  className="relative z-10 rounded-full px-6 py-3 text-[1.05rem] font-extrabold shadow-sm backdrop-blur-sm"
                   style={{
                     backgroundColor: category.chipBg,
                     color: category.chipText,
@@ -102,14 +116,6 @@ export default function HomeCategoriesMain() {
                 >
                   {category.title}
                 </span>
-
-                {/* Si luego quieres usar imagen real IA, descomenta esto:
-                <div
-                  className="absolute inset-0 bg-cover bg-center opacity-90"
-                  style={{ backgroundImage: `url(${category.image})` }}
-                />
-                <div className="absolute inset-0 bg-[var(--surface)]/20" />
-                */}
               </div>
             </div>
 

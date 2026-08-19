@@ -1,14 +1,15 @@
 import Image from "next/image";
+import { COSLESS_IMAGES } from "../../lib/coslessImages";
 
 export default function AuthMobileHero() {
   return (
     <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[560px] overflow-hidden lg:hidden">
       <Image
-        src="/images/auth/cosless-login-mobile-v4.png"
+        src={COSLESS_IMAGES.auth.loginMobile}
         alt="CosLess hero móvil"
         fill
         priority
-        sizes="430px"
+        sizes="(max-width: 640px) 100vw, 430px"
         className="object-cover object-top"
       />
 

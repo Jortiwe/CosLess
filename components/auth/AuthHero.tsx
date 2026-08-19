@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { COSLESS_IMAGES } from "../../lib/coslessImages";
 
 type AuthHeroProps = {
   mode: "login" | "register";
@@ -6,11 +7,11 @@ type AuthHeroProps = {
 
 const heroImages = {
   login: {
-    src: "/images/auth/cosless-login-hero.png",
+    src: COSLESS_IMAGES.auth.loginHero,
     alt: "CosLess iniciar sesión",
   },
   register: {
-    src: "/images/auth/cosless-register-hero.png",
+    src: COSLESS_IMAGES.auth.registerHero,
     alt: "CosLess crear cuenta",
   },
 };

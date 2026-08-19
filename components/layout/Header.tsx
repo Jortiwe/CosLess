@@ -27,6 +27,7 @@ import {
   loadAccountStoreToLocal,
   setGuestShopMode,
 } from "../../lib/storage";
+import { COSLESS_IMAGES } from "../../lib/coslessImages";
 
 type SessionUser = {
   userId?: string;
@@ -55,8 +56,8 @@ const FACEBOOK_URL =
   encodeURIComponent("Hola, quiero consultar sobre la tienda CosLess.");
 
 const HEADER_IMAGES = {
-  logo: "/images/header/cosless-logo.png",
-  cart: "/images/header/cart-icon.png",
+  logo: COSLESS_IMAGES.header.logo,
+  cart: COSLESS_IMAGES.header.cart,
 };
 
 const menuCategories = [

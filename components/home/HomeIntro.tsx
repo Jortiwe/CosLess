@@ -5,6 +5,7 @@ import {
   FiRepeat,
   FiTruck,
 } from "react-icons/fi";
+import { COSLESS_IMAGES } from "../../lib/coslessImages";
 
 const infoItems = [
   {
@@ -40,7 +41,7 @@ export default function HomeIntro() {
         <div className="absolute bottom-6 left-1/2 h-[140px] w-[120px] -translate-x-1/2 rounded-full bg-[var(--primary-light)]/10 blur-2xl" />
 
         <Image
-          src="/images/characters/yui1.png"
+          src={COSLESS_IMAGES.characters.yui}
           alt=""
           aria-hidden="true"
           width={260}
@@ -54,7 +55,7 @@ export default function HomeIntro() {
         <div className="absolute bottom-6 left-1/2 h-[140px] w-[120px] -translate-x-1/2 rounded-full bg-[var(--primary-light)]/10 blur-2xl" />
 
         <Image
-          src="/images/characters/aoi1.png"
+          src={COSLESS_IMAGES.characters.aoi}
           alt=""
           aria-hidden="true"
           width={260}
@@ -72,7 +73,7 @@ export default function HomeIntro() {
           <div className="relative mx-auto mt-4 max-w-[310px] sm:max-w-4xl">
             {/* Yui móvil al lado izquierdo del título */}
             <Image
-              src="/images/characters/yui1.png"
+              src={COSLESS_IMAGES.characters.yui}
               alt=""
               aria-hidden="true"
               width={120}
@@ -82,7 +83,7 @@ export default function HomeIntro() {
 
             {/* Aoi móvil al lado derecho del título */}
             <Image
-              src="/images/characters/aoi1.png"
+              src={COSLESS_IMAGES.characters.aoi}
               alt=""
               aria-hidden="true"
               width={120}
