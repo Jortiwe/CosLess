@@ -9,9 +9,7 @@ import Product from "../../models/Product";
 export const dynamic = "force-dynamic";
 
 type ProductsPageProps = {
-  searchParams: Promise<{
-    section?: string;
-  }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 function getPageInfo(section?: string) {
@@ -62,7 +60,10 @@ export default async function ProductsPage({
   searchParams,
 }: ProductsPageProps) {
   const params = await searchParams;
-  const section = params?.section;
+  const sectionValue = params?.section;
+  const section = Array.isArray(sectionValue)
+    ? sectionValue[0]
+    : sectionValue;
 
   await connectDB();
 
