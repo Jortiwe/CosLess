@@ -251,7 +251,8 @@ export default async function AdminPage() {
       total +
       (Array.isArray(order.items)
         ? order.items.reduce(
-            (itemTotal, item) => itemTotal + Number(item.quantity || 0),
+            (itemTotal: number, item: { quantity?: number }) =>
+              itemTotal + Number(item.quantity || 0),
             0
           )
         : 0),

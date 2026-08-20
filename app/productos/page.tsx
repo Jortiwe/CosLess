@@ -48,6 +48,14 @@ function getPageInfo(section?: string) {
     };
   }
 
+  if (section === "rentas" || section === "alquiler") {
+    return {
+      badge: "Alquiler",
+      title: "Productos en alquiler",
+      description: "Productos disponibles para alquilar por tiempo limitado.",
+    };
+  }
+
   return {
     badge: "Ver todo",
     title: "Todos los productos",
@@ -74,14 +82,6 @@ export default async function ProductsPage({
   if (section === "ofertas") {
     query.isOffer = true;
     query.stock = { $gt: 0 };
-  }
-
-  if (section === "rentas" || section === "alquiler") {
-    return {
-      badge: "Alquiler",
-      title: "Productos en alquiler",
-      description: "Productos disponibles para alquilar por tiempo limitado.",
-    };
   }
 
   if (section === "nuevos") {
