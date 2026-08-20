@@ -25,7 +25,7 @@ const infoItems = [
   },
   {
     icon: FiRepeat,
-    title: "Renta",
+    title: "Alquiler",
     text: "Consulta disponibilidad.",
   },
 ];
@@ -98,7 +98,7 @@ export default function HomeIntro() {
 
           <p className="mx-auto mt-3 max-w-3xl text-sm leading-7 text-[var(--text-soft)] sm:text-base">
             Atención rápida para cosplays, pelucas, lentes, accesorios,
-            preventas y renta.
+            preventas y alquiler.
           </p>
         </div>
 

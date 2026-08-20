@@ -46,7 +46,6 @@ const categoryLinks = [
   { label: "Cosplays", href: "/categoria/cosplays" },
   { label: "Pelucas", href: "/categoria/pelucas" },
   { label: "Lentes", href: "/categoria/lentes" },
-  { label: "Mallas", href: "/categoria/mallas" },
   { label: "Accesorios", href: "/categoria/accesorios" },
   { label: "Preventa", href: "/categoria/preventa" },
 ];
@@ -248,7 +247,7 @@ export default function Footer() {
             </h3>
 
             <p className="mt-4 max-w-sm text-[17px] leading-8 text-[var(--text-soft)]">
-              Cosplays, pelucas, lentes, mallas, accesorios, renta y preventas.
+              Cosplays, pelucas, lentes, mallas, accesorios, alquiler y preventas.
               Cotiza rápido por WhatsApp.
             </p>
 

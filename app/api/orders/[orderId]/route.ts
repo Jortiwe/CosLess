@@ -29,11 +29,20 @@ async function deductInventory(order: any) {
 
     if (quantity <= 0) continue;
 
-    await Product.findByIdAndUpdate(item.productId, {
+    const updatedProduct = await Product.findByIdAndUpdate(item.productId, {
       $inc: {
         stock: -quantity,
       },
-    });
+    }, { new: true });
+
+    if (updatedProduct && Number(updatedProduct.stock || 0) <= 0) {
+      await Product.findByIdAndUpdate(item.productId, {
+        $set: {
+          isOffer: false,
+          isWeeklyNew: false,
+        },
+      });
+    }
   }
 
   order.inventoryDeducted = true;

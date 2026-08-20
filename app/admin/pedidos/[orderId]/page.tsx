@@ -196,6 +196,7 @@ export default async function Page({ params }: PageProps) {
                         title: string;
                         quantity: number;
                         price: number;
+                        mainImage?: string;
                       },
                       index: number
                     ) => (
@@ -203,9 +204,14 @@ export default async function Page({ params }: PageProps) {
                         key={`${item.productId}-${index}`}
                         className="rounded-[22px] border border-[var(--border-soft)] bg-[var(--surface-soft)] px-4 py-4 transition hover:border-[var(--primary)] hover:bg-[var(--surface)]"
                       >
-                        <div className="flex items-start justify-between gap-3">
+                        <div className="grid grid-cols-[52px_minmax(0,1fr)_auto] items-center gap-3 sm:grid-cols-[64px_minmax(0,1fr)_auto] sm:gap-5">
+                          <img
+                            src={item.mainImage || "/placeholder-product.png"}
+                            alt={item.title}
+                            className="h-14 w-14 rounded-xl object-cover sm:h-16 sm:w-16"
+                          />
                           <div className="min-w-0">
-                            <p className="line-clamp-2 font-extrabold text-[var(--text)]">
+                            <p className="line-clamp-2 text-left font-extrabold leading-6 text-[var(--text)]">
                               {item.title}
                             </p>
 
@@ -214,7 +220,7 @@ export default async function Page({ params }: PageProps) {
                             </p>
                           </div>
 
-                          <p className="shrink-0 text-right font-black text-[var(--primary)]">
+                          <p className="whitespace-nowrap text-right text-sm font-black text-[var(--primary)] sm:text-base">
                             {formatBs(item.price)}
                           </p>
                         </div>

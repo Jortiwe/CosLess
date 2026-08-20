@@ -35,6 +35,12 @@ type ProductItem = {
   isOffer?: boolean;
   isWeeklyNew?: boolean;
   isFeatured?: boolean;
+  categories?: string[];
+  isRentable?: boolean;
+  rentalPrice?: number;
+  rentalDays?: number;
+  rentalAvailable?: boolean;
+  pairedProducts?: string[];
 };
 
 function formatBs(value?: number) {
@@ -66,12 +72,24 @@ function getSafeImage(src?: string) {
   return value;
 }
 
+function getRentalInfo(product: ProductItem) {
+  const categories = (product.categories || []).map((item) => item.toLowerCase());
+  const category = (product.category || "").toLowerCase();
+  const rentable = product.isRentable === true || category === "renta" || category === "alquiler" || categories.includes("renta") || categories.includes("alquiler");
+  return {
+    rentable: rentable && product.rentalAvailable !== false,
+    price: typeof product.rentalPrice === "number" ? product.rentalPrice : 0,
+    days: typeof product.rentalDays === "number" && product.rentalDays > 0 ? product.rentalDays : 1,
+  };
+}
+
 function RelatedProductCard({ product }: { product: ProductItem }) {
   const href = product.slug ? `/producto/${product.slug}` : "#";
   const image = getSafeImage(product.mainImage || product.images?.[0]);
   const status = product.status || "stock";
   const stock = typeof product.stock === "number" ? product.stock : 0;
   const isOutOfStock = status !== "preventa" && stock <= 0;
+  const rental = getRentalInfo(product);
 
   return (
     <Link
@@ -113,10 +131,16 @@ function RelatedProductCard({ product }: { product: ProductItem }) {
           {product.title || "Producto sin título"}
         </h3>
 
-        <div className="mt-3 flex items-center justify-between gap-2">
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
           <p className="text-[0.98rem] font-extrabold text-[var(--primary)] sm:text-[1.08rem]">
             {formatBs(product.price)}
           </p>
+
+          {rental.rentable && rental.price > 0 && (
+            <span className="text-[0.68rem] font-bold text-[#5661c9]">
+              Alquiler {formatBs(rental.price)}
+            </span>
+          )}
 
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--surface-soft)] text-sm font-extrabold text-[var(--primary)] transition group-hover:bg-[var(--primary)] group-hover:text-white sm:h-9 sm:w-9">
             →
@@ -152,22 +176,27 @@ export default async function ProductPage({ params }: PageProps) {
     .filter(Boolean)
     .slice(0, 5);
 
-  const rawRelatedProducts = await Product.find({
-    _id: { $ne: product._id },
-    category: product.category,
-    $or: [
-      { isActive: true },
-      { active: true },
-      { isActive: { $exists: false } },
-    ],
-  })
-    .sort({ updatedAt: -1, createdAt: -1 })
-    .limit(4)
-    .lean();
+  const pairedIds = Array.isArray(product.pairedProducts)
+    ? product.pairedProducts.filter((id) => String(id) !== String(product._id))
+    : [];
+
+  const [rawPairedProducts, rawRelatedProducts] = await Promise.all([
+    pairedIds.length > 0
+      ? Product.find({
+          _id: { $in: pairedIds },
+          $or: [{ isActive: true }, { active: true }, { isActive: { $exists: false } }],
+        }).limit(4).lean()
+      : [],
+    Product.find({
+      _id: { $ne: product._id, $nin: pairedIds },
+      category: product.category,
+      $or: [{ isActive: true }, { active: true }, { isActive: { $exists: false } }],
+    }).sort({ updatedAt: -1, createdAt: -1 }).limit(4).lean(),
+  ]);
 
   const relatedProducts = JSON.parse(
-    JSON.stringify(rawRelatedProducts)
-  ) as ProductItem[];
+    JSON.stringify([...rawPairedProducts, ...rawRelatedProducts])
+  ).slice(0, 4) as ProductItem[];
 
   const checkoutProduct: {
     productId: string;
@@ -189,6 +218,7 @@ export default async function ProductPage({ params }: PageProps) {
 
   const isPreventa = product.status === "preventa";
   const stock = typeof product.stock === "number" ? product.stock : 0;
+  const rental = getRentalInfo(product);
   const fallbackBackHref = product.category
     ? `/categoria/${product.category}`
     : "/productos";
@@ -234,6 +264,12 @@ export default async function ProductPage({ params }: PageProps) {
                   Destacado
                 </span>
               )}
+
+              {rental.rentable && rental.price > 0 && (
+                <span className="rounded-full bg-[#eef0ff] px-4 py-2 text-xs font-extrabold text-[#5661c9] sm:text-sm">
+                  Alquiler
+                </span>
+              )}
             </div>
 
             <h1 className="mt-5 text-[2.05rem] font-extrabold leading-tight text-[var(--text)] sm:text-[3rem] lg:max-w-[760px]">
@@ -250,6 +286,16 @@ export default async function ProductPage({ params }: PageProps) {
               <p className="text-[2rem] font-black leading-tight text-[var(--primary)] sm:text-[2.35rem]">
                 {formatBs(product.price)}
               </p>
+
+              {rental.rentable && rental.price > 0 && (
+                <div className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-[#eef0ff] px-4 py-3 text-sm font-bold text-[#5661c9] sm:text-base">
+                  <span>Alquiler:</span>
+                  <span>{formatBs(rental.price)}</span>
+                  <span className="text-xs font-semibold opacity-80">
+                    / {rental.days === 1 ? "día" : `${rental.days} días`}
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-[var(--text-soft)]">
@@ -322,7 +368,7 @@ export default async function ProductPage({ params }: PageProps) {
             <div className="mb-4 flex items-center justify-between gap-3">
               <div>
                 <span className="inline-flex rounded-full bg-[var(--surface)] px-4 py-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--primary)] shadow-[0_8px_20px_var(--shadow)]">
-                  También te puede gustar
+                  {pairedIds.length > 0 ? "Completa el conjunto" : "También te puede gustar"}
                 </span>
 
                 <h2 className="mt-3 text-[1.7rem] font-extrabold leading-tight text-[var(--text)] sm:text-[2.2rem]">

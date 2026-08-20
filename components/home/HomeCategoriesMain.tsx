@@ -39,18 +39,6 @@ const categories = [
     buttonHover: "var(--primary-dark)",
   },
   {
-    title: "Mallas",
-    description: "Opciones básicas y especiales para cosplay.",
-    href: "/buscar?q=mallas",
-    image: COSLESS_IMAGES.home.catMallas,
-    panel:
-      "linear-gradient(135deg, var(--warning-bg) 0%, var(--surface-soft) 100%)",
-    chipBg: "var(--surface)",
-    chipText: "var(--warning)",
-    buttonBg: "var(--warning)",
-    buttonHover: "var(--primary-dark)",
-  },
-  {
     title: "Accesorios",
     description: "Detalles y complementos para tu outfit.",
     href: "/buscar?q=accesorios",

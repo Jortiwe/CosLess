@@ -20,7 +20,16 @@ type SearchProduct = {
   category: string;
   description?: string;
   mainImage: string;
+  categories?: string[];
+  isRentable?: boolean;
+  rentalAvailable?: boolean;
 };
+
+function isRentalProduct(product: SearchProduct) {
+  const categories = (product.categories || []).map((item) => item.toLowerCase());
+  const category = product.category.toLowerCase();
+  return product.isRentable === true || category === "alquiler" || category === "renta" || categories.includes("alquiler") || categories.includes("renta");
+}
 
 function formatBs(value?: number) {
   if (typeof value !== "number") return "Bs0";
@@ -199,7 +208,7 @@ export default function SearchOverlay({
               <div>
                 {exactMatches.length > 0 && (
                   <div>
-                    <div className="border-b border-[var(--border-soft)] px-6 py-4 text-[0.82rem] uppercase tracking-[0.24em] text-[var(--text-muted)]">
+                    <div className="border-b border-[var(--border-soft)] px-4 py-4 text-[0.72rem] uppercase tracking-[0.18em] text-[var(--text-muted)] sm:px-6 sm:text-[0.82rem] sm:tracking-[0.24em]">
                       Coincidencias directas
                     </div>
 
@@ -209,7 +218,7 @@ export default function SearchOverlay({
                           key={product._id}
                           href={`/producto/${product.slug}`}
                           onClick={onClose}
-                          className="flex w-full items-start gap-4 px-6 py-5 text-left transition duration-200 hover:bg-[var(--surface-soft)]"
+                          className="flex w-full items-start gap-3 px-4 py-5 text-left transition duration-200 hover:bg-[var(--surface-soft)] sm:gap-4 sm:px-6"
                         >
                           <img
   src={product.mainImage || "/placeholder-product.png"}
@@ -227,9 +236,16 @@ export default function SearchOverlay({
                             <p className="mt-1 text-sm text-[var(--text-soft)]">
                               {product.category}
                             </p>
-                            <p className="mt-2 text-[0.97rem] font-bold text-[var(--primary)]">
-                              {formatBs(product.price)}
-                            </p>
+                            <div className="mt-2 flex items-center gap-2">
+                              <p className="text-[0.97rem] font-bold text-[var(--primary)]">
+                                {formatBs(product.price)}
+                              </p>
+                              {isRentalProduct(product) && (
+                                <span className="rounded-full bg-[#eef0ff] px-2 py-0.5 text-[0.68rem] font-bold uppercase tracking-[0.08em] text-[#5661c9]">
+                                  Alquiler
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </Link>
                       ))}
@@ -239,7 +255,7 @@ export default function SearchOverlay({
 
                 {relatedMatches.length > 0 && (
                   <div>
-                    <div className="border-b border-t border-[var(--border-soft)] px-6 py-4 text-[0.82rem] uppercase tracking-[0.24em] text-[var(--text-muted)]">
+                    <div className="border-b border-t border-[var(--border-soft)] px-4 py-4 text-[0.72rem] uppercase tracking-[0.18em] text-[var(--text-muted)] sm:px-6 sm:text-[0.82rem] sm:tracking-[0.24em]">
                       Relacionados
                     </div>
 
@@ -249,7 +265,7 @@ export default function SearchOverlay({
                           key={product._id}
                           href={`/producto/${product.slug}`}
                           onClick={onClose}
-                          className="flex w-full items-start gap-4 px-6 py-5 text-left transition duration-200 hover:bg-[var(--surface-soft)]"
+                          className="flex w-full items-start gap-3 px-4 py-5 text-left transition duration-200 hover:bg-[var(--surface-soft)] sm:gap-4 sm:px-6"
                         >
                           <img
   src={product.mainImage || "/placeholder-product.png"}
@@ -267,9 +283,16 @@ export default function SearchOverlay({
                             <p className="mt-1 text-sm text-[var(--text-soft)]">
                               {product.category}
                             </p>
-                            <p className="mt-2 text-[0.97rem] font-bold text-[var(--primary)]">
-                              {formatBs(product.price)}
-                            </p>
+                            <div className="mt-2 flex items-center gap-2">
+                              <p className="text-[0.97rem] font-bold text-[var(--primary)]">
+                                {formatBs(product.price)}
+                              </p>
+                              {isRentalProduct(product) && (
+                                <span className="rounded-full bg-[#eef0ff] px-2 py-0.5 text-[0.68rem] font-bold uppercase tracking-[0.08em] text-[#5661c9]">
+                                  Alquiler
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </Link>
                       ))}

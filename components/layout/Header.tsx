@@ -65,7 +65,6 @@ const menuCategories = [
   { label: "Cosplays", href: "/categoria/cosplays" },
   { label: "Pelucas", href: "/categoria/pelucas" },
   { label: "Lentes", href: "/categoria/lentes" },
-  { label: "Mallas", href: "/categoria/mallas" },
   { label: "Accesorios", href: "/categoria/accesorios" },
   { label: "Preventa", href: "/categoria/preventa" },
   { label: "Novedades", href: "/novedades" },

@@ -2,7 +2,11 @@
 
 import Link from "next/link";
 import { MouseEvent, TouchEvent, useEffect, useRef, useState } from "react";
-import { FiArrowUpRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import {
+  FiArrowUpRight,
+  FiChevronLeft,
+  FiChevronRight,
+} from "react-icons/fi";
 import { COSLESS_IMAGES } from "../../lib/coslessImages";
 
 const AUTO_SLIDE_DELAY = 8000;
@@ -34,9 +38,9 @@ const slides = [
   {
     id: 4,
     image: COSLESS_IMAGES.home.hero4,
-    tag: "Renta",
+    tag: "Alquiler",
     title: "Cosplays",
-    href: "/categoria/cosplays",
+    href: "/categoria/alquiler",
   },
 ];
 

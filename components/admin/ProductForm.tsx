@@ -1,23 +1,39 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { CATEGORY_LIST } from "../../lib/categories";
+import ProductRentalFields from "./ProductRentalFields";
+import ProductPairingFields from "./ProductPairingFields";
 
 type ProductType = {
   _id?: string;
   title?: string;
   slug?: string;
+
   category?: string;
   categories?: string[];
+
   status?: string;
+
   price?: number;
   costPrice?: number;
   oldPrice?: number;
   stock?: number;
+
+  isRentable?: boolean;
+  rentalPrice?: number;
+  rentalDeposit?: number;
+  rentalDays?: number;
+  rentalAvailable?: boolean;
+
+  pairedProducts?: string[];
+
   mainImage?: string;
   images?: string[];
+
   description?: string;
+
   isFeatured?: boolean;
   isOffer?: boolean;
   isWeeklyNew?: boolean;
@@ -45,7 +61,9 @@ function normalizeCategory(value: string) {
 }
 
 function getInitialCategories(product?: ProductType) {
-  const primaryCategory = normalizeCategory(product?.category || "cosplays");
+  const primaryCategory = normalizeCategory(
+    product?.category || "cosplays"
+  );
 
   const savedCategories = Array.isArray(product?.categories)
     ? product.categories.map(normalizeCategory).filter(Boolean)
@@ -58,96 +76,399 @@ function getInitialCategories(product?: ProductType) {
   return categories.length > 0 ? categories : ["cosplays"];
 }
 
-function getCategoryTitle(slug: string) {
-  return CATEGORY_LIST.find((category) => category.slug === slug)?.title || slug;
+function getInitialPairedProducts(product?: ProductType) {
+  if (!Array.isArray(product?.pairedProducts)) {
+    return [];
+  }
+
+  return product.pairedProducts
+    .map((item) => String(item || "").trim())
+    .filter(Boolean);
 }
 
-export default function ProductForm({ mode, product }: Props) {
+export default function ProductForm({
+  mode,
+  product,
+}: Props) {
   const router = useRouter();
 
-  const [title, setTitle] = useState(product?.title || "");
-  const [slug, setSlug] = useState(product?.slug || "");
-  const [categories, setCategories] = useState<string[]>(
-    getInitialCategories(product)
+  const initialCategories = getInitialCategories(product);
+
+  const initiallyRentable =
+    Boolean(product?.isRentable) ||
+    initialCategories.includes("alquiler");
+
+  const [title, setTitle] = useState(
+    product?.title || ""
   );
-  const [status, setStatus] = useState(product?.status || "stock");
-  const [price, setPrice] = useState(String(product?.price ?? 0));
+
+  const [slug, setSlug] = useState(
+    product?.slug || ""
+  );
+
+  const [categories, setCategories] =
+    useState<string[]>(initialCategories);
+
+  const [status, setStatus] = useState(
+    product?.status || "stock"
+  );
+
+  // =========================
+  // VENTA
+  // =========================
+
+  const [price, setPrice] = useState(
+    String(product?.price ?? 0)
+  );
+
   const [costPrice, setCostPrice] = useState(
     String(product?.costPrice ?? 0)
   );
-  const [oldPrice, setOldPrice] = useState(String(product?.oldPrice ?? 0));
-  const [stock, setStock] = useState(String(product?.stock ?? 0));
-  const [mainImage, setMainImage] = useState(product?.mainImage || "");
-  const [images, setImages] = useState((product?.images || []).join("\n"));
-  const [description, setDescription] = useState(product?.description || "");
-  const [isFeatured, setIsFeatured] = useState(Boolean(product?.isFeatured));
-  const [isOffer, setIsOffer] = useState(Boolean(product?.isOffer));
-  const [isWeeklyNew, setIsWeeklyNew] = useState(Boolean(product?.isWeeklyNew));
-  const [isActive, setIsActive] = useState(
-    product?.isActive === undefined ? true : Boolean(product.isActive)
-  );
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
 
-  function updateCategory(index: number, value: string) {
+  const [oldPrice, setOldPrice] = useState(
+    String(product?.oldPrice ?? 0)
+  );
+
+  const [stock, setStock] = useState(
+    String(product?.stock ?? 0)
+  );
+
+  // =========================
+  // ALQUILER
+  // =========================
+
+  const [isRentable, setIsRentable] =
+    useState(initiallyRentable);
+
+  const [rentalPrice, setRentalPrice] = useState(
+    String(product?.rentalPrice ?? 0)
+  );
+
+  const [rentalDeposit, setRentalDeposit] =
+    useState(
+      String(product?.rentalDeposit ?? 0)
+    );
+
+  const [rentalDays, setRentalDays] = useState(
+    String(product?.rentalDays ?? 1)
+  );
+
+  const [
+    rentalAvailable,
+    setRentalAvailable,
+  ] = useState(
+    product?.rentalAvailable === undefined
+      ? true
+      : Boolean(product.rentalAvailable)
+  );
+
+  // =========================
+  // PRODUCTOS EMPAREJADOS
+  // =========================
+
+  const [
+    pairedProducts,
+    setPairedProducts,
+  ] = useState<string[]>(
+    getInitialPairedProducts(product)
+  );
+
+  // =========================
+  // CONTENIDO
+  // =========================
+
+  const [mainImage, setMainImage] = useState(
+    product?.mainImage || ""
+  );
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+
+  async function uploadMainImage(file: File) {
+    setUploadError("");
+    setUploadingImage(true);
+    try {
+      const data = new FormData();
+      data.append("file", file);
+      const response = await fetch("/api/admin/upload", { method: "POST", body: data });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "No se pudo subir la imagen.");
+      if (!mainImage.trim()) {
+        setMainImage(result.url);
+      } else {
+        const currentImages = images
+          .split("\n")
+          .map((image) => image.trim())
+          .filter(Boolean);
+
+        if (currentImages.length >= 5) {
+          throw new Error("Solo puedes añadir 5 imágenes adicionales.");
+        }
+
+        setImages([...currentImages, result.url].join("\n"));
+      }
+    } catch (error) {
+      setUploadError(error instanceof Error ? error.message : "No se pudo subir la imagen.");
+    } finally {
+      setUploadingImage(false);
+    }
+  }
+
+  const [images, setImages] = useState(
+    (product?.images || []).join("\n")
+  );
+
+  const [description, setDescription] =
+    useState(product?.description || "");
+
+  // =========================
+  // SECCIONES
+  // =========================
+
+  const [isFeatured, setIsFeatured] =
+    useState(Boolean(product?.isFeatured));
+
+  const [isOffer, setIsOffer] = useState(
+    Boolean(product?.isOffer)
+  );
+
+  const [isWeeklyNew, setIsWeeklyNew] =
+    useState(Boolean(product?.isWeeklyNew));
+
+  const [isActive, setIsActive] = useState(
+    product?.isActive === undefined
+      ? true
+      : Boolean(product.isActive)
+  );
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [message, setMessage] =
+    useState("");
+
+  // =========================
+  // CATEGORÍAS
+  // =========================
+
+  function updateCategory(
+    index: number,
+    value: string
+  ) {
+    const normalizedValue =
+      normalizeCategory(value);
+
     setCategories((prev) => {
       const next = [...prev];
-      next[index] = normalizeCategory(value);
 
-      const cleanNext = Array.from(new Set(next.filter(Boolean)));
-
-      return cleanNext.length > 0 ? cleanNext : ["cosplays"];
-    });
-  }
-
-  function addCategoryField() {
-    setCategories((prev) => {
-      const usedCategories = new Set(prev);
-      const nextCategory = CATEGORY_LIST.find(
-        (category) => !usedCategories.has(category.slug)
+      const alreadyExists = next.some(
+        (item, itemIndex) =>
+          itemIndex !== index &&
+          item === normalizedValue
       );
 
-      if (!nextCategory) return prev;
+      if (alreadyExists) {
+        return prev;
+      }
 
-      return [...prev, nextCategory.slug];
+      const previousValue = next[index];
+
+      next[index] = normalizedValue;
+
+      const cleanNext =
+        next.filter(Boolean);
+
+      if (
+        previousValue === "alquiler" &&
+        normalizedValue !== "alquiler" &&
+        !cleanNext.includes("alquiler")
+      ) {
+        setIsRentable(false);
+      }
+
+      if (
+        normalizedValue === "alquiler"
+      ) {
+        setIsRentable(true);
+        setRentalAvailable(true);
+      }
+
+      return cleanNext;
     });
   }
 
-  function removeCategoryField(index: number) {
+  function addCategory() {
     setCategories((prev) => {
-      if (prev.length === 1) return prev;
+      const availableCategory =
+        CATEGORY_LIST.find(
+          (category) =>
+            !prev.includes(category.slug)
+        );
 
-      return prev.filter((_, itemIndex) => itemIndex !== index);
+      if (!availableCategory) {
+        return prev;
+      }
+
+      const next = [
+        ...prev,
+        availableCategory.slug,
+      ];
+
+      if (
+        availableCategory.slug ===
+        "alquiler"
+      ) {
+        setIsRentable(true);
+        setRentalAvailable(true);
+      }
+
+      return next;
     });
   }
+
+  function removeCategory(index: number) {
+    if (index === 0) return;
+
+    setCategories((prev) => {
+      const removedCategory =
+        prev[index];
+
+      const next = prev.filter(
+        (_, itemIndex) =>
+          itemIndex !== index
+      );
+
+      if (
+        removedCategory ===
+          "alquiler" &&
+        !next.includes("alquiler")
+      ) {
+        setIsRentable(false);
+      }
+
+      return next;
+    });
+  }
+
+  // =========================
+  // GUARDAR
+  // =========================
 
   async function handleSubmit() {
     try {
       setLoading(true);
       setMessage("");
 
-      const cleanCategories = Array.from(
-        new Set(categories.map(normalizeCategory).filter(Boolean))
-      );
+      if (!title.trim()) {
+        setMessage(
+          "Debes ingresar el nombre del producto."
+        );
+        return;
+      }
 
-      const primaryCategory = cleanCategories[0] || "cosplays";
+      const cleanCategories =
+        Array.from(
+          new Set(
+            categories
+              .map(normalizeCategory)
+              .filter(Boolean)
+          )
+        );
+
+      const primaryCategory =
+        cleanCategories[0] ||
+        "cosplays";
+
+      const productIsRentable =
+        isRentable &&
+        cleanCategories.includes(
+          "alquiler"
+        );
+
+      if (
+        productIsRentable &&
+        Number(rentalPrice) <= 0
+      ) {
+        setMessage(
+          "Ingresa un precio de alquiler mayor a 0."
+        );
+        return;
+      }
+
+      if (
+        productIsRentable &&
+        Number(rentalDays) < 1
+      ) {
+        setMessage(
+          "Los días incluidos en el alquiler deben ser al menos 1."
+        );
+        return;
+      }
 
       const payload = {
-        title,
-        slug: slug || makeSlug(title),
-        category: primaryCategory,
-        categories: cleanCategories,
+        title: title.trim(),
+
+        slug:
+          slug.trim() ||
+          makeSlug(title),
+
+        category:
+          primaryCategory,
+
+        categories:
+          cleanCategories,
+
         status,
+
+        // VENTA
         price: Number(price),
         costPrice: Number(costPrice),
         oldPrice: Number(oldPrice),
         stock: Number(stock),
+
+        // ALQUILER
+        isRentable:
+          productIsRentable,
+
+        rentalPrice:
+          productIsRentable
+            ? Number(rentalPrice)
+            : 0,
+
+        rentalDeposit:
+          productIsRentable
+            ? Number(rentalDeposit)
+            : 0,
+
+        rentalDays:
+          productIsRentable
+            ? Math.max(
+                1,
+                Number(rentalDays)
+              )
+            : 1,
+
+        rentalAvailable:
+          productIsRentable
+            ? rentalAvailable
+            : false,
+
+        // EMPAREJADOS
+        pairedProducts,
+
+        // IMÁGENES
         mainImage,
+
         images: images
           .split("\n")
-          .map((item) => item.trim())
+          .map((item) =>
+            item.trim()
+          )
           .filter(Boolean),
+
         description,
+
+        // SECCIONES
         isFeatured,
         isOffer,
         isWeeklyNew,
@@ -155,22 +476,39 @@ export default function ProductForm({ mode, product }: Props) {
       };
 
       const url =
-        mode === "create" ? "/api/products" : `/api/products/${product?._id}`;
+        mode === "create"
+          ? "/api/products"
+          : `/api/products/${product?._id}`;
 
-      const method = mode === "create" ? "POST" : "PATCH";
+      const method =
+        mode === "create"
+          ? "POST"
+          : "PATCH";
 
-      const res = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        url,
+        {
+          method,
 
-      const data = await res.json();
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
 
-      if (!res.ok) {
-        setMessage(data.error || "No se pudo guardar el producto.");
+          body: JSON.stringify(
+            payload
+          ),
+        }
+      );
+
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+        setMessage(
+          data.error ||
+            "No se pudo guardar el producto."
+        );
         return;
       }
 
@@ -181,210 +519,535 @@ export default function ProductForm({ mode, product }: Props) {
       );
 
       if (mode === "create") {
-        router.push(`/admin/productos/${data.product._id}`);
+        router.push(
+          `/admin/productos/${data.product._id}`
+        );
+
         router.refresh();
+
         return;
       }
 
       router.refresh();
     } catch {
-      setMessage("Ocurrió un error guardando el producto.");
+      setMessage(
+        "Ocurrió un error guardando el producto."
+      );
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <section className="rounded-[32px] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[0_10px_30px_var(--shadow)] sm:p-6">
+    <section className="rounded-[32px] border border-[#cfeaf6] bg-[#f7fdff] p-6 shadow-[0_10px_30px_rgba(22,50,74,0.05)]">
       <div className="grid gap-5 md:grid-cols-2">
+        {/* ========================= */}
+        {/* NOMBRE */}
+        {/* ========================= */}
+
         <div className="md:col-span-2">
-          <label className="mb-2 block text-sm font-bold">Nombre</label>
+          <label className="mb-2 block text-sm font-bold text-[#16324a]">
+            Nombre
+          </label>
+
           <input
             value={title}
             onChange={(e) => {
-              setTitle(e.target.value);
+              setTitle(
+                e.target.value
+              );
 
               if (!product?.slug) {
-                setSlug(makeSlug(e.target.value));
+                setSlug(
+                  makeSlug(
+                    e.target.value
+                  )
+                );
               }
             }}
-            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
+            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 text-[#16324a] outline-none transition focus:border-[#19b7c9]"
           />
         </div>
 
+        {/* ========================= */}
+        {/* SLUG */}
+        {/* ========================= */}
+
         <div>
-          <label className="mb-2 block text-sm font-bold">Slug</label>
+          <label className="mb-2 block text-sm font-bold text-[#16324a]">
+            Slug
+          </label>
+
           <input
             value={slug}
-            onChange={(e) => setSlug(e.target.value)}
-            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
+            onChange={(e) =>
+              setSlug(
+                e.target.value
+              )
+            }
+            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 text-[#16324a] outline-none transition focus:border-[#19b7c9]"
           />
         </div>
 
+        {/* ========================= */}
+        {/* ESTADO */}
+        {/* ========================= */}
+
         <div>
-          <label className="mb-2 block text-sm font-bold">Estado</label>
+          <label className="mb-2 block text-sm font-bold text-[#16324a]">
+            Estado
+          </label>
+
           <select
             value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
+            onChange={(e) =>
+              setStatus(
+                e.target.value
+              )
+            }
+            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 text-[#16324a] outline-none transition focus:border-[#19b7c9]"
           >
-            <option value="stock">Stock</option>
-            <option value="preventa">Preventa</option>
+            <option value="stock">
+              Stock
+            </option>
+
+            <option value="preventa">
+              Preventa
+            </option>
           </select>
         </div>
 
+        {/* ========================= */}
+        {/* CATEGORÍAS */}
+        {/* ========================= */}
+
         <div className="md:col-span-2">
-          <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <label className="block text-sm font-bold">Categoría</label>
-              <p className="mt-1 text-xs font-semibold text-[var(--text-soft)]">
-                El producto puede tener una categoría principal y categorías
-                adicionales.
+          <div className="mb-3">
+            <label className="block text-sm font-bold text-[#16324a]">
+              Categoría
+            </label>
+
+            <p className="mt-1 text-xs font-semibold text-[#4b6b80]">
+              Elige primero la categoría principal.
+              Agrega categorías adicionales únicamente
+              cuando este producto deba aparecer en más
+              de una sección.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            {/* PRINCIPAL */}
+
+            <div className="rounded-[22px] border border-[#cfeaf6] bg-white p-4">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-sm font-extrabold text-[#16324a]">
+                    Categoría principal
+                  </p>
+
+                  <p className="mt-1 text-xs font-semibold text-[#4b6b80]">
+                    Esta será la categoría principal del producto.
+                  </p>
+                </div>
+
+                <span className="rounded-full bg-[#e9fbff] px-3 py-1 text-[0.65rem] font-extrabold uppercase tracking-[0.14em] text-[#19b7c9]">
+                  Principal
+                </span>
+              </div>
+
+              <select
+                value={
+                  categories[0] ||
+                  "cosplays"
+                }
+                onChange={(e) =>
+                  updateCategory(
+                    0,
+                    e.target.value
+                  )
+                }
+                className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 font-semibold text-[#16324a] outline-none transition focus:border-[#19b7c9]"
+              >
+                {CATEGORY_LIST.map(
+                  (categoryOption) => (
+                    <option
+                      key={
+                        categoryOption.slug
+                      }
+                      value={
+                        categoryOption.slug
+                      }
+                      disabled={categories
+                        .slice(1)
+                        .includes(
+                          categoryOption.slug
+                        )}
+                    >
+                      {
+                        categoryOption.title
+                      }
+                    </option>
+                  )
+                )}
+              </select>
+            </div>
+
+            {/* ADICIONALES */}
+
+            {categories
+              .slice(1)
+              .map(
+                (
+                  categoryValue,
+                  extraIndex
+                ) => {
+                  const realIndex =
+                    extraIndex + 1;
+
+                  return (
+                    <div
+                      key={`${categoryValue}-${realIndex}`}
+                      className="rounded-[22px] border border-[#cfeaf6] bg-[#f8fdff] p-4"
+                    >
+                      <div className="mb-3 flex items-center justify-between gap-3">
+                        <div>
+                          <p className="text-sm font-extrabold text-[#16324a]">
+                            Categoría adicional{" "}
+                            {realIndex}
+                          </p>
+
+                          <p className="mt-1 text-xs font-semibold text-[#4b6b80]">
+                            El producto también aparecerá
+                            en esta categoría.
+                          </p>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            removeCategory(
+                              realIndex
+                            )
+                          }
+                          className="rounded-xl border border-[#f2c7c7] bg-white px-3 py-2 text-xs font-extrabold text-[#c94b4b] transition hover:bg-[#fff5f5]"
+                        >
+                          Quitar
+                        </button>
+                      </div>
+
+                      <select
+                        value={
+                          categoryValue
+                        }
+                        onChange={(e) =>
+                          updateCategory(
+                            realIndex,
+                            e.target.value
+                          )
+                        }
+                        className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 font-semibold text-[#16324a] outline-none transition focus:border-[#19b7c9]"
+                      >
+                        {CATEGORY_LIST.map(
+                          (categoryOption) => {
+                            const selectedElsewhere =
+                              categories.some(
+                                (
+                                  item,
+                                  itemIndex
+                                ) =>
+                                  itemIndex !==
+                                    realIndex &&
+                                  item ===
+                                    categoryOption.slug
+                              );
+
+                            return (
+                              <option
+                                key={
+                                  categoryOption.slug
+                                }
+                                value={
+                                  categoryOption.slug
+                                }
+                                disabled={
+                                  selectedElsewhere
+                                }
+                              >
+                                {
+                                  categoryOption.title
+                                }
+                              </option>
+                            );
+                          }
+                        )}
+                      </select>
+                    </div>
+                  );
+                }
+              )}
+
+            {categories.length <
+              CATEGORY_LIST.length && (
+              <button
+                type="button"
+                onClick={
+                  addCategory
+                }
+                className="inline-flex h-11 items-center justify-center rounded-2xl border border-[#9fdce8] bg-white px-5 text-sm font-extrabold text-[#19b7c9] transition hover:border-[#19b7c9] hover:bg-[#e9fbff]"
+              >
+                + Agregar categoría
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* ========================= */}
+        {/* VENTA */}
+        {/* ========================= */}
+
+        <div className="mt-2 md:col-span-2">
+          <div className="rounded-[24px] border border-[#cfeaf6] bg-white p-5">
+            <div className="mb-5">
+              <h3 className="text-lg font-extrabold text-[#16324a]">
+                Venta
+              </h3>
+
+              <p className="mt-1 text-xs font-semibold text-[#4b6b80]">
+                Información usada para la venta normal
+                del producto.
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={addCategoryField}
-              disabled={categories.length >= CATEGORY_LIST.length}
-              className="inline-flex w-fit items-center justify-center rounded-full border border-[var(--primary)] bg-white px-4 py-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--primary)] transition hover:bg-[var(--surface-soft)] disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              + Agregar
-            </button>
-          </div>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <div>
+                <label className="mb-2 block text-sm font-bold text-[#16324a]">
+                  Precio de venta
+                </label>
 
-          <div className="grid gap-3">
-            {categories.map((category, index) => (
-              <div
-                key={`${category}-${index}`}
-                className="rounded-2xl border border-[var(--border)] bg-white p-3 sm:p-4"
-              >
-                <div className="mb-2 flex items-center justify-between gap-3">
-                  <span className="text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--primary)]">
-                    {index === 0 ? "Principal" : `Extra ${index}`}
-                  </span>
-
-                  {index > 0 && (
-                    <button
-                      type="button"
-                      onClick={() => removeCategoryField(index)}
-                      className="text-xs font-bold text-[var(--danger)] transition hover:opacity-75"
-                    >
-                      Quitar
-                    </button>
-                  )}
-                </div>
-
-                <select
-                  value={category}
-                  onChange={(e) => updateCategory(index, e.target.value)}
-                  className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 text-[var(--text)] outline-none"
-                >
-                  {CATEGORY_LIST.map((categoryOption) => (
-                    <option
-                      key={categoryOption.slug}
-                      value={categoryOption.slug}
-                    >
-                      {categoryOption.title}
-                    </option>
-                  ))}
-                </select>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={price}
+                  onChange={(e) =>
+                    setPrice(
+                      e.target.value
+                    )
+                  }
+                  className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none transition focus:border-[#19b7c9]"
+                />
               </div>
-            ))}
-          </div>
 
-          {categories.length > 1 && (
-            <div className="mt-3 rounded-2xl bg-[var(--surface-soft)] px-4 py-3 text-xs font-semibold text-[var(--text-soft)]">
-              Este producto aparecerá en:{" "}
-              <span className="font-extrabold text-[var(--text)]">
-                {categories.map(getCategoryTitle).join(", ")}
-              </span>
+              <div>
+                <label className="mb-2 block text-sm font-bold text-[#16324a]">
+                  Precio de costo
+                </label>
+
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={costPrice}
+                  onChange={(e) =>
+                    setCostPrice(
+                      e.target.value
+                    )
+                  }
+                  className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none transition focus:border-[#19b7c9]"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-bold text-[#16324a]">
+                  Precio anterior
+                </label>
+
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={oldPrice}
+                  onChange={(e) =>
+                    setOldPrice(
+                      e.target.value
+                    )
+                  }
+                  placeholder="Opcional"
+                  className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none transition focus:border-[#19b7c9]"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-bold text-[#16324a]">
+                  Stock
+                </label>
+
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  value={stock}
+                  onChange={(e) =>
+                    setStock(
+                      e.target.value
+                    )
+                  }
+                  className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none transition focus:border-[#19b7c9]"
+                />
+              </div>
             </div>
-          )}
+          </div>
         </div>
 
-        <div>
-          <label className="mb-2 block text-sm font-bold">Precio actual</label>
-          <input
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
-          />
-        </div>
+        {/* ========================= */}
+        {/* ALQUILER */}
+        {/* ========================= */}
 
-        <div>
-          <label className="mb-2 block text-sm font-bold">
-            Costo producto
-          </label>
-          <input
-            type="number"
-            value={costPrice}
-            onChange={(e) => setCostPrice(e.target.value)}
-            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
-            placeholder="Ej: 25"
+        {categories.includes(
+          "alquiler"
+        ) && (
+          <ProductRentalFields
+            isRentable={isRentable}
+            setIsRentable={setIsRentable}
+            rentalPrice={rentalPrice}
+            setRentalPrice={setRentalPrice}
+            rentalDeposit={rentalDeposit}
+            setRentalDeposit={
+              setRentalDeposit
+            }
+            rentalDays={rentalDays}
+            setRentalDays={setRentalDays}
+            rentalAvailable={
+              rentalAvailable
+            }
+            setRentalAvailable={
+              setRentalAvailable
+            }
+            salePrice={price}
           />
-        </div>
+        )}
 
-        <div>
-          <label className="mb-2 block text-sm font-bold">
-            Precio anterior
-          </label>
-          <input
-            type="number"
-            value={oldPrice}
-            onChange={(e) => setOldPrice(e.target.value)}
-            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
-            placeholder="Opcional para ofertas"
-          />
-        </div>
-
-        <div>
-          <label className="mb-2 block text-sm font-bold">Stock</label>
-          <input
-            type="number"
-            value={stock}
-            onChange={(e) => setStock(e.target.value)}
-            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
-          />
-        </div>
+        {/* ========================= */}
+        {/* IMAGEN PRINCIPAL */}
+        {/* ========================= */}
 
         <div className="md:col-span-2">
-          <label className="mb-2 block text-sm font-bold">
+          <label className="mb-2 block text-sm font-bold text-[#16324a]">
             Imagen principal
           </label>
+
           <input
             value={mainImage}
-            onChange={(e) => setMainImage(e.target.value)}
-            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
+            onChange={(e) =>
+              setMainImage(
+                e.target.value
+              )
+            }
+            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none transition focus:border-[#19b7c9]"
           />
+
+          <div
+            onDragOver={(event) => event.preventDefault()}
+            onDrop={(event) => {
+              event.preventDefault();
+              const file = event.dataTransfer.files?.[0];
+              if (file) void uploadMainImage(file);
+            }}
+            className="mt-3 rounded-2xl border-2 border-dashed border-[#9fdce8] bg-[#f8fdff] px-4 py-5 text-center"
+          >
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (file) void uploadMainImage(file);
+                event.currentTarget.value = "";
+              }}
+            />
+            <p className="text-sm font-semibold text-[#4b6b80]">
+              Arrastra una imagen aquí o selecciónala desde tu equipo
+            </p>
+            <button
+              type="button"
+              onClick={() => imageInputRef.current?.click()}
+              disabled={uploadingImage}
+              className="mt-3 rounded-xl bg-[#19b7c9] px-4 py-2 text-sm font-extrabold text-white disabled:opacity-60"
+            >
+              {uploadingImage ? "Subiendo..." : "Seleccionar imagen"}
+            </button>
+            {uploadError && <p className="mt-2 text-xs font-bold text-red-600">{uploadError}</p>}
+          </div>
         </div>
 
+        {/* ========================= */}
+        {/* IMÁGENES ADICIONALES */}
+        {/* ========================= */}
+
         <div className="md:col-span-2">
-          <label className="mb-2 block text-sm font-bold">
+          <label className="mb-2 block text-sm font-bold text-[#16324a]">
             Imágenes adicionales
           </label>
+
           <textarea
             rows={5}
             value={images}
-            onChange={(e) => setImages(e.target.value)}
+            onChange={(e) =>
+              setImages(
+                e.target.value
+              )
+            }
             placeholder="Una URL por línea"
-            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
+            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none transition focus:border-[#19b7c9]"
           />
+
+          <p className="mt-2 text-xs font-semibold text-[#4b6b80]">
+            Máximo 5 imágenes adicionales.
+          </p>
         </div>
 
+        {/* ========================= */}
+        {/* DESCRIPCIÓN */}
+        {/* ========================= */}
+
         <div className="md:col-span-2">
-          <label className="mb-2 block text-sm font-bold">Descripción</label>
+          <label className="mb-2 block text-sm font-bold text-[#16324a]">
+            Descripción
+          </label>
+
           <textarea
             rows={7}
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full rounded-2xl border border-[var(--border)] bg-white px-4 py-4 outline-none"
+            onChange={(e) =>
+              setDescription(
+                e.target.value
+              )
+            }
+            className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none transition focus:border-[#19b7c9]"
           />
         </div>
 
+        {/* ========================= */}
+        {/* PRODUCTOS QUE COMBINAN */}
+        {/* ========================= */}
+
+        <ProductPairingFields
+          currentProductId={product?._id}
+          pairedProducts={
+            pairedProducts
+          }
+          setPairedProducts={
+            setPairedProducts
+          }
+        />
+
+        {/* ========================= */}
+        {/* SECCIONES */}
+        {/* ========================= */}
+
         <div className="md:col-span-2">
-          <p className="mb-3 text-sm font-bold text-[var(--text)]">
+          <p className="mb-3 text-sm font-bold text-[#16324a]">
             Secciones de la tienda
           </p>
 
@@ -393,59 +1056,95 @@ export default function ProductForm({ mode, product }: Props) {
               <input
                 type="checkbox"
                 checked={isOffer}
-                onChange={(e) => setIsOffer(e.target.checked)}
+                onChange={(e) =>
+                  setIsOffer(
+                    e.target.checked
+                  )
+                }
               />
-              <span className="font-semibold">Oferta</span>
+
+              <span className="font-semibold">
+                Oferta
+              </span>
             </label>
 
             <label className="flex items-center gap-3 rounded-2xl bg-white px-4 py-4">
               <input
                 type="checkbox"
                 checked={isWeeklyNew}
-                onChange={(e) => setIsWeeklyNew(e.target.checked)}
+                onChange={(e) =>
+                  setIsWeeklyNew(
+                    e.target.checked
+                  )
+                }
               />
-              <span className="font-semibold">Nuevo semanal</span>
+
+              <span className="font-semibold">
+                Nuevo semanal
+              </span>
             </label>
 
             <label className="flex items-center gap-3 rounded-2xl bg-white px-4 py-4">
               <input
                 type="checkbox"
                 checked={isFeatured}
-                onChange={(e) => setIsFeatured(e.target.checked)}
+                onChange={(e) =>
+                  setIsFeatured(
+                    e.target.checked
+                  )
+                }
               />
-              <span className="font-semibold">Producto destacado</span>
+
+              <span className="font-semibold">
+                Producto destacado
+              </span>
             </label>
 
             <label className="flex items-center gap-3 rounded-2xl bg-white px-4 py-4">
               <input
                 type="checkbox"
                 checked={isActive}
-                onChange={(e) => setIsActive(e.target.checked)}
+                onChange={(e) =>
+                  setIsActive(
+                    e.target.checked
+                  )
+                }
               />
-              <span className="font-semibold">Producto activo</span>
+
+              <span className="font-semibold">
+                Producto activo
+              </span>
             </label>
           </div>
         </div>
       </div>
 
+      {/* ========================= */}
+      {/* MENSAJE */}
+      {/* ========================= */}
+
       {message && (
-        <div className="mt-5 rounded-2xl border border-[var(--border)] bg-white px-4 py-4 text-sm font-semibold">
+        <div className="mt-5 rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 text-sm font-semibold text-[#16324a]">
           {message}
         </div>
       )}
+
+      {/* ========================= */}
+      {/* GUARDAR */}
+      {/* ========================= */}
 
       <div className="mt-6">
         <button
           type="button"
           onClick={handleSubmit}
           disabled={loading}
-          className="rounded-2xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-white disabled:opacity-70"
+          className="rounded-2xl bg-[#19b7c9] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#129aac] disabled:cursor-not-allowed disabled:opacity-70"
         >
           {loading
             ? "Guardando..."
             : mode === "create"
-            ? "Crear producto"
-            : "Guardar cambios"}
+              ? "Crear producto"
+              : "Guardar cambios"}
         </button>
       </div>
     </section>

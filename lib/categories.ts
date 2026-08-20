@@ -23,13 +23,6 @@ export const CATEGORY_LIST = [
     queryValues: ["lentes", "lentillas"],
   },
   {
-    slug: "mallas",
-    title: "Mallas",
-    description: "Mallas y prendas base para cosplay.",
-    image: COSLESS_IMAGES.home.catMallas,
-    queryValues: ["mallas", "malla"],
-  },
-  {
     slug: "accesorios",
     title: "Accesorios",
     description: "Complementos, detalles y piezas especiales.",
@@ -42,6 +35,16 @@ export const CATEGORY_LIST = [
     description: "Productos próximos a llegar o disponibles bajo pedido.",
     image: COSLESS_IMAGES.home.catPreventa,
     queryValues: ["preventa"],
+  },
+
+  // NUEVA CATEGORÍA
+  {
+    slug: "alquiler",
+    title: "Alquiler",
+    description:
+      "Cosplays y pelucas disponibles para alquilar por eventos, sesiones y convenciones.",
+    image: COSLESS_IMAGES.home.hero4,
+    queryValues: ["alquiler", "renta"],
   },
 ];
 

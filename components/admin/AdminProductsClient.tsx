@@ -18,6 +18,8 @@ type ProductItem = {
   isOffer?: boolean;
   isWeeklyNew?: boolean;
   isFeatured?: boolean;
+  mainImage?: string;
+  images?: string[];
 };
 
 type AdminProductsClientProps = {
@@ -160,6 +162,14 @@ export default function AdminProductsClient({
                   className="rounded-[24px] border border-transparent bg-[var(--surface)] p-4 shadow-[0_8px_22px_var(--shadow)] transition duration-200 hover:-translate-y-0.5 hover:border-[var(--primary)] hover:shadow-[0_12px_26px_var(--shadow-strong)] sm:p-5"
                 >
                   <div className="flex items-start justify-between gap-3 sm:gap-4">
+                    <img
+                      src={product.mainImage || product.images?.[0] || "/placeholder-product.png"}
+                      alt={product.title || "Producto"}
+                      className="h-16 w-16 shrink-0 rounded-2xl object-cover sm:h-20 sm:w-20"
+                      onError={(event) => {
+                        event.currentTarget.src = "/placeholder-product.png";
+                      }}
+                    />
                     <div className="min-w-0 flex-1">
                       <h2 className="line-clamp-2 text-[1rem] font-extrabold leading-5 text-[var(--text)] sm:text-xl sm:leading-7">
                         {product.title || "Sin título"}

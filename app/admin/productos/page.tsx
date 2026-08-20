@@ -17,6 +17,8 @@ type ProductItem = {
   isOffer?: boolean;
   isWeeklyNew?: boolean;
   isFeatured?: boolean;
+  mainImage?: string;
+  images?: string[];
 };
 
 export default async function AdminProductsPage() {

@@ -225,6 +225,7 @@ export default async function AdminPage() {
     rawRecentOrders,
     rawRecentProducts,
     rawRecentUsers,
+    rawPaidOrders,
     rawFavorites,
     rawStores,
   ] = await Promise.all([
@@ -235,9 +236,27 @@ export default async function AdminPage() {
     Order.find().sort({ createdAt: -1 }).limit(5).lean(),
     Product.find().sort({ createdAt: -1 }).limit(5).lean(),
     User.find().sort({ createdAt: -1 }).limit(5).lean(),
+    Order.find({
+      status: { $in: ["paid", "preparing", "shipped", "delivered"] },
+      inventoryDeducted: true,
+    })
+      .select("items")
+      .lean(),
     Favorite.find().lean(),
     AccountStore.find().lean(),
   ]);
+
+  const soldUnitsCount = rawPaidOrders.reduce(
+    (total, order) =>
+      total +
+      (Array.isArray(order.items)
+        ? order.items.reduce(
+            (itemTotal, item) => itemTotal + Number(item.quantity || 0),
+            0
+          )
+        : 0),
+    0
+  );
 
   const recentOrders = JSON.parse(
     JSON.stringify(rawRecentOrders)
@@ -351,9 +370,9 @@ export default async function AdminPage() {
           />
 
           <StatCard
-            title="Liquidaciones"
-            value={0}
-            subtitle="Ganancias"
+            title="Pagos"
+            value={soldUnitsCount}
+            subtitle="Unidades vendidas"
             href="/admin/pagos"
           />
         </div>

@@ -17,6 +17,10 @@ type RawProduct = {
   mainImage?: string;
   images?: string[];
   status?: string;
+  categories?: string[];
+  isRentable?: boolean;
+  rentalPrice?: number;
+  rentalAvailable?: boolean;
 };
 
 function formatBs(value?: number) {
@@ -24,27 +28,39 @@ function formatBs(value?: number) {
   return `Bs${value.toFixed(2)}`;
 }
 
-function formatProduct(product: RawProduct, fallbackBadge: string) {
+function formatProduct(product: RawProduct, fallbackBadge: string, rental = false) {
   return {
     title: product.title || "Producto",
-    price: formatBs(product.price),
+    price: formatBs(rental ? product.rentalPrice : product.price),
     oldPrice:
       typeof product.oldPrice === "number" && product.oldPrice > 0
         ? formatBs(product.oldPrice)
         : undefined,
     image: product.mainImage || product.images?.[0] || "/placeholder-product.png",
     href: product.slug ? `/producto/${product.slug}` : "/productos",
-    badge: product.status === "preventa" ? "Preventa" : fallbackBadge,
+    badge: rental ? "Alquiler" : product.status === "preventa" ? "Preventa" : fallbackBadge,
   };
 }
 
 export default async function HomePage() {
   await connectDB();
 
-  const [offerRawProducts, weeklyRawProducts] = await Promise.all([
+  const [offerRawProducts, rentalRawProducts, weeklyRawProducts] = await Promise.all([
     Product.find({
       isActive: true,
       isOffer: true,
+      stock: { $gt: 0 },
+    })
+      .sort({ updatedAt: -1, createdAt: -1 })
+      .limit(10)
+      .lean(),
+
+    Product.find({
+      isActive: true,
+      stock: { $gt: 0 },
+      isRentable: true,
+      rentalAvailable: { $ne: false },
+      rentalPrice: { $gt: 0 },
     })
       .sort({ updatedAt: -1, createdAt: -1 })
       .limit(10)
@@ -53,6 +69,7 @@ export default async function HomePage() {
     Product.find({
       isActive: true,
       isWeeklyNew: true,
+      stock: { $gt: 0 },
     })
       .sort({ updatedAt: -1, createdAt: -1 })
       .limit(10)
@@ -61,6 +78,10 @@ export default async function HomePage() {
 
   const offerProducts = JSON.parse(JSON.stringify(offerRawProducts)).map(
     (product: RawProduct) => formatProduct(product, "Oferta")
+  );
+
+  const rentalProducts = JSON.parse(JSON.stringify(rentalRawProducts)).map(
+    (product: RawProduct) => formatProduct(product, "Alquiler", true)
   );
 
   const weeklyProducts = JSON.parse(JSON.stringify(weeklyRawProducts)).map(
@@ -82,6 +103,15 @@ export default async function HomePage() {
             subtitle="Productos seleccionados con precios especiales."
             products={offerProducts}
             viewAllHref="/productos?section=ofertas"
+          />
+        )}
+
+        {rentalProducts.length > 0 && (
+          <HomeProductRail
+            title="Alquiler"
+            subtitle="Productos disponibles para alquilar por tiempo limitado."
+            products={rentalProducts}
+            viewAllHref="/productos?section=alquiler"
           />
         )}
 

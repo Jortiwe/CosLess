@@ -15,11 +15,16 @@ type SearchProduct = {
   slug?: string;
   title?: string;
   category?: string;
+  categories?: string[];
   description?: string;
   mainImage?: string;
   price?: number;
   status?: string;
   stock?: number;
+  isRentable?: boolean;
+  rentalPrice?: number;
+  rentalDays?: number;
+  rentalAvailable?: boolean;
 };
 
 function formatBs(value?: number) {
@@ -28,7 +33,7 @@ function formatBs(value?: number) {
 }
 
 function normalizeText(value: unknown): string {
-  return String(value || "").toLowerCase();
+  return String(value || "").toLowerCase().trim();
 }
 
 function splitWords(value: unknown): string[] {
@@ -42,12 +47,40 @@ function formatCount(count: number) {
   return `${count}+`;
 }
 
+function getRentalInfo(product: SearchProduct) {
+  const hasRentalCategory =
+    Array.isArray(product.categories) &&
+    product.categories.map(normalizeText).includes("alquiler");
+
+  const isRentable =
+    Boolean(product.isRentable) ||
+    hasRentalCategory ||
+    normalizeText(product.category) === "alquiler" ||
+    normalizeText(product.category) === "renta";
+
+  const rentalPrice =
+    typeof product.rentalPrice === "number" ? product.rentalPrice : 0;
+
+  const rentalDays =
+    typeof product.rentalDays === "number" && product.rentalDays > 0
+      ? product.rentalDays
+      : 1;
+
+  return {
+    isRentable,
+    rentalPrice,
+    rentalDays,
+    available: product.rentalAvailable !== false,
+  };
+}
+
 function ProductCard({ product }: { product: SearchProduct }) {
   const href = product.slug ? `/producto/${product.slug}` : "#";
   const image = product.mainImage || "/placeholder-product.png";
   const status = product.status || "stock";
   const stock = typeof product.stock === "number" ? product.stock : 0;
   const isOutOfStock = status !== "preventa" && stock <= 0;
+  const rentalInfo = getRentalInfo(product);
 
   return (
     <Link
@@ -84,6 +117,19 @@ function ProductCard({ product }: { product: SearchProduct }) {
               ? "Preventa"
               : "Stock"}
           </span>
+
+          {rentalInfo.isRentable && (
+            <span
+              className={
+                "rounded-full px-2.5 py-1 text-[8px] font-extrabold uppercase tracking-[0.12em] shadow-sm sm:px-3 sm:text-[10px] sm:tracking-[0.14em] " +
+                (rentalInfo.available
+                  ? "bg-[#eef0ff] text-[#5661c9]"
+                  : "bg-[var(--surface-soft)] text-[var(--text-muted)]")
+              }
+            >
+              {rentalInfo.available ? "Alquiler" : "Alquiler no disponible"}
+            </span>
+          )}
         </div>
       </div>
 
@@ -92,10 +138,39 @@ function ProductCard({ product }: { product: SearchProduct }) {
           {product.title || "Producto sin título"}
         </h3>
 
-        <div className="mt-3 flex items-center justify-between gap-2 sm:gap-3">
-          <p className="text-[0.98rem] font-extrabold text-[var(--primary)] sm:text-[1.08rem]">
-            {formatBs(product.price)}
-          </p>
+        <div className="mt-3 flex items-end justify-between gap-2 sm:gap-3">
+          <div className="min-w-0">
+            {rentalInfo.isRentable && (
+              <p className="text-[0.62rem] font-extrabold uppercase tracking-[0.12em] text-[var(--text-muted)] sm:text-[0.68rem]">
+                Compra
+              </p>
+            )}
+
+            <p className="text-[0.98rem] font-extrabold text-[var(--primary)] sm:text-[1.08rem]">
+              {formatBs(product.price)}
+            </p>
+
+            {rentalInfo.isRentable && (
+              <div className="mt-2">
+                <p className="text-[0.62rem] font-extrabold uppercase tracking-[0.12em] text-[#6c72b8] sm:text-[0.68rem]">
+                  Alquiler
+                </p>
+
+                {rentalInfo.available ? (
+                  <p className="mt-0.5 text-[0.9rem] font-extrabold text-[#5661c9] sm:text-[1rem]">
+                    {formatBs(rentalInfo.rentalPrice)}
+                    <span className="ml-1 text-[0.68rem] font-bold text-[var(--text-muted)] sm:text-xs">
+                      / {rentalInfo.rentalDays === 1 ? "dia" : String(rentalInfo.rentalDays) + " dias"}
+                    </span>
+                  </p>
+                ) : (
+                  <p className="mt-0.5 text-xs font-bold text-[var(--text-muted)]">
+                    No disponible
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
 
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--surface-soft)] text-sm font-extrabold text-[var(--primary)] transition group-hover:bg-[var(--primary)] group-hover:text-white sm:h-9 sm:w-9">
             →
@@ -135,7 +210,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         return (
           title.includes(query) ||
           category.includes(query) ||
-          description.includes(query)
+          description.includes(query) ||
+          (getRentalInfo(product).isRentable && "renta alquiler".includes(query))
         );
       })
     : [];
@@ -155,7 +231,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             descriptionWords.some(
               (item: string) => item.includes(word) || word.includes(item)
             ) ||
-            category.includes(word)
+            category.includes(word) ||
+            (getRentalInfo(product).isRentable &&
+              "renta alquiler".includes(word))
           );
         });
 

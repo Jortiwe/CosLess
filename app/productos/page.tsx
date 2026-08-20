@@ -72,19 +72,37 @@ export default async function ProductsPage({
 
   if (section === "ofertas") {
     query.isOffer = true;
+    query.stock = { $gt: 0 };
+  }
+
+  if (section === "rentas" || section === "alquiler") {
+    return {
+      badge: "Alquiler",
+      title: "Productos en alquiler",
+      description: "Productos disponibles para alquilar por tiempo limitado.",
+    };
   }
 
   if (section === "nuevos") {
     query.isWeeklyNew = true;
+    query.stock = { $gt: 0 };
   }
 
   if (section === "nuevos-cosplays") {
     query.isWeeklyNew = true;
     query.category = "cosplays";
+    query.stock = { $gt: 0 };
   }
 
   if (section === "destacados") {
     query.isFeatured = true;
+  }
+
+  if (section === "rentas" || section === "alquiler") {
+    query.isRentable = true;
+    query.rentalAvailable = { $ne: false };
+    query.rentalPrice = { $gt: 0 };
+    query.stock = { $gt: 0 };
   }
 
   const rawProducts = await Product.find(query)
