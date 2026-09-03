@@ -1,4 +1,4 @@
-import { COSLESS_IMAGES } from "./coslessImages";
+﻿import { COSLESS_IMAGES } from "./coslessImages";
 
 export const CATEGORY_LIST = [
   {

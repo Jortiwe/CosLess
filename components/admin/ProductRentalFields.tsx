@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 type Props = {
   isRentable: boolean;
@@ -17,6 +17,8 @@ type Props = {
   setRentalAvailable: (value: boolean) => void;
 
   salePrice: string;
+  rentalOnly: boolean;
+  setRentalOnly: (value: boolean) => void;
 };
 
 export default function ProductRentalFields({
@@ -31,6 +33,8 @@ export default function ProductRentalFields({
   rentalAvailable,
   setRentalAvailable,
   salePrice,
+  rentalOnly,
+  setRentalOnly,
 }: Props) {
   return (
     <div className="md:col-span-2">
@@ -174,6 +178,11 @@ export default function ProductRentalFields({
               </strong>
               .
             </div>
+
+            <label className="mt-4 flex cursor-pointer items-center gap-3 rounded-2xl border border-[#cfeaf6] bg-white px-4 py-3">
+              <input type="checkbox" checked={rentalOnly} onChange={(e) => setRentalOnly(e.target.checked)} className="h-4 w-4 accent-[#19b7c9]" />
+              <span className="text-sm font-bold text-[#16324a]">Solo alquiler (no se puede comprar)</span>
+            </label>
           </div>
         )}
       </div>

@@ -1,4 +1,4 @@
-import Header from "../components/layout/Header";
+﻿import Header from "../components/layout/Header";
 import Hero from "../components/home/Hero";
 import Categories from "../components/home/Categories";
 import HomeIntro from "../components/home/HomeIntro";
@@ -6,6 +6,7 @@ import HomeProductRail from "../components/home/HomeProductRail";
 import Footer from "../components/layout/Footer";
 import { connectDB } from "../lib/mongodb";
 import Product from "../models/Product";
+import { sortProductsByRotation } from "../lib/product-order";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,8 @@ type RawProduct = {
   isRentable?: boolean;
   rentalPrice?: number;
   rentalAvailable?: boolean;
+  category?: string;
+  createdAt?: string | Date;
 };
 
 function formatBs(value?: number) {
@@ -51,8 +54,7 @@ export default async function HomePage() {
       isOffer: true,
       stock: { $gt: 0 },
     })
-      .sort({ updatedAt: -1, createdAt: -1 })
-      .limit(10)
+      .sort({ createdAt: -1 })
       .lean(),
 
     Product.find({
@@ -62,8 +64,7 @@ export default async function HomePage() {
       rentalAvailable: { $ne: false },
       rentalPrice: { $gt: 0 },
     })
-      .sort({ updatedAt: -1, createdAt: -1 })
-      .limit(10)
+      .sort({ createdAt: -1 })
       .lean(),
 
     Product.find({
@@ -71,20 +72,19 @@ export default async function HomePage() {
       isWeeklyNew: true,
       stock: { $gt: 0 },
     })
-      .sort({ updatedAt: -1, createdAt: -1 })
-      .limit(10)
+      .sort({ createdAt: -1 })
       .lean(),
   ]);
 
-  const offerProducts = JSON.parse(JSON.stringify(offerRawProducts)).map(
+  const offerProducts = sortProductsByRotation(JSON.parse(JSON.stringify(offerRawProducts)) as RawProduct[]).slice(0, 10).map(
     (product: RawProduct) => formatProduct(product, "Oferta")
   );
 
-  const rentalProducts = JSON.parse(JSON.stringify(rentalRawProducts)).map(
+  const rentalProducts = sortProductsByRotation(JSON.parse(JSON.stringify(rentalRawProducts)) as RawProduct[]).slice(0, 10).map(
     (product: RawProduct) => formatProduct(product, "Alquiler", true)
   );
 
-  const weeklyProducts = JSON.parse(JSON.stringify(weeklyRawProducts)).map(
+  const weeklyProducts = sortProductsByRotation(JSON.parse(JSON.stringify(weeklyRawProducts)) as RawProduct[]).slice(0, 10).map(
     (product: RawProduct) => formatProduct(product, "Nuevo")
   );
 

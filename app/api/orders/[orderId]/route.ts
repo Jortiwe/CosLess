@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { connectDB } from "../../../../lib/mongodb";
+import { writeAudit } from "../../../../lib/audit";
 import Order from "../../../../models/Order";
 import Product from "../../../../models/Product";
 
@@ -29,23 +30,73 @@ async function deductInventory(order: any) {
 
     if (quantity <= 0) continue;
 
-    const updatedProduct = await Product.findByIdAndUpdate(item.productId, {
-      $inc: {
-        stock: -quantity,
-      },
-    }, { new: true });
+    const product = await Product.findById(item.productId);
+    if (!product) throw new Error(`Producto no encontrado: ${item.title}`);
 
-    if (updatedProduct && Number(updatedProduct.stock || 0) <= 0) {
-      await Product.findByIdAndUpdate(item.productId, {
-        $set: {
-          isOffer: false,
-          isWeeklyNew: false,
-        },
+    const stock = Number(product.stock || 0);
+    if (stock < quantity) {
+      throw new Error(`Stock insuficiente para ${item.title}. Stock actual: ${stock}`);
+    }
+
+    let lots = Array.isArray(product.inventoryLots)
+      ? product.inventoryLots
+      : [];
+
+    // Compatibilidad automática con inventario anterior a los lotes.
+    if (lots.length === 0 && stock > 0) {
+      product.inventoryLots = [{
+        quantity: stock,
+        remaining: stock,
+        costPrice: Number(product.costPrice || 0),
+        receivedAt: product.createdAt || new Date(),
+      }];
+      lots = product.inventoryLots;
+    }
+
+    let pending = quantity;
+    const allocations: Array<{ lotId: string; quantity: number; costPrice: number }> = [];
+
+    for (const lot of lots) {
+      if (pending <= 0) break;
+
+      const available = Number(lot.remaining || 0);
+      if (available <= 0) continue;
+
+      const used = Math.min(available, pending);
+      lot.remaining = available - used;
+      pending -= used;
+      allocations.push({
+        lotId: String(lot._id || ""),
+        quantity: used,
+        costPrice: Number(lot.costPrice || 0),
       });
     }
+
+    // Nunca debería ocurrir, pero protege datos antiguos con stock inconsistente.
+    if (pending > 0) {
+      throw new Error(`No se pudo asignar el lote de inventario para ${item.title}.`);
+    }
+
+    const inventoryCost = allocations.reduce(
+      (total, allocation) => total + allocation.quantity * allocation.costPrice,
+      0
+    );
+
+    item.inventoryAllocations = allocations;
+    item.inventoryCost = inventoryCost;
+    product.stock = stock - quantity;
+    product.lastSoldUnitCost = inventoryCost / quantity;
+
+    if (Number(product.stock || 0) <= 0) {
+      product.isOffer = false;
+      product.isWeeklyNew = false;
+    }
+
+    await product.save();
   }
 
   order.inventoryDeducted = true;
+  order.markModified("items");
 }
 
 async function restoreInventory(order: any) {
@@ -54,14 +105,64 @@ async function restoreInventory(order: any) {
 
     if (quantity <= 0) continue;
 
-    await Product.findByIdAndUpdate(item.productId, {
-      $inc: {
-        stock: quantity,
-      },
-    });
+    const product = await Product.findById(item.productId);
+    if (!product) continue;
+
+    const allocations = Array.isArray(item.inventoryAllocations)
+      ? item.inventoryAllocations
+      : [];
+
+    if (allocations.length > 0) {
+      const lots = Array.isArray(product.inventoryLots)
+        ? product.inventoryLots
+        : [];
+
+      for (const allocation of allocations) {
+        const restoredQuantity = Number(allocation.quantity || 0);
+        if (restoredQuantity <= 0) continue;
+
+        const lot = lots.find(
+          (candidate: any) => String(candidate._id || "") === String(allocation.lotId || "")
+        );
+
+        if (lot) {
+          lot.remaining = Number(lot.remaining || 0) + restoredQuantity;
+        } else {
+          lots.push({
+            quantity: restoredQuantity,
+            remaining: restoredQuantity,
+            costPrice: Number(allocation.costPrice || product.costPrice || 0),
+            receivedAt: new Date(),
+          });
+        }
+      }
+
+      product.inventoryLots = lots;
+    } else {
+      // Pedidos antiguos que no tienen asignación de lote.
+      product.inventoryLots = Array.isArray(product.inventoryLots)
+        ? product.inventoryLots
+        : [];
+      if (product.inventoryLots.length === 0) {
+        product.inventoryLots.push({
+          quantity,
+          remaining: quantity,
+          costPrice: Number(product.costPrice || 0),
+          receivedAt: new Date(),
+        });
+      } else {
+        product.inventoryLots[0].remaining = Number(product.inventoryLots[0].remaining || 0) + quantity;
+      }
+    }
+
+    product.stock = Number(product.stock || 0) + quantity;
+    item.inventoryAllocations = [];
+    item.inventoryCost = 0;
+    await product.save();
   }
 
   order.inventoryDeducted = false;
+  order.markModified("items");
 }
 
 export async function GET(
@@ -184,6 +285,15 @@ export async function PATCH(
     }
 
     await order.save();
+
+    await writeAudit({
+      action: "Estado de pedido actualizado",
+      entityType: "pedido",
+      entityId: String(order._id),
+      entityName: order.orderCode,
+      actor: "Administrador",
+      details: `Estado: ${previousStatus} → ${nextStatus}.`,
+    });
 
     return NextResponse.json({
       success: true,

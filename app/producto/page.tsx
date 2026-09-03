@@ -1,10 +1,11 @@
-import Header from "../../components/layout/Header";
+﻿import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import ProductCatalog, {
   CatalogProduct,
 } from "../../components/catalog/ProductCatalog";
 import { connectDB } from "../../lib/mongodb";
 import Product from "../../models/Product";
+import { sortProductsByRotation } from "../../lib/product-order";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +22,7 @@ export default async function ProductsPage() {
     .sort({ createdAt: -1 })
     .lean();
 
-  const products = JSON.parse(JSON.stringify(rawProducts)) as CatalogProduct[];
+  const products = sortProductsByRotation(JSON.parse(JSON.stringify(rawProducts)) as CatalogProduct[]);
 
   return (
     <main className="min-h-screen bg-[var(--bg)] text-[var(--text)]">

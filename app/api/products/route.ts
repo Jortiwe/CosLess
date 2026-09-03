@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { Types } from "mongoose";
 
 import { connectDB } from "../../../lib/mongodb";
+import { writeAudit } from "../../../lib/audit";
 import Product from "../../../models/Product";
 
 function cleanImage(value: unknown) {
@@ -61,7 +62,7 @@ function cleanRentalDays(value: unknown) {
   );
 }
 
-function cleanPairedProducts(value: unknown) {
+function cleanPairedProducts(value: unknown, maxProducts = 4) {
   if (!Array.isArray(value)) {
     return [];
   }
@@ -78,7 +79,7 @@ function cleanPairedProducts(value: unknown) {
 
   return Array.from(
     new Set(ids)
-  ).slice(0, 4);
+  ).slice(0, maxProducts);
 }
 
 export async function GET() {
@@ -139,6 +140,10 @@ export async function POST(
       cleanPairedProducts(
         body.pairedProducts
       );
+    const groupProducts = cleanPairedProducts(body.groupProducts, 20);
+
+    const initialStock = cleanNumber(body.stock);
+    const initialCostPrice = cleanNumber(body.costPrice);
 
     const product =
       await Product.create({
@@ -168,25 +173,31 @@ export async function POST(
           body.price
         ),
 
-        costPrice:
-          cleanNumber(
-            body.costPrice
-          ),
+        costPrice: initialCostPrice,
 
         oldPrice:
           cleanNumber(
             body.oldPrice
           ),
 
-        stock: cleanNumber(
-          body.stock
-        ),
+        stock: initialStock,
+
+        inventoryLots:
+          initialStock > 0
+            ? [{
+                quantity: initialStock,
+                remaining: initialStock,
+                costPrice: initialCostPrice,
+                receivedAt: new Date(),
+              }]
+            : [],
 
         // =========================
         // ALQUILER
         // =========================
 
         isRentable,
+        rentalOnly: isRentable && Boolean(body.rentalOnly),
 
         rentalPrice:
           isRentable
@@ -220,6 +231,7 @@ export async function POST(
         // =========================
 
         pairedProducts,
+        groupProducts,
 
         // =========================
         // IMÁGENES
@@ -280,6 +292,16 @@ export async function POST(
           body.isActive !==
           false,
       });
+
+    await writeAudit({
+      action: "Producto creado",
+      entityType: "producto",
+      entityId: String(product._id),
+      entityName: product.title,
+      category: product.category,
+      actor: "Administrador",
+      details: `Stock inicial: ${product.stock}. Costo: Bs${product.costPrice}.`,
+    });
 
     return NextResponse.json(
       {

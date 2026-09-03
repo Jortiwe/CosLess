@@ -1,4 +1,4 @@
-import { Schema, model, models } from "mongoose";
+﻿import { Schema, model, models } from "mongoose";
 
 const ProductSchema = new Schema(
   {
@@ -63,11 +63,36 @@ const ProductSchema = new Schema(
       min: 0,
     },
 
+    // Cada reposición conserva su cantidad y costo. Las ventas consumen
+    // estos lotes en orden de llegada (FIFO).
+    inventoryLots: {
+      type: [
+        {
+          quantity: { type: Number, required: true, min: 0 },
+          remaining: { type: Number, required: true, min: 0 },
+          costPrice: { type: Number, required: true, min: 0 },
+          receivedAt: { type: Date, default: Date.now },
+        },
+      ],
+      default: [],
+    },
+
+    lastSoldUnitCost: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+
     // =========================
     // ALQUILER
     // =========================
 
     isRentable: {
+      type: Boolean,
+      default: false,
+    },
+
+    rentalOnly: {
       type: Boolean,
       default: false,
     },
@@ -117,6 +142,16 @@ const ProductSchema = new Schema(
         message:
           "Puedes emparejar como máximo 4 productos.",
       },
+    },
+    setProducts: {
+      type: [Schema.Types.ObjectId],
+      ref: "Product",
+      default: [],
+    },
+    groupProducts: {
+      type: [Schema.Types.ObjectId],
+      ref: "Product",
+      default: [],
     },
 
     // =========================

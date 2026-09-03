@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 
 function clearAuthCookies(response: NextResponse) {
   response.cookies.set("cosless_token", "", {

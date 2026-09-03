@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -14,12 +14,18 @@ type Props = {
   currentProductId?: string;
   pairedProducts: string[];
   setPairedProducts: (value: string[]) => void;
+  title?: string;
+  description?: string;
+  maxProducts?: number;
 };
 
 export default function ProductPairingFields({
   currentProductId,
   pairedProducts,
   setPairedProducts,
+  title = "Productos que combinan",
+  description = "Relaciona este producto con otros.",
+  maxProducts = 4,
 }: Props) {
   const [products, setProducts] = useState<ProductOption[]>([]);
   const [search, setSearch] = useState("");
@@ -90,7 +96,7 @@ export default function ProductPairingFields({
 
   function addProduct(id: string) {
     if (pairedProducts.includes(id)) return;
-    if (pairedProducts.length >= 4) return;
+    if (pairedProducts.length >= maxProducts) return;
 
     setPairedProducts([...pairedProducts, id]);
     setSearch("");
@@ -101,16 +107,16 @@ export default function ProductPairingFields({
   }
 
   return (
-    <div className="md:col-span-2">
-      <div className="rounded-[24px] border border-[#cfeaf6] bg-white p-5">
+    <div className="min-w-0 md:col-span-2">
+      <div className="min-w-0 overflow-hidden rounded-[24px] border border-[#cfeaf6] bg-white p-4 sm:p-5">
         <div className="mb-4">
           <h3 className="text-lg font-extrabold text-[#16324a]">
-            Productos que combinan
+            {title}
           </h3>
 
           <p className="mt-1 text-xs font-semibold leading-5 text-[#4b6b80]">
             Relaciona este producto con otros que puedan venderse o alquilarse juntos.
-            Máximo 4 productos.
+            Máximo {maxProducts} productos.
           </p>
         </div>
 
@@ -119,7 +125,7 @@ export default function ProductPairingFields({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar producto por nombre..."
-            disabled={pairedProducts.length >= 4}
+            disabled={pairedProducts.length >= maxProducts}
             className="w-full rounded-2xl border border-[#cfeaf6] bg-[#f8fdff] px-4 py-4 text-sm font-semibold text-[#16324a] outline-none transition placeholder:text-[#8aa4b4] focus:border-[#19b7c9] disabled:cursor-not-allowed disabled:opacity-60"
           />
 
@@ -139,7 +145,7 @@ export default function ProductPairingFields({
                     key={product._id}
                     type="button"
                     onClick={() => addProduct(product._id)}
-                    className="flex w-full items-center gap-3 border-b border-[#eef7fa] px-4 py-3 text-left transition last:border-b-0 hover:bg-[#f1fbfd]"
+                    className="flex min-w-0 w-full items-center gap-3 border-b border-[#eef7fa] px-3 py-3 text-left transition last:border-b-0 hover:bg-[#f1fbfd] sm:px-4"
                   >
                     <img
                       src={product.mainImage || "/placeholder-product.png"}
@@ -158,7 +164,7 @@ export default function ProductPairingFields({
                       </p>
                     </div>
 
-                    <span className="rounded-xl bg-[#e9fbff] px-3 py-2 text-xs font-extrabold text-[#19b7c9]">
+                    <span className="shrink-0 rounded-xl bg-[#e9fbff] px-2 py-2 text-xs font-extrabold text-[#19b7c9] sm:px-3">
                       Agregar
                     </span>
                   </button>
@@ -173,7 +179,7 @@ export default function ProductPairingFields({
             {selectedProducts.map((product) => (
               <div
                 key={product._id}
-                className="flex items-center gap-3 rounded-[18px] border border-[#cfeaf6] bg-[#f8fdff] p-3"
+                className="flex min-w-0 items-center gap-2 rounded-[18px] border border-[#cfeaf6] bg-[#f8fdff] p-3 sm:gap-3"
               >
                 <img
                   src={product.mainImage || "/placeholder-product.png"}
@@ -194,7 +200,7 @@ export default function ProductPairingFields({
                 <button
                   type="button"
                   onClick={() => removeProduct(product._id)}
-                  className="rounded-xl border border-[#f2c7c7] bg-white px-3 py-2 text-xs font-extrabold text-[#c94b4b] transition hover:bg-[#fff5f5]"
+                  className="shrink-0 rounded-xl border border-[#f2c7c7] bg-white px-2 py-2 text-xs font-extrabold text-[#c94b4b] transition hover:bg-[#fff5f5] sm:px-3"
                 >
                   Quitar
                 </button>
@@ -204,7 +210,7 @@ export default function ProductPairingFields({
         )}
 
         <p className="mt-3 text-xs font-bold text-[#4b6b80]">
-          {pairedProducts.length} / 4 emparejados
+          {pairedProducts.length} / {maxProducts} emparejados
         </p>
       </div>
     </div>

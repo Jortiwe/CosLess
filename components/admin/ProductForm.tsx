@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
@@ -20,14 +20,17 @@ type ProductType = {
   costPrice?: number;
   oldPrice?: number;
   stock?: number;
+  inventoryLots?: Array<{ quantity?: number; remaining?: number; costPrice?: number }>;
 
   isRentable?: boolean;
   rentalPrice?: number;
   rentalDeposit?: number;
   rentalDays?: number;
   rentalAvailable?: boolean;
+  rentalOnly?: boolean;
 
   pairedProducts?: string[];
+  groupProducts?: string[];
 
   mainImage?: string;
   images?: string[];
@@ -85,6 +88,25 @@ function getInitialPairedProducts(product?: ProductType) {
     .map((item) => String(item || "").trim())
     .filter(Boolean);
 }
+function getInitialStockLots(product?: ProductType) {
+  const savedLots = Array.isArray(product?.inventoryLots)
+    ? product.inventoryLots
+        .filter((lot) => Number(lot?.remaining ?? lot?.quantity ?? 0) > 0)
+        .map((lot) => `${Number(lot.remaining ?? lot.quantity ?? 0)} @ ${Number(lot.costPrice || 0)}`)
+    : [];
+
+  if (savedLots.length > 0) return savedLots.join("\n");
+  const currentStock = Number(product?.stock || 0);
+  return currentStock > 0 ? `${currentStock} @ ${Number(product?.costPrice || 0)}` : "";
+}
+
+function parseStockLots(value: string) {
+  return value.split("\n").map((line) => line.trim()).filter(Boolean).map((line) => {
+    const [quantityText, costText] = line.split("@").map((item) => item.trim());
+    const quantity = Math.floor(Number(quantityText || 0));
+    return { quantity, remaining: quantity, costPrice: Number(costText || 0) };
+  });
+}
 
 export default function ProductForm({
   mode,
@@ -133,12 +155,16 @@ export default function ProductForm({
     String(product?.stock ?? 0)
   );
 
+  const [stockToAdd, setStockToAdd] = useState("0");
+  const [stockLots, setStockLots] = useState(getInitialStockLots(product));
+
   // =========================
   // ALQUILER
   // =========================
 
   const [isRentable, setIsRentable] =
     useState(initiallyRentable);
+  const [rentalOnly, setRentalOnly] = useState(Boolean(product?.rentalOnly));
 
   const [rentalPrice, setRentalPrice] = useState(
     String(product?.rentalPrice ?? 0)
@@ -172,6 +198,7 @@ export default function ProductForm({
   ] = useState<string[]>(
     getInitialPairedProducts(product)
   );
+  const [groupProducts, setGroupProducts] = useState<string[]>(product?.groupProducts || []);
 
   // =========================
   // CONTENIDO
@@ -193,13 +220,20 @@ export default function ProductForm({
       const response = await fetch("/api/admin/upload", { method: "POST", body: data });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "No se pudo subir la imagen.");
-      if (!mainImage.trim()) {
+      const currentMainImage = mainImage.trim();
+      const hasRealMainImage =
+        currentMainImage &&
+        currentMainImage !== "/placeholder-product.png";
+
+      if (!hasRealMainImage) {
         setMainImage(result.url);
       } else {
         const currentImages = images
           .split("\n")
           .map((image) => image.trim())
-          .filter(Boolean);
+          .filter(
+            (image) => image && image !== "/placeholder-product.png"
+          );
 
         if (currentImages.length >= 5) {
           throw new Error("Solo puedes añadir 5 imágenes adicionales.");
@@ -405,6 +439,17 @@ export default function ProductForm({
         return;
       }
 
+      const parsedStockLots = mode === "edit" ? parseStockLots(stockLots) : [];
+      const lotsAreValid = parsedStockLots.every(
+        (lot) => lot.quantity > 0 && lot.costPrice >= 0 && Number.isFinite(lot.costPrice)
+      );
+      const lotsTotal = parsedStockLots.reduce((total, lot) => total + lot.quantity, 0);
+
+      if (mode === "edit" && (!lotsAreValid || lotsTotal !== Number(stock || 0))) {
+        setMessage("Revisa los lotes: cada línea debe ser cantidad @ costo y la suma debe coincidir con el stock actual.");
+        return;
+      }
+
       const payload = {
         title: title.trim(),
 
@@ -425,10 +470,13 @@ export default function ProductForm({
         costPrice: Number(costPrice),
         oldPrice: Number(oldPrice),
         stock: Number(stock),
+        stockToAdd: mode === "edit" ? Number(stockToAdd) : 0,
+        inventoryLots: parsedStockLots,
 
         // ALQUILER
         isRentable:
           productIsRentable,
+        rentalOnly: productIsRentable && rentalOnly,
 
         rentalPrice:
           productIsRentable
@@ -455,6 +503,7 @@ export default function ProductForm({
 
         // EMPAREJADOS
         pairedProducts,
+        groupProducts,
 
         // IMÁGENES
         mainImage,
@@ -528,6 +577,17 @@ export default function ProductForm({
         return;
       }
 
+      setStock(String(data.product?.stock ?? stock));
+      setStockToAdd("0");
+      setStockLots(
+        Array.isArray(data.product?.inventoryLots)
+          ? data.product.inventoryLots
+              .filter((lot: { remaining?: number; quantity?: number }) => Number(lot.remaining ?? lot.quantity ?? 0) > 0)
+              .map((lot: { remaining?: number; quantity?: number; costPrice?: number }) => `${Number(lot.remaining ?? lot.quantity ?? 0)} @ ${Number(lot.costPrice || 0)}`)
+              .join("\n")
+          : stockLots
+      );
+
       router.refresh();
     } catch {
       setMessage(
@@ -539,8 +599,8 @@ export default function ProductForm({
   }
 
   return (
-    <section className="rounded-[32px] border border-[#cfeaf6] bg-[#f7fdff] p-6 shadow-[0_10px_30px_rgba(22,50,74,0.05)]">
-      <div className="grid gap-5 md:grid-cols-2">
+    <section className="min-w-0 overflow-hidden rounded-[26px] border border-[#cfeaf6] bg-[#f7fdff] p-4 shadow-[0_10px_30px_rgba(22,50,74,0.05)] sm:rounded-[32px] sm:p-6">
+      <div className="grid min-w-0 gap-5 md:grid-cols-2">
         {/* ========================= */}
         {/* NOMBRE */}
         {/* ========================= */}
@@ -840,7 +900,7 @@ export default function ProductForm({
 
               <div>
                 <label className="mb-2 block text-sm font-bold text-[#16324a]">
-                  Precio de costo
+                  {mode === "edit" ? "Costo del nuevo lote" : "Precio de costo"}
                 </label>
 
                 <input
@@ -879,7 +939,7 @@ export default function ProductForm({
 
               <div>
                 <label className="mb-2 block text-sm font-bold text-[#16324a]">
-                  Stock
+                  {mode === "edit" ? "Stock actual" : "Stock inicial"}
                 </label>
 
                 <input
@@ -892,10 +952,46 @@ export default function ProductForm({
                       e.target.value
                     )
                   }
+                  readOnly={mode === "edit"}
                   className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none transition focus:border-[#19b7c9]"
                 />
               </div>
+
+              {mode === "edit" && (
+                <div>
+                  <label className="mb-2 block text-sm font-bold text-[#16324a]">
+                    Añadir al stock
+                  </label>
+
+                  <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={stockToAdd}
+                    onChange={(e) => setStockToAdd(e.target.value)}
+                    className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-4 outline-none transition focus:border-[#19b7c9]"
+                  />
+                </div>
+              )}
             </div>
+
+            {mode === "edit" && (
+              <div className="mt-4 rounded-2xl border border-[#cfeaf6] bg-[#f7fdff] p-4">
+                <label className="mb-2 block text-sm font-bold text-[#16324a]">
+                  Lotes actuales
+                </label>
+                <textarea
+                  rows={3}
+                  value={stockLots}
+                  onChange={(e) => setStockLots(e.target.value)}
+                  placeholder="3 @ 30\n2 @ 35"
+                  className="w-full rounded-2xl border border-[#cfeaf6] bg-white px-4 py-3 font-medium text-[#16324a] outline-none transition focus:border-[#19b7c9]"
+                />
+                <p className="mt-2 text-xs font-semibold text-[#4b6b80]">
+                  Una línea por lote: cantidad @ costo unitario. Úsalo para corregir inventario anterior.
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -924,6 +1020,8 @@ export default function ProductForm({
               setRentalAvailable
             }
             salePrice={price}
+            rentalOnly={rentalOnly}
+            setRentalOnly={setRentalOnly}
           />
         )}
 
@@ -1037,9 +1135,20 @@ export default function ProductForm({
           pairedProducts={
             pairedProducts
           }
+          title="Piezas del conjunto"
+          description="Relaciona piezas que forman parte del mismo conjunto."
+          maxProducts={4}
           setPairedProducts={
             setPairedProducts
           }
+        />
+        <ProductPairingFields
+          currentProductId={product?._id}
+          pairedProducts={groupProducts}
+          setPairedProducts={setGroupProducts}
+          title="Grupo o colección"
+          description="Relaciona productos de la misma marca, color o colección."
+          maxProducts={20}
         />
 
         {/* ========================= */}

@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { connectDB } from "../../../../lib/mongodb";
 import Product from "../../../../models/Product";
 import PrintReportButton from "../../../../components/admin/PrintReportButton";

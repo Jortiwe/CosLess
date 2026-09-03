@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import { connectDB } from "../../../lib/mongodb";
+import { writeAudit } from "../../../lib/audit";
 import Order from "../../../models/Order";
 import Product from "../../../models/Product";
 import User from "../../../models/User";
@@ -281,6 +282,15 @@ if (currentStock < item.quantity) {
       inventoryDeducted: false,
       whatsappMessage,
       notes,
+    });
+
+    await writeAudit({
+      action: "Pedido creado",
+      entityType: "pedido",
+      entityId: String(order._id),
+      entityName: order.orderCode,
+      actor: customerName,
+      details: `${order.items.reduce((total: number, item: { quantity?: number }) => total + Number(item.quantity || 0), 0)} unidades. Total: Bs${order.total}.`,
     });
 
     return NextResponse.json(

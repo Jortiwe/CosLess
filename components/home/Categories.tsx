@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { CATEGORY_LIST } from "../../lib/categories";
 
 export default function Categories() {

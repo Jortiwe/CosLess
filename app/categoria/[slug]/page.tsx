@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+﻿import { notFound } from "next/navigation";
 import Header from "../../../components/layout/Header";
 import Footer from "../../../components/layout/Footer";
 import ProductCatalog, {
@@ -7,6 +7,7 @@ import ProductCatalog, {
 import { connectDB } from "../../../lib/mongodb";
 import Product from "../../../models/Product";
 import { getCategoryBySlug } from "../../../lib/categories";
+import { sortProductsByRotation } from "../../../lib/product-order";
 
 export const dynamic = "force-dynamic";
 
@@ -61,7 +62,7 @@ export default async function CategoryPage({ params }: PageProps) {
     .sort({ createdAt: -1 })
     .lean();
 
-  const products = JSON.parse(JSON.stringify(rawProducts)) as CatalogProduct[];
+  const products = sortProductsByRotation(JSON.parse(JSON.stringify(rawProducts)) as CatalogProduct[]);
 
   return (
     <main className="min-h-screen bg-[var(--bg)] text-[var(--text)]">

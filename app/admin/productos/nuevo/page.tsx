@@ -5,8 +5,8 @@ export const dynamic = "force-dynamic";
 
 export default function NewProductPage() {
   return (
-    <main className="min-h-screen bg-[var(--bg)] px-5 py-8 text-[var(--text)] sm:px-8 lg:px-12">
-      <div className="mx-auto max-w-[1200px]">
+    <main className="min-h-screen overflow-x-hidden bg-[var(--bg)] px-4 py-6 text-[var(--text)] sm:px-8 sm:py-8 lg:px-12">
+      <div className="mx-auto min-w-0 max-w-[1200px]">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-4xl font-extrabold text-[var(--text)]">

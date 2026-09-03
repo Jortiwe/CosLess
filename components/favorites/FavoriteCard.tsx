@@ -1,4 +1,4 @@
-import { FiHeart, FiShoppingBag, FiTrash2 } from "react-icons/fi";
+﻿import { FiHeart, FiShoppingBag, FiTrash2 } from "react-icons/fi";
 
 type FavoriteCardProps = {
   title: string;

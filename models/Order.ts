@@ -1,4 +1,4 @@
-import { Schema, model, models } from "mongoose";
+﻿import { Schema, model, models } from "mongoose";
 
 const OrderItemSchema = new Schema(
   {
@@ -24,6 +24,21 @@ const OrderItemSchema = new Schema(
     mainImage: {
       type: String,
       default: "",
+    },
+    inventoryCost: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    inventoryAllocations: {
+      type: [
+        {
+          lotId: { type: String, default: "" },
+          quantity: { type: Number, required: true, min: 0 },
+          costPrice: { type: Number, required: true, min: 0 },
+        },
+      ],
+      default: [],
     },
   },
   { _id: false }

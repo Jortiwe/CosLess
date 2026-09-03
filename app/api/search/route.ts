@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { connectDB } from "../../../lib/mongodb";
 import Product from "../../../models/Product";
+import { sortProductsByRotation } from "../../../lib/product-order";
 
 type SearchProduct = {
   _id: string;
@@ -41,7 +42,7 @@ export async function GET(request: Request) {
       .sort({ createdAt: -1 })
       .lean();
 
-    const products: SearchProduct[] = JSON.parse(JSON.stringify(rawProducts));
+    const products: SearchProduct[] = sortProductsByRotation(JSON.parse(JSON.stringify(rawProducts)) as SearchProduct[]);
 
     const exactMatches = products.filter((product: SearchProduct) => {
       const title = normalizeText(product.title);

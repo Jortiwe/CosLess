@@ -1,8 +1,9 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import { connectDB } from "../../lib/mongodb";
 import Product from "../../models/Product";
+import { sortProductsByRotation } from "../../lib/product-order";
 
 type SearchPageProps = {
   searchParams: Promise<{
@@ -199,7 +200,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     .sort({ createdAt: -1 })
     .lean();
 
-  const products: SearchProduct[] = JSON.parse(JSON.stringify(rawProducts));
+  const products: SearchProduct[] = sortProductsByRotation(JSON.parse(JSON.stringify(rawProducts)) as SearchProduct[]);
 
   const exactMatches: SearchProduct[] = query
     ? products.filter((product: SearchProduct) => {

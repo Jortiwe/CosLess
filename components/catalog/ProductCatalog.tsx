@@ -1,7 +1,8 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { compareProductsByRotation } from "../../lib/product-order";
 import {
   FiChevronDown,
   FiFilter,
@@ -154,7 +155,7 @@ export default function ProductCatalog({
   showCategoryFilter = true,
 }: Props) {
   const [sort, setSort] =
-    useState("newest");
+    useState("rotation");
 
   const [category, setCategory] =
     useState("all");
@@ -227,6 +228,10 @@ export default function ProductCatalog({
       }
 
       result.sort((a, b) => {
+        if (sort === "rotation") {
+          return compareProductsByRotation(a, b);
+        }
+
         if (sort === "newest") {
           return (
             new Date(
@@ -390,6 +395,10 @@ export default function ProductCatalog({
             }
             className="h-11 w-full appearance-none rounded-[18px] border border-[var(--border-soft)] bg-[var(--surface-soft)] px-3 pr-9 text-xs font-bold text-[var(--text)] outline-none transition focus:border-[var(--primary)] focus:bg-[var(--surface)] sm:h-12 sm:min-w-[190px] sm:rounded-2xl sm:px-4 sm:pr-10 sm:text-sm"
           >
+            <option value="rotation">
+              Recomendado
+            </option>
+
             <option value="newest">
               Recientes
             </option>

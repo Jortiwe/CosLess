@@ -1,4 +1,4 @@
-import { connectDB } from "../../../lib/mongodb";
+﻿import { connectDB } from "../../../lib/mongodb";
 import Product from "../../../models/Product";
 import Liquidation from "../../../models/Liquidation";
 import AdminPaymentsClient from "../../../components/admin/AdminPaymentsClient";
@@ -13,6 +13,7 @@ type PaymentProduct = {
   status?: string;
   price?: number;
   costPrice?: number;
+  lastSoldUnitCost?: number;
   stock?: number;
   mainImage?: string;
 };
@@ -51,7 +52,17 @@ export default async function AdminPaymentsPage() {
     Liquidation.find().sort({ updatedAt: -1 }).lean(),
   ]);
 
-  const products = JSON.parse(JSON.stringify(rawProducts)) as PaymentProduct[];
+  const products = (JSON.parse(JSON.stringify(rawProducts)) as PaymentProduct[]).map(
+    (product) => ({
+      ...product,
+      // El costo sugerido corresponde a la unidad que realmente salió del
+      // lote FIFO; se puede ajustar manualmente si la venta tuvo un caso especial.
+      costPrice:
+        Number(product.lastSoldUnitCost || 0) > 0
+          ? Number(product.lastSoldUnitCost)
+          : Number(product.costPrice || 0),
+    })
+  );
   const liquidations = JSON.parse(
     JSON.stringify(rawLiquidations)
   ) as PaymentLiquidation[];

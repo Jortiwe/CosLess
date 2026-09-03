@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { COSLESS_IMAGES } from "../../lib/coslessImages";
 
 const categories = [

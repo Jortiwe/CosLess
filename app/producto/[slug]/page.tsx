@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+﻿import { notFound } from "next/navigation";
 import Link from "next/link";
 import Header from "../../../components/layout/Header";
 import Footer from "../../../components/layout/Footer";
@@ -7,8 +7,10 @@ import AddToFavoritesButton from "../../../components/product/AddToFavoritesButt
 import BuyNowButton from "../../../components/product/BuyNowButton";
 import ProductBackButton from "../../../components/product/ProductBackButton";
 import ProductImageGallery from "../../../components/product/ProductImageGallery";
+import RentalRequestForm from "../../../components/product/RentalRequestForm";
 import { connectDB } from "../../../lib/mongodb";
 import Product from "../../../models/Product";
+import { availabilityPriority, sortProductsByRotation } from "../../../lib/product-order";
 
 export const dynamic = "force-dynamic";
 
@@ -40,7 +42,9 @@ type ProductItem = {
   rentalPrice?: number;
   rentalDays?: number;
   rentalAvailable?: boolean;
+  rentalOnly?: boolean;
   pairedProducts?: string[];
+  groupProducts?: string[];
 };
 
 function formatBs(value?: number) {
@@ -180,23 +184,42 @@ export default async function ProductPage({ params }: PageProps) {
     ? product.pairedProducts.filter((id) => String(id) !== String(product._id))
     : [];
 
-  const [rawPairedProducts, rawRelatedProducts] = await Promise.all([
-    pairedIds.length > 0
+  const groupIds = Array.isArray(product.groupProducts)
+    ? product.groupProducts.filter((id) => String(id) !== String(product._id))
+    : [];
+
+  // El orden importa: primero se muestran las piezas del conjunto. Si no
+  // existen, se muestran los productos del grupo o colección.
+  const priorityIds = pairedIds.length > 0 ? pairedIds : groupIds;
+
+  const [rawPriorityProducts, rawRelatedProducts] = await Promise.all([
+    priorityIds.length > 0
       ? Product.find({
-          _id: { $in: pairedIds },
+          _id: { $in: priorityIds },
           $or: [{ isActive: true }, { active: true }, { isActive: { $exists: false } }],
-        }).limit(4).lean()
+        }).limit(12).lean()
       : [],
     Product.find({
-      _id: { $ne: product._id, $nin: pairedIds },
+      _id: { $ne: product._id, $nin: [...pairedIds, ...groupIds] },
       category: product.category,
       $or: [{ isActive: true }, { active: true }, { isActive: { $exists: false } }],
-    }).sort({ updatedAt: -1, createdAt: -1 }).limit(4).lean(),
+    }).lean(),
   ]);
 
+  const priorityById = new Map(
+    rawPriorityProducts.map((item) => [String(item._id), item])
+  );
+  const orderedPriorityProducts = priorityIds
+    .map((id) => priorityById.get(String(id)))
+    .filter(Boolean);
+
   const relatedProducts = JSON.parse(
-    JSON.stringify([...rawPairedProducts, ...rawRelatedProducts])
-  ).slice(0, 4) as ProductItem[];
+    JSON.stringify(
+      [...orderedPriorityProducts, ...sortProductsByRotation(rawRelatedProducts)].sort(
+        (a, b) => availabilityPriority(a) - availabilityPriority(b)
+      )
+    )
+  ).slice(0, 12) as ProductItem[];
 
   const checkoutProduct: {
     productId: string;
@@ -232,7 +255,7 @@ export default async function ProductPage({ params }: PageProps) {
           <ProductBackButton fallbackHref={fallbackBackHref} />
         </div>
 
-        <div className="overflow-hidden rounded-[30px] border border-[var(--border)] bg-[var(--surface)] shadow-[0_12px_32px_var(--shadow)] sm:rounded-[34px] lg:grid lg:grid-cols-[0.95fr_1.05fr]">
+        <div className="overflow-hidden rounded-[30px] border border-[var(--border)] bg-[var(--surface)] shadow-[0_12px_32px_var(--shadow)] sm:rounded-[34px] lg:grid lg:grid-cols-[0.85fr_1.15fr]">
           <ProductImageGallery title={product.title} images={gallery} />
 
           <div className="p-5 sm:p-8 lg:p-10">
@@ -276,24 +299,22 @@ export default async function ProductPage({ params }: PageProps) {
               {product.title}
             </h1>
 
-            <div className="mt-4">
-              {typeof product.oldPrice === "number" && product.oldPrice > 0 && (
-                <p className="text-base font-bold text-[var(--text-muted)] line-through sm:text-lg">
-                  {formatBs(product.oldPrice)}
-                </p>
+            <div className={`mt-4 grid gap-3 ${!product.rentalOnly && rental.rentable ? "sm:grid-cols-2" : "grid-cols-1"}`}>
+              {!product.rentalOnly && (
+                <div className="rounded-2xl border border-[var(--border-soft)] bg-[var(--surface-soft)] px-4 py-3">
+                  <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[var(--text-muted)]">Compra</p>
+                  {typeof product.oldPrice === "number" && product.oldPrice > 0 && (
+                    <p className="mt-1 text-sm font-bold text-[var(--text-muted)] line-through">{formatBs(product.oldPrice)}</p>
+                  )}
+                  <p className="mt-1 text-[1.8rem] font-black leading-tight text-[var(--primary)] sm:text-[2rem]">{formatBs(product.price)}</p>
+                </div>
               )}
 
-              <p className="text-[2rem] font-black leading-tight text-[var(--primary)] sm:text-[2.35rem]">
-                {formatBs(product.price)}
-              </p>
-
-              {rental.rentable && rental.price > 0 && (
-                <div className="mt-3 inline-flex items-center gap-2 rounded-2xl bg-[#eef0ff] px-4 py-3 text-sm font-bold text-[#5661c9] sm:text-base">
-                  <span>Alquiler:</span>
-                  <span>{formatBs(rental.price)}</span>
-                  <span className="text-xs font-semibold opacity-80">
-                    / {rental.days === 1 ? "día" : `${rental.days} días`}
-                  </span>
+              {rental.rentable && (
+                <div className="rounded-2xl border border-[#dfe2ff] bg-[#eef0ff] px-4 py-3 text-[#5661c9]">
+                  <p className="text-xs font-extrabold uppercase tracking-[0.14em]">Alquiler</p>
+                  <p className="mt-1 text-[1.8rem] font-black leading-tight sm:text-[2rem]">{rental.price > 0 ? formatBs(rental.price) : "Consultar"}</p>
+                  {rental.price > 0 && <p className="text-xs font-semibold opacity-80">/ {rental.days === 1 ? "día" : `${rental.days} días`}</p>}
                 </div>
               )}
             </div>
@@ -324,9 +345,9 @@ export default async function ProductPage({ params }: PageProps) {
             </div>
 
             <div className="mt-7 space-y-3">
-              <div className="grid grid-cols-2 gap-3">
+              <div className={`grid gap-3 ${product.rentalOnly ? "grid-cols-1" : "grid-cols-2"}`}>
                 <div className="min-w-0 overflow-hidden rounded-[22px] [&_a]:!box-border [&_a]:!flex [&_a]:!h-[56px] [&_a]:!w-full [&_a]:!min-w-0 [&_a]:!max-w-full [&_a]:!items-center [&_a]:!justify-center [&_a]:!overflow-hidden [&_a]:!rounded-[22px] [&_a]:!px-2 [&_a]:!text-center [&_a]:!text-[0.82rem] [&_a]:!leading-none [&_button]:!box-border [&_button]:!flex [&_button]:!h-[56px] [&_button]:!w-full [&_button]:!min-w-0 [&_button]:!max-w-full [&_button]:!items-center [&_button]:!justify-center [&_button]:!overflow-hidden [&_button]:!rounded-[22px] [&_button]:!px-2 [&_button]:!text-center [&_button]:!text-[0.82rem] [&_button]:!leading-none sm:[&_a]:!h-[60px] sm:[&_a]:!px-4 sm:[&_a]:!text-base sm:[&_button]:!h-[60px] sm:[&_button]:!px-4 sm:[&_button]:!text-base">
-                  <AddToCartButton product={checkoutProduct} />
+                  {!product.rentalOnly && <AddToCartButton product={checkoutProduct} />}
                 </div>
 
                 <div className="min-w-0 overflow-hidden rounded-[22px] [&_a]:!box-border [&_a]:!flex [&_a]:!h-[56px] [&_a]:!w-full [&_a]:!min-w-0 [&_a]:!max-w-full [&_a]:!items-center [&_a]:!justify-center [&_a]:!overflow-hidden [&_a]:!rounded-[22px] [&_a]:!px-2 [&_a]:!text-center [&_a]:!text-[0.82rem] [&_a]:!leading-none [&_button]:!box-border [&_button]:!flex [&_button]:!h-[56px] [&_button]:!w-full [&_button]:!min-w-0 [&_button]:!max-w-full [&_button]:!items-center [&_button]:!justify-center [&_button]:!overflow-hidden [&_button]:!rounded-[22px] [&_button]:!px-2 [&_button]:!text-center [&_button]:!text-[0.82rem] [&_button]:!leading-none sm:[&_a]:!h-[60px] sm:[&_a]:!px-4 sm:[&_a]:!text-base sm:[&_button]:!h-[60px] sm:[&_button]:!px-4 sm:[&_button]:!text-base">
@@ -345,9 +366,28 @@ export default async function ProductPage({ params }: PageProps) {
               </div>
 
               <div className="min-w-0 overflow-hidden rounded-[24px] [&_a]:!box-border [&_a]:!flex [&_a]:!h-[60px] [&_a]:!w-full [&_a]:!min-w-0 [&_a]:!max-w-full [&_a]:!items-center [&_a]:!justify-center [&_a]:!overflow-hidden [&_a]:!rounded-[24px] [&_a]:!px-3 [&_a]:!text-center [&_a]:!text-[0.92rem] [&_a]:!leading-none [&_button]:!box-border [&_button]:!flex [&_button]:!h-[60px] [&_button]:!w-full [&_button]:!min-w-0 [&_button]:!max-w-full [&_button]:!items-center [&_button]:!justify-center [&_button]:!overflow-hidden [&_button]:!rounded-[24px] [&_button]:!px-3 [&_button]:!text-center [&_button]:!text-[0.92rem] [&_button]:!leading-none sm:[&_a]:!h-[62px] sm:[&_a]:!px-4 sm:[&_a]:!text-base sm:[&_button]:!h-[62px] sm:[&_button]:!px-4 sm:[&_button]:!text-base">
-                <BuyNowButton product={checkoutProduct} />
+                {!product.rentalOnly && <BuyNowButton product={checkoutProduct} />}
               </div>
             </div>
+
+            {rental.rentable && (
+              <RentalRequestForm
+                product={{
+                  _id: product._id,
+                  title: product.title,
+                  rentalPrice: product.rentalPrice,
+                  rentalDays: product.rentalDays,
+                }}
+                relatedProducts={relatedProducts
+                  .filter((item) => getRentalInfo(item).rentable)
+                  .map((item) => ({
+                    _id: item._id,
+                    title: item.title,
+                    rentalPrice: item.rentalPrice,
+                    rentalDays: item.rentalDays,
+                  }))}
+              />
+            )}
 
             {product.description && (
               <div className="mt-7 border-t border-[var(--border-soft)] pt-5">
@@ -367,30 +407,23 @@ export default async function ProductPage({ params }: PageProps) {
           <section className="mt-8 sm:mt-10">
             <div className="mb-4 flex items-center justify-between gap-3">
               <div>
-                <span className="inline-flex rounded-full bg-[var(--surface)] px-4 py-2 text-xs font-extrabold uppercase tracking-[0.16em] text-[var(--primary)] shadow-[0_8px_20px_var(--shadow)]">
-                  {pairedIds.length > 0 ? "Completa el conjunto" : "También te puede gustar"}
-                </span>
-
-                <h2 className="mt-3 text-[1.7rem] font-extrabold leading-tight text-[var(--text)] sm:text-[2.2rem]">
+<h2 className="mt-3 text-[1.7rem] font-extrabold leading-tight text-[var(--text)] sm:text-[2.2rem]">
                   Productos relacionados
                 </h2>
               </div>
-
-              {product.category && (
-                <Link
-                  href={`/categoria/${product.category}`}
-                  className="hidden shrink-0 rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-5 py-3 text-sm font-extrabold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)] sm:inline-flex"
-                >
-                  Ver más
-                </Link>
-              )}
-            </div>
+</div>
 
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
               {relatedProducts.map((item) => (
                 <RelatedProductCard key={item._id} product={item} />
               ))}
             </div>
+
+            {product.category && (
+              <div className="mt-6 flex justify-center">
+                <Link href={`/categoria/${product.category}`} className="inline-flex rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-6 py-3 text-sm font-extrabold text-[var(--text)] transition hover:border-[var(--primary)] hover:text-[var(--primary)]">Ver más</Link>
+              </div>
+            )}
           </section>
         )}
       </section>

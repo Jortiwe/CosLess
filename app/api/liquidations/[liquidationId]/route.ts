@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { connectDB } from "../../../../lib/mongodb";
+import { writeAudit } from "../../../../lib/audit";
 import Liquidation from "../../../../models/Liquidation";
 
 function roundMoney(value: number) {
@@ -106,6 +107,15 @@ export async function PATCH(
     liquidation.set(calculated);
 
     await liquidation.save();
+
+    await writeAudit({
+      action: "Pago actualizado",
+      entityType: "pago",
+      entityId: String(liquidation._id),
+      entityName: liquidation.productTitle,
+      actor: "Administrador",
+      details: `Venta: Bs${liquidation.finalSalePrice}. Costo: Bs${liquidation.productCost}.`,
+    });
 
     return NextResponse.json({
       success: true,

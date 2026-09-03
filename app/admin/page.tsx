@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+﻿import { Types } from "mongoose";
 import Link from "next/link";
 import { connectDB } from "../../lib/mongodb";
 import Order from "../../models/Order";
@@ -377,6 +377,17 @@ export default async function AdminPage() {
             href="/admin/pagos"
           />
         </div>
+
+        <Link
+          href="/admin/historial"
+          className="mt-5 flex items-center justify-between rounded-[24px] border border-[var(--border)] bg-white px-5 py-4 shadow-[0_8px_22px_var(--shadow)] transition hover:border-[var(--primary)] sm:px-6"
+        >
+          <span>
+            <span className="block text-lg font-extrabold">Historial</span>
+            <span className="mt-1 block text-sm font-semibold text-[var(--text-soft)]">Consulta los cambios de productos, stock y pedidos.</span>
+          </span>
+          <span className="text-xl font-extrabold text-[var(--primary)]">→</span>
+        </Link>
 
         <div className="mt-6 grid gap-6 xl:grid-cols-[1.25fr_0.75fr]">
           <section className="rounded-[30px] border border-[var(--border)] bg-white p-5 shadow-[0_12px_32px_var(--shadow)] sm:rounded-[34px] sm:p-6">

@@ -45,7 +45,7 @@ export default function ProductImageGallery({
         <img
           src={selectedImage}
           alt={title}
-          className="h-[320px] w-full object-contain sm:h-[500px] lg:h-[610px]"
+          className="h-[300px] w-full object-contain sm:h-[420px] lg:h-[520px]"
           onError={(event) => {
             event.currentTarget.src = "/placeholder-product.png";
           }}

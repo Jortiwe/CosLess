@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { connectDB } from "../../../lib/mongodb";
+import { writeAudit } from "../../../lib/audit";
 import Liquidation from "../../../models/Liquidation";
 import Product from "../../../models/Product";
 
@@ -135,6 +136,15 @@ export async function POST(request: Request) {
       capitalProvider,
       notes: String(body.notes || ""),
       ...calculated,
+    });
+
+    await writeAudit({
+      action: "Pago registrado",
+      entityType: "pago",
+      entityId: String(liquidation._id),
+      entityName: liquidation.productTitle,
+      actor: "Administrador",
+      details: `Venta: Bs${liquidation.finalSalePrice}. Costo: Bs${liquidation.productCost}.`,
     });
 
     return NextResponse.json(
