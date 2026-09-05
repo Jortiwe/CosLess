@@ -90,13 +90,10 @@ function ProductCard({ product }: { product: SearchProduct }) {
     >
       <div className="relative aspect-square overflow-hidden bg-[var(--surface-soft)]">
         <img
-  src={image}
-  alt={product.title || "Producto"}
-  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-  onError={(event) => {
-    event.currentTarget.src = "/placeholder-product.png";
-  }}
-/>
+          src={image}
+          alt={product.title || "Producto"}
+          className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+        />
 
         <div className="absolute left-2 top-2 flex max-w-[calc(100%-16px)] flex-wrap gap-1.5 sm:left-3 sm:top-3 sm:gap-2">
           <span className="rounded-full bg-white/90 px-2.5 py-1 text-[8px] font-extrabold uppercase tracking-[0.12em] text-[var(--text)] shadow-sm sm:px-3 sm:text-[10px] sm:tracking-[0.14em]">
