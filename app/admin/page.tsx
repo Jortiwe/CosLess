@@ -389,6 +389,17 @@ export default async function AdminPage() {
           <span className="text-xl font-extrabold text-[var(--primary)]">→</span>
         </Link>
 
+        <Link
+          href="/admin/configuracion-imagenes"
+          className="mt-4 flex items-center justify-between rounded-[24px] border border-[var(--border)] bg-white px-5 py-4 shadow-[0_8px_22px_var(--shadow)] transition hover:border-[var(--primary)] sm:px-6"
+        >
+          <span>
+            <span className="block text-lg font-extrabold">Configuración de imágenes</span>
+            <span className="mt-1 block text-sm font-semibold text-[var(--text-soft)]">Cambia el carrusel principal y las imágenes de categorías.</span>
+          </span>
+          <span className="text-xl font-extrabold text-[var(--primary)]">→</span>
+        </Link>
+
         <div className="mt-6 grid gap-6 xl:grid-cols-[1.25fr_0.75fr]">
           <section className="rounded-[30px] border border-[var(--border)] bg-white p-5 shadow-[0_12px_32px_var(--shadow)] sm:rounded-[34px] sm:p-6">
             <div className="mb-5 flex items-center justify-between gap-4">

@@ -1,7 +1,12 @@
 ﻿import Link from "next/link";
 import { CATEGORY_LIST } from "../../lib/categories";
+import type { HomeCategoryImageKey } from "../../lib/home-images";
 
-export default function Categories() {
+export default function Categories({
+  images,
+}: {
+  images?: Partial<Record<HomeCategoryImageKey, string>>;
+}) {
   return (
     <section className="mt-10 sm:mt-12">
       <div className="mb-5 sm:mb-6">
@@ -37,7 +42,7 @@ export default function Categories() {
             <div className="relative h-[145px] overflow-hidden sm:h-[170px] xl:h-[190px]">
               <div
                 className="absolute inset-0 bg-cover bg-center transition duration-500 group-hover:scale-105"
-                style={{ backgroundImage: `url(${category.image})` }}
+                style={{ backgroundImage: `url(${images?.[category.slug as HomeCategoryImageKey] || category.image})` }}
               />
 
               <div className="absolute inset-0 bg-gradient-to-t from-[rgba(16,38,90,0.72)] via-[rgba(16,38,90,0.14)] to-white/5" />

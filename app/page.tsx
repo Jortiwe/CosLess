@@ -7,6 +7,7 @@ import Footer from "../components/layout/Footer";
 import { connectDB } from "../lib/mongodb";
 import Product from "../models/Product";
 import { sortProductsByRotation } from "../lib/product-order";
+import { getHomeImageSettings } from "../lib/site-image-settings";
 
 export const dynamic = "force-dynamic";
 
@@ -48,7 +49,7 @@ function formatProduct(product: RawProduct, fallbackBadge: string, rental = fals
 export default async function HomePage() {
   await connectDB();
 
-  const [offerRawProducts, rentalRawProducts, weeklyRawProducts] = await Promise.all([
+  const [offerRawProducts, rentalRawProducts, weeklyRawProducts, homeImages] = await Promise.all([
     Product.find({
       isActive: true,
       isOffer: true,
@@ -74,6 +75,7 @@ export default async function HomePage() {
     })
       .sort({ createdAt: -1 })
       .lean(),
+    getHomeImageSettings(),
   ]);
 
   const offerProducts = sortProductsByRotation(JSON.parse(JSON.stringify(offerRawProducts)) as RawProduct[]).slice(0, 10).map(
@@ -93,9 +95,9 @@ export default async function HomePage() {
       <Header />
 
       <div className="mx-auto max-w-[1380px] px-4 pb-6 pt-3 sm:px-6 sm:pt-4 lg:px-8">
-        <Hero />
+        <Hero images={homeImages.heroImages} />
 
-        <Categories />
+        <Categories images={homeImages.categoryImages} />
 
         {offerProducts.length > 0 && (
           <HomeProductRail

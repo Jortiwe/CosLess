@@ -13,7 +13,7 @@ const AUTO_SLIDE_DELAY = 8000;
 const MANUAL_PAUSE_DELAY = 15000;
 const SWIPE_THRESHOLD = 45;
 
-const slides = [
+const defaultSlides = [
   {
     id: 1,
     image: COSLESS_IMAGES.home.hero1,
@@ -44,7 +44,11 @@ const slides = [
   },
 ];
 
-export default function Hero() {
+export default function Hero({ images }: { images?: string[] }) {
+  const slides = defaultSlides.map((slide, index) => ({
+    ...slide,
+    image: images?.[index] || slide.image,
+  }));
   const [current, setCurrent] = useState(0);
 
   const nextAutoChangeAt = useRef(Date.now() + AUTO_SLIDE_DELAY);
