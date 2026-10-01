@@ -3,7 +3,7 @@ import { CATEGORY_LIST } from "../lib/categories";
 import { connectDB } from "../lib/mongodb";
 import Product from "../models/Product";
 
-const SITE_URL = "https://cosless.store";
+const SITE_URL = "https://www.cosless.store";
 
 // El listado se obtiene de MongoDB para incluir productos creados o editados
 // recientemente sin mantener un archivo manual.

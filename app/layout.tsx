@@ -5,7 +5,7 @@ import FloatingActions from "../components/layout/FloatingActions";
 import RouteLoadingScreen from "../components/layout/RouteLoadingScreen";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://cosless.store"),
+  metadataBase: new URL("https://www.cosless.store"),
   title: {
     default: "CosLess | Tienda de cosplay en Bolivia",
     template: "%s | CosLess",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "es_BO",
-    url: "https://cosless.store",
+    url: "https://www.cosless.store",
     siteName: "CosLess",
     title: "CosLess | Tienda de cosplay en Bolivia",
     description:

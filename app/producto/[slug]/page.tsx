@@ -294,7 +294,7 @@ export default async function ProductPage({ params }: PageProps) {
   const fallbackBackHref = product.category
     ? `/categoria/${product.category}`
     : "/productos";
-  const productUrl = `https://cosless.store/producto/${product.slug}`;
+  const productUrl = `https://www.cosless.store/producto/${product.slug}`;
   const structuredProduct = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -310,7 +310,7 @@ export default async function ProductPage({ params }: PageProps) {
     image: gallery
       .filter((image) => image !== "/placeholder-product.png")
       .map((image) =>
-        image.startsWith("http") ? image : `https://cosless.store${image}`
+        image.startsWith("http") ? image : `https://www.cosless.store${image}`
       ),
     ...(!product.rentalOnly
       ? {
