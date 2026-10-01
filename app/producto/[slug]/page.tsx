@@ -1,5 +1,6 @@
 ﻿import { notFound } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
 import Header from "../../../components/layout/Header";
 import Footer from "../../../components/layout/Footer";
 import AddToCartButton from "../../../components/product/AddToCartButton";
@@ -46,6 +47,54 @@ type ProductItem = {
   pairedProducts?: string[];
   groupProducts?: string[];
 };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+
+  await connectDB();
+
+  const rawProduct = await Product.findOne({
+    slug: slug.toLowerCase(),
+  })
+    .select("title slug description mainImage images")
+    .lean();
+
+  if (!rawProduct) {
+    return {
+      title: "Producto no encontrado",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const product = JSON.parse(JSON.stringify(rawProduct)) as ProductItem;
+  const title = product.title || "Producto";
+  const description =
+    product.description?.trim() ||
+    `Compra ${title} en CosLess, tienda de cosplay en Bolivia.`;
+  const image = getSafeImage(product.mainImage || product.images?.[0]);
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `/producto/${product.slug}`,
+    },
+    openGraph: {
+      type: "website",
+      locale: "es_BO",
+      url: `/producto/${product.slug}`,
+      title,
+      description,
+      images: image === "/placeholder-product.png" ? [] : [{ url: image }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: image === "/placeholder-product.png" ? [] : [image],
+    },
+  };
+}
 
 function formatBs(value?: number) {
   if (typeof value !== "number") return "Bs0";
@@ -245,10 +294,51 @@ export default async function ProductPage({ params }: PageProps) {
   const fallbackBackHref = product.category
     ? `/categoria/${product.category}`
     : "/productos";
+  const productUrl = `https://cosless.store/producto/${product.slug}`;
+  const structuredProduct = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    description:
+      product.description ||
+      `Compra ${product.title} en CosLess, tienda de cosplay en Bolivia.`,
+    sku: product.slug,
+    brand: {
+      "@type": "Brand",
+      name: "CosLess",
+    },
+    image: gallery
+      .filter((image) => image !== "/placeholder-product.png")
+      .map((image) =>
+        image.startsWith("http") ? image : `https://cosless.store${image}`
+      ),
+    ...(!product.rentalOnly
+      ? {
+          offers: {
+            "@type": "Offer",
+            url: productUrl,
+            priceCurrency: "BOB",
+            price: product.price.toFixed(2),
+            availability: isPreventa
+              ? "https://schema.org/PreOrder"
+              : stock > 0
+              ? "https://schema.org/InStock"
+              : "https://schema.org/OutOfStock",
+            itemCondition: "https://schema.org/NewCondition",
+          },
+        }
+      : {}),
+  };
 
   return (
     <main className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
       <Header />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredProduct).replace(/</g, "\\u003c"),
+        }}
+      />
 
       <section className="mx-auto w-full max-w-[1380px] px-4 pb-8 pt-3 sm:px-6 sm:pt-5 lg:px-8">
         <div className="mb-4 flex justify-start">

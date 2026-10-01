@@ -1,9 +1,15 @@
 ﻿import Link from "next/link";
+import type { Metadata } from "next";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import { connectDB } from "../../lib/mongodb";
 import Product from "../../models/Product";
 import { sortProductsByRotation } from "../../lib/product-order";
+
+export const metadata: Metadata = {
+  title: "Buscar productos",
+  robots: { index: false, follow: true },
+};
 
 type SearchPageProps = {
   searchParams: Promise<{

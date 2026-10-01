@@ -1,4 +1,5 @@
 ﻿import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import Header from "../../../components/layout/Header";
 import Footer from "../../../components/layout/Footer";
 import ProductCatalog, {
@@ -20,6 +21,32 @@ type PageProps = {
 function formatProductCount(count: number) {
   if (count > 99) return "99+";
   return `${count}+`;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const category = getCategoryBySlug(slug);
+
+  if (!category) {
+    return {
+      title: "Categoría no encontrada",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  return {
+    title: category.title,
+    description: category.description,
+    alternates: { canonical: `/categoria/${category.slug}` },
+    openGraph: {
+      type: "website",
+      locale: "es_BO",
+      url: `/categoria/${category.slug}`,
+      title: category.title,
+      description: category.description,
+      images: [{ url: category.image }],
+    },
+  };
 }
 
 export default async function CategoryPage({ params }: PageProps) {
