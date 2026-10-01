@@ -14,6 +14,8 @@ export async function getHomeImageSettings(): Promise<HomeImageSettings> {
 
   return normalizeHomeImageSettings({
     heroImages: Array.isArray(raw.heroImages) ? raw.heroImages : [],
+    heroSlides: Array.isArray(raw.heroSlides) ? raw.heroSlides : [],
     categoryImages: readCategoryImages(raw.categoryImages),
+    categoryHeroImages: readCategoryImages(raw.categoryHeroImages),
   });
 }

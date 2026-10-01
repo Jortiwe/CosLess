@@ -9,6 +9,8 @@ import { connectDB } from "../../../lib/mongodb";
 import Product from "../../../models/Product";
 import { getCategoryBySlug } from "../../../lib/categories";
 import { sortProductsByRotation } from "../../../lib/product-order";
+import { getHomeImageSettings } from "../../../lib/site-image-settings";
+import type { HomeCategoryImageKey } from "../../../lib/home-images";
 
 export const dynamic = "force-dynamic";
 
@@ -58,6 +60,8 @@ export default async function CategoryPage({ params }: PageProps) {
   }
 
   await connectDB();
+  const homeImages = await getHomeImageSettings();
+  const categoryImage = homeImages.categoryHeroImages[category.slug as HomeCategoryImageKey] || category.image;
 
   const activeFilter = {
     $or: [
@@ -119,7 +123,7 @@ export default async function CategoryPage({ params }: PageProps) {
             <div className="relative min-h-[165px] overflow-hidden bg-[var(--surface-soft)] lg:min-h-[320px]">
               <div
                 className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url(${category.image})` }}
+                style={{ backgroundImage: `url(${categoryImage})` }}
               />
 
               <div className="absolute inset-0 bg-gradient-to-l from-transparent to-white/10" />

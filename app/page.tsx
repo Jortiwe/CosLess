@@ -95,7 +95,7 @@ export default async function HomePage() {
       <Header />
 
       <div className="mx-auto max-w-[1380px] px-4 pb-6 pt-3 sm:px-6 sm:pt-4 lg:px-8">
-        <Hero images={homeImages.heroImages} />
+        <Hero slides={homeImages.heroSlides} />
 
         <Categories images={homeImages.categoryImages} />
 

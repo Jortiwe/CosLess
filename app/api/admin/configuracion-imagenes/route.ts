@@ -25,7 +25,9 @@ export async function GET() {
       raw
         ? {
             heroImages: Array.isArray(raw.heroImages) ? raw.heroImages : [],
+            heroSlides: Array.isArray(raw.heroSlides) ? raw.heroSlides : [],
             categoryImages: readCategoryImages(raw.categoryImages),
+            categoryHeroImages: readCategoryImages(raw.categoryHeroImages),
           }
         : undefined
     );
@@ -46,8 +48,24 @@ export async function PUT(request: Request) {
       heroImages: Array.isArray(body?.heroImages)
         ? body.heroImages.filter((value: unknown) => typeof value === "string")
         : [],
+      heroSlides: Array.isArray(body?.heroSlides)
+        ? body.heroSlides
+            .filter((slide: unknown) => slide && typeof slide === "object")
+            .slice(0, 8)
+            .map((slide: Record<string, unknown>) => ({
+              image: typeof slide.image === "string" ? slide.image : "",
+              tag: typeof slide.tag === "string" ? slide.tag : "",
+              title: typeof slide.title === "string" ? slide.title : "",
+              href: typeof slide.href === "string" ? slide.href : "",
+            }))
+        : [],
       categoryImages: HOME_CATEGORY_IMAGE_KEYS.reduce((images, key) => {
         const value = body?.categoryImages?.[key];
+        if (typeof value === "string") images[key] = value;
+        return images;
+      }, {} as Record<(typeof HOME_CATEGORY_IMAGE_KEYS)[number], string>),
+      categoryHeroImages: HOME_CATEGORY_IMAGE_KEYS.reduce((images, key) => {
+        const value = body?.categoryHeroImages?.[key];
         if (typeof value === "string") images[key] = value;
         return images;
       }, {} as Record<(typeof HOME_CATEGORY_IMAGE_KEYS)[number], string>),
@@ -56,7 +74,7 @@ export async function PUT(request: Request) {
     await connectDB();
     await SiteImageSettings.findOneAndUpdate(
       { key: "home" },
-      { $set: { heroImages: settings.heroImages, categoryImages: settings.categoryImages } },
+      { $set: { heroSlides: settings.heroSlides, categoryImages: settings.categoryImages, categoryHeroImages: settings.categoryHeroImages } },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
 
@@ -65,7 +83,7 @@ export async function PUT(request: Request) {
       entityType: "Configuración",
       entityName: "Página principal",
       actor: admin.email,
-      details: "Se actualizaron imágenes del carrusel y categorías.",
+      details: "Se actualizaron diapositivas, imágenes de categorías y banners.",
     });
 
     return NextResponse.json({ settings });

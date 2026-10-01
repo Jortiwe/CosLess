@@ -8,6 +8,7 @@ import {
   FiChevronRight,
 } from "react-icons/fi";
 import { COSLESS_IMAGES } from "../../lib/coslessImages";
+import type { HeroSlideSettings } from "../../lib/home-images";
 
 const AUTO_SLIDE_DELAY = 8000;
 const MANUAL_PAUSE_DELAY = 15000;
@@ -44,11 +45,8 @@ const defaultSlides = [
   },
 ];
 
-export default function Hero({ images }: { images?: string[] }) {
-  const slides = defaultSlides.map((slide, index) => ({
-    ...slide,
-    image: images?.[index] || slide.image,
-  }));
+export default function Hero({ slides: configuredSlides }: { slides?: HeroSlideSettings[] }) {
+  const slides = configuredSlides && configuredSlides.length > 0 ? configuredSlides : defaultSlides;
   const [current, setCurrent] = useState(0);
 
   const nextAutoChangeAt = useRef(Date.now() + AUTO_SLIDE_DELAY);
@@ -141,7 +139,7 @@ export default function Hero({ images }: { images?: string[] }) {
       >
         {slides.map((slide, index) => (
           <Link
-            key={slide.id}
+            key={`${slide.href}-${index}`}
             href={slide.href}
             aria-label={slide.title}
             className={`group absolute inset-0 transition-all duration-700 ${
@@ -188,7 +186,7 @@ export default function Hero({ images }: { images?: string[] }) {
         <div className="absolute left-1/2 top-3 z-30 flex -translate-x-1/2 items-center gap-2 rounded-full bg-white/25 px-3 py-1.5 backdrop-blur-md sm:top-4">
           {slides.map((slide, index) => (
             <button
-              key={slide.id}
+              key={`dot-${slide.href}-${index}`}
               type="button"
               onClick={() => goToSlide(index)}
               aria-label={`Ir al slide ${index + 1}`}
