@@ -52,6 +52,7 @@ const categoryLinks = [
 
 const updateLinks = [
   { label: "Novedades", href: "/novedades" },
+  { label: "Cotiza tu cosplay", href: "/cotizar-cosplay" },
   { label: "Próximos ingresos", href: "/categoria/preventa" },
   { label: "Nuevos cosplays", href: "/productos?section=nuevos-cosplays" },
   { label: "Productos destacados", href: "/productos?section=destacados" },

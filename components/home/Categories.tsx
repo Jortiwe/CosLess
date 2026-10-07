@@ -8,7 +8,7 @@ export default function Categories({
   images?: Partial<Record<HomeCategoryImageKey, string>>;
 }) {
   return (
-    <section className="mt-10 sm:mt-12">
+    <section className="mt-6 sm:mt-8">
       <div className="mb-5 sm:mb-6">
         <span className="inline-flex rounded-full bg-[var(--surface)] px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-[var(--primary)] shadow-sm">
           Explora

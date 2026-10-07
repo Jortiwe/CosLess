@@ -61,6 +61,7 @@ const HEADER_IMAGES = {
 };
 
 const menuCategories = [
+  { label: "Cotiza tu cosplay", href: "/cotizar-cosplay" },
   { label: "Ver todo", href: "/productos" },
   { label: "Cosplays", href: "/categoria/cosplays" },
   { label: "Pelucas", href: "/categoria/pelucas" },

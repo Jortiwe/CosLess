@@ -43,6 +43,13 @@ const defaultSlides = [
     title: "Cosplays",
     href: "/categoria/alquiler",
   },
+  {
+    id: 5,
+    image: "",
+    tag: "Catálogo",
+    title: "Ver todo",
+    href: "/productos",
+  },
 ];
 
 export default function Hero({ slides: configuredSlides }: { slides?: HeroSlideSettings[] }) {
@@ -150,7 +157,11 @@ export default function Hero({ slides: configuredSlides }: { slides?: HeroSlideS
           >
             <div
               className="absolute inset-0 bg-cover bg-center transition duration-[1400ms] ease-out group-hover:scale-[1.045]"
-              style={{ backgroundImage: `url(${slide.image})` }}
+              style={{
+                backgroundImage: slide.image
+                  ? `url(${slide.image})`
+                  : "linear-gradient(135deg, #10265a 0%, #3e72be 100%)",
+              }}
             />
 
             <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(16,38,90,0.58)_0%,rgba(16,38,90,0.22)_42%,rgba(16,38,90,0.05)_100%)] transition duration-500 group-hover:bg-[linear-gradient(90deg,rgba(16,38,90,0.68)_0%,rgba(16,38,90,0.28)_42%,rgba(16,38,90,0.07)_100%)]" />

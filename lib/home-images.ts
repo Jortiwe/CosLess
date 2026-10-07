@@ -36,6 +36,7 @@ export const DEFAULT_HERO_SLIDES: HeroSlideSettings[] = [
   { image: COSLESS_IMAGES.home.hero2, tag: "Lentillas", title: "Lentes", href: "/categoria/lentes" },
   { image: COSLESS_IMAGES.home.hero3, tag: "Accesorios", title: "Detalles", href: "/categoria/accesorios" },
   { image: COSLESS_IMAGES.home.hero4, tag: "Alquiler", title: "Cosplays", href: "/categoria/alquiler" },
+  { image: "", tag: "Catálogo", title: "Ver todo", href: "/productos" },
 ];
 
 export const DEFAULT_HOME_IMAGE_SETTINGS: HomeImageSettings = {
@@ -73,17 +74,21 @@ export function readCategoryImages(value: unknown): Partial<Record<HomeCategoryI
 }
 
 export function normalizeHomeImageSettings(value?: HomeImageSettingsInput | null): HomeImageSettings {
-  const sourceSlides = Array.isArray(value?.heroSlides) && value.heroSlides.length > 0
+  const savedSlides = Array.isArray(value?.heroSlides) && value.heroSlides.length > 0
     ? value.heroSlides.slice(0, 8)
     : DEFAULT_HERO_SLIDES.map((slide, index) => ({
         ...slide,
         image: value?.heroImages?.[index]?.trim() || slide.image,
       }));
 
+  const sourceSlides = savedSlides.length < DEFAULT_HERO_SLIDES.length
+    ? [...savedSlides, ...DEFAULT_HERO_SLIDES.slice(savedSlides.length)]
+    : savedSlides;
+
   const heroSlides = sourceSlides.map((slide, index) => {
     const fallback = DEFAULT_HERO_SLIDES[index % DEFAULT_HERO_SLIDES.length];
     return {
-      image: slide.image?.trim() || fallback.image,
+      image: typeof slide.image === "string" ? slide.image.trim() : fallback.image,
       tag: slide.tag?.trim() || fallback.tag,
       title: slide.title?.trim() || fallback.title,
       href: slide.href?.trim() || fallback.href,
