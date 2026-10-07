@@ -99,6 +99,15 @@ export default async function HomePage() {
 
         <Categories images={homeImages.categoryImages} />
 
+        {weeklyProducts.length > 0 && (
+          <HomeProductRail
+            title="Nuevos semanales"
+            subtitle="Ingresos recientes y productos destacados de la semana."
+            products={weeklyProducts}
+            viewAllHref="/productos?section=nuevos"
+          />
+        )}
+
         {offerProducts.length > 0 && (
           <HomeProductRail
             title="Ofertas"
@@ -114,15 +123,6 @@ export default async function HomePage() {
             subtitle="Productos disponibles para alquilar por tiempo limitado."
             products={rentalProducts}
             viewAllHref="/productos?section=alquiler"
-          />
-        )}
-
-        {weeklyProducts.length > 0 && (
-          <HomeProductRail
-            title="Nuevos semanales"
-            subtitle="Ingresos recientes y productos destacados de la semana."
-            products={weeklyProducts}
-            viewAllHref="/productos?section=nuevos"
           />
         )}
 
